@@ -35,6 +35,8 @@ const Ollama = (() => {
     // ── Logging ──
     let logLines = [];
     let logEl = null;
+    let exchangeHistory = [];
+    const MAX_EXCHANGES = 40;
 
     function log(msg, level = 'info') {
         const ts = new Date().toLocaleTimeString();
@@ -66,8 +68,17 @@ const Ollama = (() => {
 
     // ── Status callbacks ──
     let onStatusChange = null;
+    let onExchangeChange = null;
     function setStatus(s) {
         if (onStatusChange) onStatusChange(s, serverUrl, modelName, backend);
+    }
+
+    function pushExchange(entry) {
+        exchangeHistory.push(entry);
+        if (exchangeHistory.length > MAX_EXCHANGES) {
+            exchangeHistory = exchangeHistory.slice(-MAX_EXCHANGES);
+        }
+        if (onExchangeChange) onExchangeChange([...exchangeHistory]);
     }
 
     // ═══════════════════════════════════════
@@ -525,7 +536,7 @@ const Ollama = (() => {
     // Query
     // ═══════════════════════════════════════
 
-    async function query(prompt, temperature = 0.8) {
+    async function query(prompt, temperature = 0.8, mode = 'unknown') {
         if (!ready || !serverUrl || !modelName) return null;
 
         const backendName = backend === 'lmstudio' ? 'LM Studio' : 'Ollama';
@@ -533,6 +544,20 @@ const Ollama = (() => {
         const startTime = Date.now();
 
         try {
+            const exchangeBase = {
+                ts: Date.now(),
+                mode,
+                backend,
+                backendName,
+                serverUrl,
+                model: modelName,
+                prompt,
+                response: null,
+                ok: false,
+                durationMs: 0,
+                error: null
+            };
+
             let resp;
             if (backend === 'lmstudio') {
                 resp = await fetch(`${serverUrl}/v1/chat/completions`, {
@@ -561,6 +586,12 @@ const Ollama = (() => {
 
             if (!resp.ok) {
                 log(`Requête échouée : HTTP ${resp.status}`, 'error');
+                pushExchange({
+                    ...exchangeBase,
+                    ok: false,
+                    durationMs: Date.now() - startTime,
+                    error: `HTTP ${resp.status}`
+                });
                 return null;
             }
             const data = await resp.json();
@@ -575,9 +606,28 @@ const Ollama = (() => {
 
             const len = (text || '').length;
             log(`Réponse reçue en ${elapsed}s (${len} caractères)`);
+            pushExchange({
+                ...exchangeBase,
+                response: text,
+                ok: true,
+                durationMs: Date.now() - startTime
+            });
             return text;
         } catch (e) {
             log(`Erreur requête : ${e.message}`, 'error');
+            pushExchange({
+                ts: Date.now(),
+                mode,
+                backend,
+                backendName,
+                serverUrl,
+                model: modelName,
+                prompt,
+                response: null,
+                ok: false,
+                durationMs: Date.now() - startTime,
+                error: e.message
+            });
             return null;
         }
     }
@@ -676,27 +726,79 @@ Exemple de format :
         return null;
     }
 
+    function stripMarkdownFences(raw) {
+        const s = String(raw || '').trim();
+        const fenceMatch = s.match(/```(?:json)?\s*([\s\S]*?)```/i);
+        if (fenceMatch && fenceMatch[1]) return fenceMatch[1].trim();
+        return s;
+    }
+
+    function tryParseArrayCandidates(raw) {
+        const s = stripMarkdownFences(raw);
+        const starts = [];
+        for (let i = 0; i < s.length; i++) {
+            if (s[i] === '[') starts.push(i);
+        }
+
+        // Try shortest valid candidate first to avoid swallowing extra trailing prose.
+        for (const start of starts) {
+            for (let end = start + 1; end < s.length; end++) {
+                if (s[end] !== ']') continue;
+                const candidate = s.slice(start, end + 1);
+                try {
+                    const parsed = JSON.parse(candidate);
+                    if (Array.isArray(parsed)) return parsed;
+                } catch (_) {}
+            }
+        }
+
+        return null;
+    }
+
+    async function normalizeToJsonArray(mode, rawText) {
+        const schema = {
+            homophones: 'keys: sentence, answer, choices, explanation',
+            conjugaison: 'keys: sentence, answer, hint, explanation',
+            nature: 'keys: sentence, answer, choices, explanation',
+            accord: 'keys: sentence, answer, choices, explanation'
+        };
+
+        const prompt = `Tu es un validateur JSON strict.
+Transforme le contenu suivant en tableau JSON STRICT et valide.
+Ne mets aucun commentaire, aucun markdown, aucun texte avant/apres.
+Chaque objet doit respecter: ${schema[mode] || 'keys: sentence, answer, explanation'}.
+Si certaines entrees sont invalides, supprime-les.
+
+Contenu source:
+${rawText}`;
+
+        return query(prompt, 0.1, `${mode}:normalize`);
+    }
+
     function parseQuestions(raw, mode) {
         if (!raw) return [];
 
-        let jsonStr = raw;
-        const match = raw.match(/\[[\s\S]*\]/);
-        if (match) jsonStr = match[0];
-
         let questions;
         try {
-            questions = JSON.parse(jsonStr);
+            questions = JSON.parse(stripMarkdownFences(raw));
         } catch (e) {
-            log(`Parsing JSON partiel (${mode})…`, 'warn');
-            // Attempt to recover truncated output
-            const repaired = repairTruncatedJson(raw);
-            if (repaired) {
-                log(`Récupéré ${repaired.length} question(s) depuis réponse tronquée`);
-                questions = repaired;
+            log(`Parsing JSON strict impossible (${mode}), tentative de recuperation…`, 'warn');
+
+            const recovered = tryParseArrayCandidates(raw);
+            if (recovered && recovered.length > 0) {
+                log(`Recuperation JSON reussie: ${recovered.length} question(s)`);
+                questions = recovered;
             } else {
-                log(`Échec du parsing JSON (${mode}): ${e.message}`, 'warn');
-                log(`Réponse brute (200 premiers chars): ${raw.substring(0, 200)}`, 'warn');
-                return [];
+            // Attempt to recover truncated output
+                const repaired = repairTruncatedJson(stripMarkdownFences(raw));
+                if (repaired) {
+                    log(`Reponse tronquee reparee: ${repaired.length} question(s)`);
+                    questions = repaired;
+                } else {
+                    log(`Echec parsing JSON (${mode}): ${e.message}`, 'warn');
+                    log(`Reponse brute (200 chars): ${raw.substring(0, 200)}`, 'warn');
+                    return [];
+                }
             }
         }
 
@@ -765,8 +867,15 @@ Exemple de format :
         log(`Génération en arrière-plan (${mode})...`);
 
         try {
-            const raw = await query(PROMPTS[mode], 0.7);
-            const questions = parseQuestions(raw, mode);
+            const raw = await query(PROMPTS[mode], 0.7, mode);
+            let questions = parseQuestions(raw, mode);
+
+            // If output is not strict JSON, ask the model to normalize its own output.
+            if (questions.length === 0 && raw) {
+                log(`Normalisation JSON (${mode})…`, 'warn');
+                const normalized = await normalizeToJsonArray(mode, raw);
+                questions = parseQuestions(normalized, mode);
+            }
 
             if (questions.length > 0) {
                 buffer[mode].push(...questions);
@@ -833,6 +942,10 @@ Exemple de format :
         discover,
         debugEndpoint,
         setModel,
+        clearExchanges() {
+            exchangeHistory = [];
+            if (onExchangeChange) onExchangeChange([]);
+        },
         getQuestion,
         prefill,
         fillBuffer,
@@ -845,8 +958,10 @@ Exemple de format :
         get models()   { return [...availableModels]; },
         get backendType() { return backend; },
         get logs()     { return logLines; },
+        get exchanges() { return [...exchangeHistory]; },
         get isGenerating() { return filling.size > 0 || fillQueue.length > 0; },
         bufferCount(mode) { return (buffer[mode] || []).length; },
         set onStatus(fn) { onStatusChange = fn; },
+        set onExchange(fn) { onExchangeChange = fn; },
     };
 })();
