@@ -98,6 +98,30 @@
             border-radius: 3px;
         }
 
+        .question-source-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.72rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: #fff;
+        }
+
+        .question-source-badge.ai {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            box-shadow: 0 4px 12px rgba(255,94,98,0.35);
+        }
+
+        .question-source-badge.local {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            box-shadow: 0 4px 12px rgba(79,172,254,0.35);
+        }
+
         .card-front .instruction {
             font-family: 'Fredoka One', cursive;
             font-size: 0.8rem;
@@ -364,6 +388,7 @@
         let gameMode = 'homophones';
         let currentAnswer = null;
         let currentExplanation = '';
+        let currentQuestionSource = 'local';
 
         const questionArea  = document.getElementById('question-area');
         const cardModeLabel = document.getElementById('card-mode-label');
@@ -387,6 +412,13 @@
                 [a[i], a[j]] = [a[j], a[i]];
             }
             return a;
+        }
+
+        function sourceBadgeHtml() {
+            if (currentQuestionSource === 'ai') {
+                return `<div class="question-source-badge ai">✨ Question IA</div>`;
+            }
+            return `<div class="question-source-badge local">📚 Banque locale</div>`;
         }
 
         // ═══════════════════════════════════════
@@ -791,6 +823,7 @@
                 const aiQ = Ollama.getQuestion(mode);
                 if (aiQ) {
                     console.log(`[Grammar] Using AI question for ${mode}`);
+                    currentQuestionSource = 'ai';
                     return aiQ;
                 }
             }
@@ -801,6 +834,7 @@
             let idx;
             do { idx = randInt(0, bank.length - 1); } while (usedIndices[mode].includes(idx));
             usedIndices[mode].push(idx);
+            currentQuestionSource = 'local';
             return bank[idx];
         }
 
@@ -832,7 +866,7 @@
             cardModeLabel.textContent = 'Choisis le bon homophone';
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
-            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
+            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${display}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -850,6 +884,7 @@
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
             questionArea.innerHTML = `
+                ${sourceBadgeHtml()}
                 <div class="sentence-text">${display}</div>
                 <div class="instruction">${q.hint}</div>`;
 
@@ -868,7 +903,7 @@
             const q = pickQuestion(natureQuestions, 'nature');
             cardModeLabel.textContent = 'Quelle est la nature du mot ?';
 
-            questionArea.innerHTML = `<div class="sentence-text">${q.sentence}</div>`;
+            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${q.sentence}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -885,7 +920,7 @@
             cardModeLabel.textContent = 'Choisis le bon accord';
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
-            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
+            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${display}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -948,7 +983,7 @@
         const aiStatusEl   = document.getElementById('ai-status');
         const aiStatusText = document.getElementById('ai-status-text');
 
-        Ollama.onStatus = (status, url, model) => {
+        Ollama.onStatus = (status, url, model, backendType) => {
             aiStatusEl.className = 'ai-status ' + status;
             switch (status) {
                 case 'searching':
@@ -956,7 +991,8 @@
                     break;
                 case 'found':
                     const shortModel = model.split(':')[0];
-                    aiStatusText.textContent = `🤖 IA connectée (${shortModel})`;
+                    const backendName = backendType === 'lmstudio' ? 'LM Studio' : 'Ollama';
+                    aiStatusText.textContent = `🤖 ${backendName} (${shortModel})`;
                     break;
                 case 'offline':
                     aiStatusText.textContent = '📦 Mode hors-ligne (banque locale)';
