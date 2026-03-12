@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Toto - Grammaire CM2</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #fc4a1a, #f7b733);
+            box-shadow: 0 8px 20px rgba(252,74,26,0.4);
+        }
+
+        .btn:hover {
+            box-shadow: 0 12px 28px rgba(252,74,26,0.5);
+        }
+
+        #game-screen {
+            max-width: 580px;
+        }
+
+        .card-container {
+            width: 320px;
+            height: 400px;
+        }
+
+        /* ── Mode selector ── */
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            padding: 14px 24px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        .mode-btn.selected {
+            background: rgba(255,255,255,0.9);
+            color: #11998e;
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .mode-btn .mode-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ── Sentence on card ── */
+        .sentence-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.35rem;
+            color: #333;
+            line-height: 1.6;
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .sentence-text .blank {
+            display: inline-block;
+            min-width: 70px;
+            border-bottom: 3px dashed #11998e;
+            color: #11998e;
+            font-weight: 900;
+            padding: 0 4px;
+            margin: 0 2px;
+        }
+
+        .sentence-text .highlight {
+            background: linear-gradient(to top, rgba(17,153,142,0.25) 40%, transparent 40%);
+            font-weight: 900;
+            color: #0a6b63;
+            padding: 0 3px;
+            border-radius: 3px;
+        }
+
+        .card-front .instruction {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 14px;
+            letter-spacing: 1px;
+        }
+
+        .card-back .result {
+            font-size: 2rem;
+            padding: 0 16px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .card-back .explanation {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.85);
+            margin-top: 12px;
+            padding: 0 16px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* ── Choice buttons (for MCQ modes) ── */
+        .choice-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.15rem;
+            padding: 12px 22px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 16px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: all 0.2s;
+            min-width: 80px;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ── Text input for conjugation ── */
+        #grammar-input {
+            width: 200px;
+        }
+
+        /* ── AI status indicator ── */
+        .ai-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 14px;
+            padding: 8px 18px;
+            border-radius: 30px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            color: rgba(255,255,255,0.8);
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.4s;
+        }
+
+        .ai-status .ai-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #aaa;
+            transition: background 0.4s;
+        }
+
+        .ai-status.searching .ai-dot {
+            background: #ffd700;
+            animation: pulse-dot 1s infinite alternate;
+        }
+
+        .ai-status.found .ai-dot {
+            background: #43e97b;
+        }
+
+        .ai-status.offline .ai-dot {
+            background: #ff5858;
+        }
+
+        @keyframes pulse-dot {
+            from { opacity: 0.4; transform: scale(0.8); }
+            to   { opacity: 1;   transform: scale(1.2); }
+        }
+
+        /* ── Log panel ── */
+        .log-toggle {
+            display: inline-block;
+            margin-top: 8px;
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            cursor: pointer;
+            text-decoration: none;
+            border: none;
+            background: none;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .log-toggle:hover {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .log-panel {
+            display: none;
+            width: 90%;
+            max-width: 520px;
+            max-height: 200px;
+            margin: 10px auto 0;
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-family: 'Courier New', monospace;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.75);
+            text-align: left;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            line-height: 1.5;
+        }
+
+        .log-panel.visible {
+            display: block;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 500px) {
+            #start-screen h1 { font-size: 2.4rem; }
+            .card-container { width: 280px; height: 370px; }
+            .sentence-text { font-size: 1.15rem; }
+            .card-back .result { font-size: 1.6rem; }
+            .choice-btn { font-size: 1rem; padding: 10px 16px; min-width: 70px; }
+            .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ══════════════ ÉCRAN D'ACCUEIL ══════════════ -->
+    <div id="start-screen">
+        <h1>📝 Grammaire Toto</h1>
+        <p>Entraîne-toi en grammaire — CM2</p>
+
+        <div class="mode-selector">
+            <div class="mode-btn selected" onclick="selectMode('homophones')" id="mode-homophones">
+                <span class="mode-icon">🔤</span>Homophones
+            </div>
+            <div class="mode-btn" onclick="selectMode('conjugaison')" id="mode-conjugaison">
+                <span class="mode-icon">✏️</span>Conjugaison
+            </div>
+            <div class="mode-btn" onclick="selectMode('nature')" id="mode-nature">
+                <span class="mode-icon">🏷️</span>Nature
+            </div>
+            <div class="mode-btn" onclick="selectMode('accord')" id="mode-accord">
+                <span class="mode-icon">🤝</span>Accords
+            </div>
+        </div>
+
+        <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
+        <div class="ai-status searching" id="ai-status">
+            <span class="ai-dot"></span>
+            <span id="ai-status-text">🔍 Recherche du serveur IA…</span>
+        </div>
+        <br>
+        <button class="log-toggle" onclick="toggleLog()">📋 Voir les logs</button>
+        <div class="log-panel" id="log-panel"></div>
+        <br>
+        <a class="nav-link" href="index.html">🃏 Multiplications</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="fractions.html">🥧 Fractions</a>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE JEU ══════════════ -->
+    <div id="game-screen">
+        <div class="game-controls">
+            <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
+            <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="label">Carte</div>
+                <div class="value" id="card-count">1 / 10</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">⏱ Chrono</div>
+                <div class="value" id="timer">00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">✅ Score</div>
+                <div class="value" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="card-front">
+                    <div class="card-label" id="card-mode-label">Homophones</div>
+                    <div id="question-area"></div>
+                    <div class="card-number" id="card-num">#1</div>
+                </div>
+                <div class="card-face card-back" id="card-back">
+                    <div class="result-label">La réponse est</div>
+                    <div class="result" id="result"></div>
+                    <div class="result-icon" id="result-icon">✅</div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-zone" id="answer-zone"></div>
+        <button class="btn-next" id="btn-next" onclick="nextCard()">Carte suivante ➜</button>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE PAUSE ══════════════ -->
+    <div id="pause-screen">
+        <h2 id="pause-title">🎉 Bravo !</h2>
+        <p class="pause-stats">Score : <strong id="pause-score">0 / 10</strong></p>
+        <p class="pause-stats">Temps : <strong id="pause-time">00:00</strong></p>
+        <p class="pause-stats" id="pause-message"></p>
+        <div class="pause-buttons">
+            <button class="btn btn-continue" onclick="continueGame()">🔄 Encore 10 !</button>
+            <button class="btn btn-stop" onclick="resetGame()">🏠 Accueil</button>
+        </div>
+    </div>
+
+    <!-- ══════════════ OVERLAY PAUSE EN JEU ══════════════ -->
+    <div id="ingame-pause-overlay">
+        <div class="pause-overlay-box">
+            <h2>⏸️ Pause</h2>
+            <p>Prends ton temps !</p>
+            <div class="pause-overlay-buttons">
+                <button class="btn btn-resume" onclick="resumeGame()">▶️ Reprendre</button>
+                <button class="btn btn-quit" onclick="stopSeries()">⏹️ Arrêter la série</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script src="ollama.js"></script>
+    <script>
+        // ═══════════════════════════════════════
+        // Grammar-specific logic — CM2
+        // ═══════════════════════════════════════
+        let gameMode = 'homophones';
+        let currentAnswer = null;
+        let currentExplanation = '';
+
+        const questionArea  = document.getElementById('question-area');
+        const cardModeLabel = document.getElementById('card-mode-label');
+        const explanationEl = document.getElementById('explanation');
+
+        // ── Mode selection ──
+        function selectMode(mode) {
+            gameMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('mode-' + mode).classList.add('selected');
+        }
+
+        // ── Utility ──
+        function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function pick(arr) { return arr[randInt(0, arr.length - 1)]; }
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = randInt(0, i);
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // ═══════════════════════════════════════
+        // Question banks
+        // ═══════════════════════════════════════
+
+        // ── HOMOPHONES ──
+        const homophoneQuestions = [
+            // ─── a / à ───
+            { sentence: "Il ___ un chien très gentil.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir (il a). On peut remplacer par « avait »." },
+            { sentence: "Elle va ___ l'école tous les matins.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition (indique le lieu). On ne peut pas dire « avait l'école »." },
+            { sentence: "Mon frère ___ oublié son cartable.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir. On peut dire « avait oublié »." },
+            { sentence: "Je pense ___ mes vacances.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition. On ne peut pas remplacer par « avait »." },
+            { sentence: "La maîtresse ___ distribué les cahiers.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir (elle a distribué)." },
+            { sentence: "Nous irons ___ la piscine demain.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition de lieu." },
+            { sentence: "Papa ___ réparé le vélo.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir. On peut dire « avait réparé »." },
+            { sentence: "Le gâteau est ___ la vanille.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition (saveur). On ne peut pas dire « avait la vanille »." },
+            { sentence: "Le directeur ___ parlé aux élèves.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir (il a parlé)." },
+            { sentence: "Elle joue ___ la corde ___ sauter.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition. On ne peut pas remplacer par « avait »." },
+            { sentence: "Ce film ___ l'air très drôle.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir (avoir l'air). On peut dire « avait l'air »." },
+            { sentence: "Grâce ___ toi, on a gagné !", answer: "à", choices: ["a","à"], explanation: "« à » = préposition. « Grâce avait toi » ne veut rien dire." },
+            { sentence: "Ma cousine ___ sept ans.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir (elle a sept ans)." },
+            { sentence: "Nous habitons ___ Paris.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition de lieu." },
+            { sentence: "Le chat ___ attrapé une souris.", answer: "a", choices: ["a","à"], explanation: "« a » = verbe avoir. On peut dire « avait attrapé »." },
+            { sentence: "Il commence ___ pleuvoir.", answer: "à", choices: ["a","à"], explanation: "« à » = préposition (commencer à). On ne dit pas « avait pleuvoir »." },
+
+            // ─── et / est ───
+            { sentence: "Le chat ___ noir et blanc.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était »." },
+            { sentence: "J'ai acheté du pain ___ du beurre.", answer: "et", choices: ["et","est"], explanation: "« et » = conjonction (ajoute deux choses). On peut dire « et puis »." },
+            { sentence: "Ma sœur ___ partie en voyage.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être (elle est partie)." },
+            { sentence: "Il aime les pommes ___ les poires.", answer: "et", choices: ["et","est"], explanation: "« et » relie deux compléments. On peut dire « et aussi »." },
+            { sentence: "Cette histoire ___ très amusante.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était »." },
+            { sentence: "Prends ton manteau ___ tes gants.", answer: "et", choices: ["et","est"], explanation: "« et » = conjonction qui relie deux noms." },
+            { sentence: "Mon voisin ___ très sympathique.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était sympathique »." },
+            { sentence: "J'ai un cahier ___ un crayon.", answer: "et", choices: ["et","est"], explanation: "« et » = conjonction. On peut dire « et aussi un crayon »." },
+            { sentence: "Le temps ___ magnifique aujourd'hui.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était magnifique »." },
+            { sentence: "Range tes livres ___ tes crayons.", answer: "et", choices: ["et","est"], explanation: "« et » relie deux compléments d'objet." },
+            { sentence: "Ce restaurant ___ fermé le lundi.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était fermé »." },
+            { sentence: "Il fait beau ___ chaud.", answer: "et", choices: ["et","est"], explanation: "« et » relie deux adjectifs." },
+            { sentence: "La récréation ___ bientôt terminée.", answer: "est", choices: ["et","est"], explanation: "« est » = verbe être. On peut dire « était terminée »." },
+            { sentence: "Léa mange une tartine ___ boit un jus.", answer: "et", choices: ["et","est"], explanation: "« et » relie deux actions. On peut dire « et puis boit »." },
+
+            // ─── son / sont ───
+            { sentence: "Les enfants ___ dans la cour.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être (ils sont). On peut dire « étaient »." },
+            { sentence: "Il a perdu ___ stylo.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif (le sien). On peut dire « mon stylo »." },
+            { sentence: "Ces gâteaux ___ délicieux.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être. On peut dire « étaient délicieux »." },
+            { sentence: "Elle adore ___ petit chat.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif. On peut dire « mon petit chat »." },
+            { sentence: "Les oiseaux ___ partis vers le sud.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être (ils sont partis)." },
+            { sentence: "Léo range ___ bureau.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif. On peut dire « mon bureau »." },
+            { sentence: "Les magasins ___ ouverts le samedi.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être. On peut dire « étaient ouverts »." },
+            { sentence: "Il a oublié ___ goûter.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif. On peut dire « mon goûter »." },
+            { sentence: "Les résultats ___ affichés au tableau.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être. On peut dire « étaient affichés »." },
+            { sentence: "Lucie lit ___ livre préféré.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif. On peut dire « mon livre »." },
+            { sentence: "Ces exercices ___ faciles.", answer: "sont", choices: ["son","sont"], explanation: "« sont » = verbe être. On peut dire « étaient faciles »." },
+            { sentence: "Il promène ___ chien tous les soirs.", answer: "son", choices: ["son","sont"], explanation: "« son » = déterminant possessif. On peut dire « mon chien »." },
+
+            // ─── on / ont ───
+            { sentence: "___ mange à la cantine aujourd'hui.", answer: "On", choices: ["On","Ont"], explanation: "« On » = pronom (= quelqu'un / nous). On peut dire « il mange »." },
+            { sentence: "Les élèves ___ fini leur exercice.", answer: "ont", choices: ["on","ont"], explanation: "« ont » = verbe avoir (ils ont). On peut dire « avaient fini »." },
+            { sentence: "___ a bien rigolé pendant la récréation.", answer: "On", choices: ["On","Ont"], explanation: "« On » = pronom sujet. On peut remplacer par « il »." },
+            { sentence: "Mes parents ___ préparé une surprise.", answer: "ont", choices: ["on","ont"], explanation: "« ont » = verbe avoir (ils ont). On peut dire « avaient préparé »." },
+            { sentence: "___ dirait qu'il va pleuvoir.", answer: "On", choices: ["On","Ont"], explanation: "« On » = pronom sujet. On peut dire « il dirait »." },
+            { sentence: "Les voisins ___ déménagé.", answer: "ont", choices: ["on","ont"], explanation: "« ont » = verbe avoir (ils ont). On peut dire « avaient déménagé »." },
+            { sentence: "___ part en vacances la semaine prochaine.", answer: "On", choices: ["On","Ont"], explanation: "« On » = pronom sujet. On peut dire « il part »." },
+            { sentence: "Les joueurs ___ marqué trois buts.", answer: "ont", choices: ["on","ont"], explanation: "« ont » = verbe avoir. On peut dire « avaient marqué »." },
+            { sentence: "___ ne sait pas encore le résultat.", answer: "On", choices: ["On","Ont"], explanation: "« On » = pronom sujet (= nous / quelqu'un)." },
+            { sentence: "Ils ___ trouvé un trésor dans le jardin.", answer: "ont", choices: ["on","ont"], explanation: "« ont » = verbe avoir. On peut dire « avaient trouvé »." },
+
+            // ─── ou / où ───
+            { sentence: "Tu préfères le rouge ___ le bleu ?", answer: "ou", choices: ["ou","où"], explanation: "« ou » = conjonction de choix. On peut dire « ou bien »." },
+            { sentence: "La ville ___ j'habite est très jolie.", answer: "où", choices: ["ou","où"], explanation: "« où » indique un lieu. On ne peut pas dire « ou bien j'habite »." },
+            { sentence: "Veux-tu du jus ___ de l'eau ?", answer: "ou", choices: ["ou","où"], explanation: "« ou » = choix entre deux choses. On peut dire « ou bien »." },
+            { sentence: "C'est l'endroit ___ nous avons pique-niqué.", answer: "où", choices: ["ou","où"], explanation: "« où » = pronom relatif de lieu." },
+            { sentence: "On joue dehors ___ dedans ?", answer: "ou", choices: ["ou","où"], explanation: "« ou » = choix. On peut dire « ou bien dedans »." },
+            { sentence: "Le jour ___ je suis né, il neigeait.", answer: "où", choices: ["ou","où"], explanation: "« où » indique un moment dans le temps." },
+            { sentence: "Tu viens lundi ___ mardi ?", answer: "ou", choices: ["ou","où"], explanation: "« ou » = choix entre deux jours. On peut dire « ou bien »." },
+            { sentence: "Montre-moi ___ tu as rangé mes clés.", answer: "où", choices: ["ou","où"], explanation: "« où » = pronom interrogatif de lieu." },
+            { sentence: "C'est un film comique ___ dramatique ?", answer: "ou", choices: ["ou","où"], explanation: "« ou » = choix. On peut dire « ou bien dramatique »." },
+            { sentence: "La maison ___ habitait ma grand-mère est très vieille.", answer: "où", choices: ["ou","où"], explanation: "« où » = pronom relatif de lieu." },
+
+            // ─── ce / se ───
+            { sentence: "___ matin, il fait très froid.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif devant un nom (ce matin)." },
+            { sentence: "Le chat ___ cache sous le lit.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi devant un verbe (se cacher)." },
+            { sentence: "___ livre est passionnant.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif (ce livre = celui-là)." },
+            { sentence: "Les enfants ___ lavent les mains.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi (se laver)." },
+            { sentence: "___ film m'a beaucoup plu.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif (ce film)." },
+            { sentence: "Marie ___ brosse les dents.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi (se brosser)." },
+            { sentence: "___ gâteau est vraiment bon.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif (ce gâteau)." },
+            { sentence: "Le soleil ___ couche derrière la montagne.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi (se coucher)." },
+            { sentence: "___ soir, on regarde un film.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif devant un nom (ce soir)." },
+            { sentence: "Ils ___ regardent dans le miroir.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi (se regarder)." },
+            { sentence: "___ problème est difficile.", answer: "Ce", choices: ["Ce","Se"], explanation: "« Ce » = déterminant démonstratif (ce problème)." },
+            { sentence: "Le bébé ___ réveille en pleurant.", answer: "se", choices: ["ce","se"], explanation: "« se » = pronom réfléchi (se réveiller)." },
+
+            // ─── ces / ses ───
+            { sentence: "Il a rangé ___ affaires dans son sac.", answer: "ses", choices: ["ces","ses"], explanation: "« ses » = possessif (les siennes). On peut dire « mes affaires »." },
+            { sentence: "Regarde ___ fleurs magnifiques !", answer: "ces", choices: ["ces","ses"], explanation: "« ces » = démonstratif (celles-là). On peut dire « cette fleur »." },
+            { sentence: "Elle a perdu ___ lunettes.", answer: "ses", choices: ["ces","ses"], explanation: "« ses » = possessif (les siennes). On peut dire « mes lunettes »." },
+            { sentence: "___ arbres sont très grands.", answer: "Ces", choices: ["Ces","Ses"], explanation: "« Ces » = démonstratif (ceux-là). On peut dire « cet arbre »." },
+            { sentence: "Lucas a invité ___ amis pour son anniversaire.", answer: "ses", choices: ["ces","ses"], explanation: "« ses » = possessif (les siens). On peut dire « mes amis »." },
+            { sentence: "Qui a construit ___ immeubles ?", answer: "ces", choices: ["ces","ses"], explanation: "« ces » = démonstratif (ceux-là, qu'on montre)." },
+            { sentence: "Elle enfile ___ chaussures neuves.", answer: "ses", choices: ["ces","ses"], explanation: "« ses » = possessif (les siennes). On peut dire « mes chaussures »." },
+            { sentence: "___ nuages annoncent la pluie.", answer: "Ces", choices: ["Ces","Ses"], explanation: "« Ces » = démonstratif (ceux qu'on voit)." },
+
+            // ─── c'est / s'est ───
+            { sentence: "___ mon meilleur ami.", answer: "C'est", choices: ["C'est","S'est"], explanation: "« C'est » = cela est. On présente quelqu'un ou quelque chose." },
+            { sentence: "Il ___ trompé de chemin.", answer: "s'est", choices: ["c'est","s'est"], explanation: "« s'est » = pronom réfléchi + être (se tromper → il s'est trompé)." },
+            { sentence: "___ une bonne idée !", answer: "C'est", choices: ["C'est","S'est"], explanation: "« C'est » = cela est. On peut dire « c'était une bonne idée »." },
+            { sentence: "Le vase ___ cassé en tombant.", answer: "s'est", choices: ["c'est","s'est"], explanation: "« s'est » = se casser → il s'est cassé." },
+            { sentence: "___ la plus belle journée de l'année.", answer: "C'est", choices: ["C'est","S'est"], explanation: "« C'est » = cela est." },
+            { sentence: "Ma sœur ___ endormie sur le canapé.", answer: "s'est", choices: ["c'est","s'est"], explanation: "« s'est » = s'endormir → elle s'est endormie." },
+            { sentence: "___ bientôt les vacances !", answer: "C'est", choices: ["C'est","S'est"], explanation: "« C'est » = cela est." },
+            { sentence: "Le chat ___ griffé en jouant.", answer: "s'est", choices: ["c'est","s'est"], explanation: "« s'est » = se griffer → il s'est griffé." },
+
+            // ─── leur / leurs ───
+            { sentence: "Je ___ ai donné des bonbons.", answer: "leur", choices: ["leur","leurs"], explanation: "« leur » devant un verbe = pronom (= à eux). Invariable." },
+            { sentence: "Les enfants rangent ___ jouets.", answer: "leurs", choices: ["leur","leurs"], explanation: "« leurs » devant un nom pluriel = déterminant possessif." },
+            { sentence: "Il ___ explique la leçon.", answer: "leur", choices: ["leur","leurs"], explanation: "« leur » devant un verbe = pronom. Pas de « s »." },
+            { sentence: "Ils ont apporté ___ cahiers.", answer: "leurs", choices: ["leur","leurs"], explanation: "« leurs » devant un nom pluriel = possessif pluriel." },
+            { sentence: "La maîtresse ___ lit une histoire.", answer: "leur", choices: ["leur","leurs"], explanation: "« leur » devant un verbe = pronom (= à eux)." },
+            { sentence: "Elles ont oublié ___ parapluie.", answer: "leur", choices: ["leur","leurs"], explanation: "« leur » devant un nom singulier = possessif singulier (un seul parapluie chacune)." },
+
+            // ─── la / l'a / là ───
+            { sentence: "Je ___ vois tous les jours.", answer: "la", choices: ["la","l'a","là"], explanation: "« la » = pronom COD (je vois qui ? → la)." },
+            { sentence: "Il ___ appelée ce matin.", answer: "l'a", choices: ["la","l'a","là"], explanation: "« l'a » = l' + a (verbe avoir). Il l'avait appelée." },
+            { sentence: "Pose ton sac ___.", answer: "là", choices: ["la","l'a","là"], explanation: "« là » = adverbe de lieu (= ici)." },
+            { sentence: "Ma mère ___ accompagnée à l'école.", answer: "l'a", choices: ["la","l'a","là"], explanation: "« l'a » = l' + a (verbe avoir). On peut dire « l'avait accompagnée »." },
+            { sentence: "___ fenêtre est ouverte.", answer: "La", choices: ["La","L'a","Là"], explanation: "« La » = déterminant (article défini féminin)." },
+            { sentence: "C'est ___ qu'on se retrouve.", answer: "là", choices: ["la","l'a","là"], explanation: "« là » = adverbe de lieu." },
+
+            // ─── quel / quelle / qu'elle ───
+            { sentence: "___ heure est-il ?", answer: "Quelle", choices: ["Quel","Quelle","Qu'elle"], explanation: "« Quelle » = déterminant interrogatif féminin (l'heure est féminin)." },
+            { sentence: "Je sais ___ viendra demain.", answer: "qu'elle", choices: ["quel","quelle","qu'elle"], explanation: "« qu'elle » = que + elle. Je sais que elle viendra." },
+            { sentence: "___ beau temps !", answer: "Quel", choices: ["Quel","Quelle","Qu'elle"], explanation: "« Quel » = déterminant exclamatif masculin (le temps est masculin)." },
+            { sentence: "Il pense ___ a raison.", answer: "qu'elle", choices: ["quel","quelle","qu'elle"], explanation: "« qu'elle » = que + elle. Il pense que elle a raison." },
+            { sentence: "___ surprise !", answer: "Quelle", choices: ["Quel","Quelle","Qu'elle"], explanation: "« Quelle » = déterminant exclamatif féminin (la surprise)." },
+            { sentence: "___ est ton sport préféré ?", answer: "Quel", choices: ["Quel","Quelle","Qu'elle"], explanation: "« Quel » = déterminant interrogatif masculin (le sport)." },
+
+            // ─── mais / mes ───
+            { sentence: "J'aime le chocolat ___ pas la vanille.", answer: "mais", choices: ["mais","mes"], explanation: "« mais » = conjonction d'opposition. On peut dire « cependant »." },
+            { sentence: "J'ai oublié ___ clés à la maison.", answer: "mes", choices: ["mais","mes"], explanation: "« mes » = déterminant possessif (les miennes)." },
+            { sentence: "Il fait froid ___ il y a du soleil.", answer: "mais", choices: ["mais","mes"], explanation: "« mais » = conjonction d'opposition." },
+            { sentence: "___ amis sont venus me voir.", answer: "Mes", choices: ["Mais","Mes"], explanation: "« Mes » = déterminant possessif pluriel." },
+            { sentence: "J'aimerais venir ___ je ne peux pas.", answer: "mais", choices: ["mais","mes"], explanation: "« mais » = opposition. On peut dire « pourtant »." },
+            { sentence: "Je range ___ affaires dans le placard.", answer: "mes", choices: ["mais","mes"], explanation: "« mes » = déterminant possessif (les miennes)." },
+        ];
+
+        // ── CONJUGAISON ──
+        const conjugaisonQuestions = [
+            // ─── Présent ───
+            { sentence: "Nous ___ (manger) à midi.", answer: "mangeons", hint: "manger – présent – nous", explanation: "Manger au présent avec « nous » → mangeons." },
+            { sentence: "Tu ___ (finir) tes devoirs.", answer: "finis", hint: "finir – présent – tu", explanation: "Finir au présent avec « tu » → finis." },
+            { sentence: "Les oiseaux ___ (chanter) dans les arbres.", answer: "chantent", hint: "chanter – présent – ils", explanation: "Chanter au présent avec « ils » → chantent." },
+            { sentence: "Je ___ (prendre) le bus chaque matin.", answer: "prends", hint: "prendre – présent – je", explanation: "Prendre au présent avec « je » → prends." },
+            { sentence: "Vous ___ (aller) au marché le samedi.", answer: "allez", hint: "aller – présent – vous", explanation: "Aller au présent avec « vous » → allez." },
+            { sentence: "Elle ___ (être) très contente.", answer: "est", hint: "être – présent – elle", explanation: "Être au présent avec « elle » → est." },
+            { sentence: "Nous ___ (avoir) un contrôle demain.", answer: "avons", hint: "avoir – présent – nous", explanation: "Avoir au présent avec « nous » → avons." },
+            { sentence: "Tu ___ (venir) avec moi ?", answer: "viens", hint: "venir – présent – tu", explanation: "Venir au présent avec « tu » → viens." },
+            { sentence: "Je ___ (dire) la vérité.", answer: "dis", hint: "dire – présent – je", explanation: "Dire au présent avec « je » → dis." },
+            { sentence: "Nous ___ (écrire) une lettre.", answer: "écrivons", hint: "écrire – présent – nous", explanation: "Écrire au présent avec « nous » → écrivons." },
+            { sentence: "Vous ___ (faire) du sport le mercredi.", answer: "faites", hint: "faire – présent – vous", explanation: "Faire au présent avec « vous » → faites." },
+            { sentence: "Il ___ (savoir) nager.", answer: "sait", hint: "savoir – présent – il", explanation: "Savoir au présent avec « il » → sait." },
+            { sentence: "Les enfants ___ (grandir) vite.", answer: "grandissent", hint: "grandir – présent – ils", explanation: "Grandir au présent avec « ils » → grandissent (2e groupe : -issent)." },
+            { sentence: "Tu ___ (pouvoir) m'aider ?", answer: "peux", hint: "pouvoir – présent – tu", explanation: "Pouvoir au présent avec « tu » → peux." },
+            { sentence: "Je ___ (voir) le sommet de la montagne.", answer: "vois", hint: "voir – présent – je", explanation: "Voir au présent avec « je » → vois." },
+            { sentence: "Nous ___ (choisir) un livre à la bibliothèque.", answer: "choisissons", hint: "choisir – présent – nous", explanation: "Choisir au présent avec « nous » → choisissons (2e groupe)." },
+            { sentence: "Vous ___ (vouloir) du dessert ?", answer: "voulez", hint: "vouloir – présent – vous", explanation: "Vouloir au présent avec « vous » → voulez." },
+            { sentence: "Elle ___ (mettre) son manteau.", answer: "met", hint: "mettre – présent – elle", explanation: "Mettre au présent avec « elle » → met." },
+            { sentence: "Les chats ___ (dormir) beaucoup.", answer: "dorment", hint: "dormir – présent – ils", explanation: "Dormir au présent avec « ils » → dorment." },
+            { sentence: "Tu ___ (lire) un roman passionnant.", answer: "lis", hint: "lire – présent – tu", explanation: "Lire au présent avec « tu » → lis." },
+            { sentence: "Je ___ (devoir) me dépêcher.", answer: "dois", hint: "devoir – présent – je", explanation: "Devoir au présent avec « je » → dois." },
+            { sentence: "Nous ___ (courir) dans le parc.", answer: "courons", hint: "courir – présent – nous", explanation: "Courir au présent avec « nous » → courons." },
+            { sentence: "Vous ___ (apprendre) le français.", answer: "apprenez", hint: "apprendre – présent – vous", explanation: "Apprendre au présent avec « vous » → apprenez." },
+            { sentence: "Elles ___ (partir) en vacances.", answer: "partent", hint: "partir – présent – elles", explanation: "Partir au présent avec « elles » → partent." },
+            { sentence: "Je ___ (croire) en toi.", answer: "crois", hint: "croire – présent – je", explanation: "Croire au présent avec « je » → crois." },
+            { sentence: "Il ___ (peindre) un tableau.", answer: "peint", hint: "peindre – présent – il", explanation: "Peindre au présent avec « il » → peint." },
+            { sentence: "Tu ___ (sortir) ce soir ?", answer: "sors", hint: "sortir – présent – tu", explanation: "Sortir au présent avec « tu » → sors." },
+            { sentence: "Nous ___ (boire) de l'eau fraîche.", answer: "buvons", hint: "boire – présent – nous", explanation: "Boire au présent avec « nous » → buvons." },
+            { sentence: "Vous ___ (connaître) cette chanson ?", answer: "connaissez", hint: "connaître – présent – vous", explanation: "Connaître au présent avec « vous » → connaissez." },
+            { sentence: "Les poules ___ (pondre) des œufs.", answer: "pondent", hint: "pondre – présent – elles", explanation: "Pondre au présent avec « elles » → pondent." },
+
+            // ─── Imparfait ───
+            { sentence: "Avant, je ___ (jouer) dans le jardin.", answer: "jouais", hint: "jouer – imparfait – je", explanation: "Jouer à l'imparfait avec « je » → jouais." },
+            { sentence: "Nous ___ (faire) du vélo tous les jours.", answer: "faisions", hint: "faire – imparfait – nous", explanation: "Faire à l'imparfait avec « nous » → faisions." },
+            { sentence: "Tu ___ (être) en CE2 l'an dernier.", answer: "étais", hint: "être – imparfait – tu", explanation: "Être à l'imparfait avec « tu » → étais." },
+            { sentence: "Les enfants ___ (courir) dans la cour.", answer: "couraient", hint: "courir – imparfait – ils", explanation: "Courir à l'imparfait avec « ils » → couraient." },
+            { sentence: "Elle ___ (avoir) un chat roux.", answer: "avait", hint: "avoir – imparfait – elle", explanation: "Avoir à l'imparfait avec « elle » → avait." },
+            { sentence: "Vous ___ (partir) toujours en avance.", answer: "partiez", hint: "partir – imparfait – vous", explanation: "Partir à l'imparfait avec « vous » → partiez." },
+            { sentence: "Il ___ (pleuvoir) tous les après-midi.", answer: "pleuvait", hint: "pleuvoir – imparfait – il", explanation: "Pleuvoir à l'imparfait → il pleuvait." },
+            { sentence: "Nous ___ (aller) à la mer chaque été.", answer: "allions", hint: "aller – imparfait – nous", explanation: "Aller à l'imparfait avec « nous » → allions." },
+            { sentence: "Tu ___ (vouloir) un vélo rouge.", answer: "voulais", hint: "vouloir – imparfait – tu", explanation: "Vouloir à l'imparfait avec « tu » → voulais." },
+            { sentence: "Les voisins ___ (chanter) le soir.", answer: "chantaient", hint: "chanter – imparfait – ils", explanation: "Chanter à l'imparfait avec « ils » → chantaient." },
+            { sentence: "Je ___ (lire) des bandes dessinées.", answer: "lisais", hint: "lire – imparfait – je", explanation: "Lire à l'imparfait avec « je » → lisais." },
+            { sentence: "Vous ___ (manger) toujours ensemble.", answer: "mangiez", hint: "manger – imparfait – vous", explanation: "Manger à l'imparfait avec « vous » → mangiez." },
+            { sentence: "Ma grand-mère ___ (préparer) des crêpes.", answer: "préparait", hint: "préparer – imparfait – elle", explanation: "Préparer à l'imparfait avec « elle » → préparait." },
+            { sentence: "On ___ (voir) les étoiles la nuit.", answer: "voyait", hint: "voir – imparfait – on", explanation: "Voir à l'imparfait avec « on » → voyait." },
+            { sentence: "Nous ___ (finir) nos devoirs avant le dîner.", answer: "finissions", hint: "finir – imparfait – nous", explanation: "Finir à l'imparfait avec « nous » → finissions (2e groupe)." },
+            { sentence: "Tu ___ (prendre) le train chaque matin.", answer: "prenais", hint: "prendre – imparfait – tu", explanation: "Prendre à l'imparfait avec « tu » → prenais." },
+            { sentence: "Les élèves ___ (écrire) dans leur cahier.", answer: "écrivaient", hint: "écrire – imparfait – ils", explanation: "Écrire à l'imparfait avec « ils » → écrivaient." },
+            { sentence: "Je ___ (savoir) cette leçon par cœur.", answer: "savais", hint: "savoir – imparfait – je", explanation: "Savoir à l'imparfait avec « je » → savais." },
+            { sentence: "Vous ___ (dire) toujours bonjour.", answer: "disiez", hint: "dire – imparfait – vous", explanation: "Dire à l'imparfait avec « vous » → disiez." },
+            { sentence: "Elle ___ (mettre) une robe bleue.", answer: "mettait", hint: "mettre – imparfait – elle", explanation: "Mettre à l'imparfait avec « elle » → mettait." },
+
+            // ─── Futur ───
+            { sentence: "Demain, il ___ (pleuvoir).", answer: "pleuvra", hint: "pleuvoir – futur – il", explanation: "Pleuvoir au futur → il pleuvra." },
+            { sentence: "Nous ___ (visiter) le musée la semaine prochaine.", answer: "visiterons", hint: "visiter – futur – nous", explanation: "Visiter au futur avec « nous » → visiterons." },
+            { sentence: "Tu ___ (pouvoir) venir demain.", answer: "pourras", hint: "pouvoir – futur – tu", explanation: "Pouvoir au futur avec « tu » → pourras." },
+            { sentence: "Elles ___ (danser) au spectacle de l'école.", answer: "danseront", hint: "danser – futur – elles", explanation: "Danser au futur avec « elles » → danseront." },
+            { sentence: "Je ___ (voir) mes grands-parents ce week-end.", answer: "verrai", hint: "voir – futur – je", explanation: "Voir au futur avec « je » → verrai." },
+            { sentence: "Vous ___ (devoir) réviser pour le contrôle.", answer: "devrez", hint: "devoir – futur – vous", explanation: "Devoir au futur avec « vous » → devrez." },
+            { sentence: "Il ___ (faire) beau demain.", answer: "fera", hint: "faire – futur – il", explanation: "Faire au futur avec « il » → fera." },
+            { sentence: "Nous ___ (être) en vacances bientôt.", answer: "serons", hint: "être – futur – nous", explanation: "Être au futur avec « nous » → serons." },
+            { sentence: "Tu ___ (avoir) dix ans en juin.", answer: "auras", hint: "avoir – futur – tu", explanation: "Avoir au futur avec « tu » → auras." },
+            { sentence: "Je ___ (venir) te chercher à la gare.", answer: "viendrai", hint: "venir – futur – je", explanation: "Venir au futur avec « je » → viendrai." },
+            { sentence: "Les enfants ___ (grandir) et deviendront grands.", answer: "grandiront", hint: "grandir – futur – ils", explanation: "Grandir au futur avec « ils » → grandiront." },
+            { sentence: "Vous ___ (aller) au cinéma samedi.", answer: "irez", hint: "aller – futur – vous", explanation: "Aller au futur avec « vous » → irez." },
+            { sentence: "Elle ___ (savoir) la réponse demain.", answer: "saura", hint: "savoir – futur – elle", explanation: "Savoir au futur avec « elle » → saura." },
+            { sentence: "Nous ___ (courir) le marathon en mai.", answer: "courrons", hint: "courir – futur – nous", explanation: "Courir au futur avec « nous » → courrons (deux r !)." },
+            { sentence: "Tu ___ (envoyer) la lettre demain.", answer: "enverras", hint: "envoyer – futur – tu", explanation: "Envoyer au futur avec « tu » → enverras." },
+            { sentence: "Je ___ (mettre) mon plus beau costume.", answer: "mettrai", hint: "mettre – futur – je", explanation: "Mettre au futur avec « je » → mettrai." },
+            { sentence: "Ils ___ (prendre) l'avion pour la première fois.", answer: "prendront", hint: "prendre – futur – ils", explanation: "Prendre au futur avec « ils » → prendront." },
+            { sentence: "Vous ___ (écrire) une rédaction.", answer: "écrirez", hint: "écrire – futur – vous", explanation: "Écrire au futur avec « vous » → écrirez." },
+            { sentence: "Elle ___ (vouloir) sûrement venir.", answer: "voudra", hint: "vouloir – futur – elle", explanation: "Vouloir au futur avec « elle » → voudra." },
+            { sentence: "On ___ (manger) des crêpes à la Chandeleur.", answer: "mangera", hint: "manger – futur – on", explanation: "Manger au futur avec « on » → mangera." },
+
+            // ─── Passé composé ───
+            { sentence: "J'___ (manger) une pomme.", answer: "ai mangé", hint: "manger – passé composé – je", explanation: "Manger au passé composé avec « je » → j'ai mangé." },
+            { sentence: "Elle ___ (partir) à huit heures.", answer: "est partie", hint: "partir – passé composé – elle", explanation: "Partir au passé composé avec « elle » → est partie (auxiliaire être)." },
+            { sentence: "Nous ___ (finir) nos devoirs.", answer: "avons fini", hint: "finir – passé composé – nous", explanation: "Finir au passé composé avec « nous » → avons fini." },
+            { sentence: "Ils ___ (aller) au cinéma.", answer: "sont allés", hint: "aller – passé composé – ils", explanation: "Aller au passé composé avec « ils » → sont allés (auxiliaire être)." },
+            { sentence: "Tu ___ (prendre) ton petit-déjeuner ?", answer: "as pris", hint: "prendre – passé composé – tu", explanation: "Prendre au passé composé avec « tu » → as pris." },
+            { sentence: "Elle ___ (tomber) dans la cour.", answer: "est tombée", hint: "tomber – passé composé – elle", explanation: "Tomber au passé composé avec « elle » → est tombée (auxiliaire être)." },
+            { sentence: "Nous ___ (voir) un arc-en-ciel.", answer: "avons vu", hint: "voir – passé composé – nous", explanation: "Voir au passé composé avec « nous » → avons vu." },
+            { sentence: "Vous ___ (écrire) une lettre.", answer: "avez écrit", hint: "écrire – passé composé – vous", explanation: "Écrire au passé composé avec « vous » → avez écrit." },
+            { sentence: "J'___ (venir) dès que possible.", answer: "suis venu", hint: "venir – passé composé – je", explanation: "Venir au passé composé avec « je » → suis venu (auxiliaire être)." },
+            { sentence: "Les filles ___ (arriver) en retard.", answer: "sont arrivées", hint: "arriver – passé composé – elles", explanation: "Arriver au passé composé avec « elles » → sont arrivées (auxiliaire être, fém. pluriel)." },
+            { sentence: "Il ___ (lire) ce livre en une journée.", answer: "a lu", hint: "lire – passé composé – il", explanation: "Lire au passé composé avec « il » → a lu." },
+            { sentence: "Tu ___ (faire) un beau dessin.", answer: "as fait", hint: "faire – passé composé – tu", explanation: "Faire au passé composé avec « tu » → as fait." },
+            { sentence: "Nous ___ (dire) la vérité.", answer: "avons dit", hint: "dire – passé composé – nous", explanation: "Dire au passé composé avec « nous » → avons dit." },
+            { sentence: "Elles ___ (descendre) au rez-de-chaussée.", answer: "sont descendues", hint: "descendre – passé composé – elles", explanation: "Descendre au passé composé avec « elles » → sont descendues (auxiliaire être)." },
+            { sentence: "J'___ (mettre) la table.", answer: "ai mis", hint: "mettre – passé composé – je", explanation: "Mettre au passé composé avec « je » → ai mis." },
+            { sentence: "Vous ___ (pouvoir) résoudre le problème.", answer: "avez pu", hint: "pouvoir – passé composé – vous", explanation: "Pouvoir au passé composé avec « vous » → avez pu." },
+
+            // ─── Passé simple ───
+            { sentence: "Il ___ (marcher) pendant des heures.", answer: "marcha", hint: "marcher – passé simple – il", explanation: "Marcher au passé simple avec « il » → marcha (1er groupe : -a)." },
+            { sentence: "Ils ___ (finir) leur repas en silence.", answer: "finirent", hint: "finir – passé simple – ils", explanation: "Finir au passé simple avec « ils » → finirent (2e groupe : -irent)." },
+            { sentence: "Elle ___ (prendre) la fuite.", answer: "prit", hint: "prendre – passé simple – elle", explanation: "Prendre au passé simple avec « elle » → prit." },
+            { sentence: "Le roi ___ (faire) construire un château.", answer: "fit", hint: "faire – passé simple – il", explanation: "Faire au passé simple avec « il » → fit." },
+            { sentence: "Les soldats ___ (partir) à l'aube.", answer: "partirent", hint: "partir – passé simple – ils", explanation: "Partir au passé simple avec « ils » → partirent." },
+            { sentence: "Je ___ (voir) une étoile filante.", answer: "vis", hint: "voir – passé simple – je", explanation: "Voir au passé simple avec « je » → vis." },
+            { sentence: "Elle ___ (être) surprise par la nouvelle.", answer: "fut", hint: "être – passé simple – elle", explanation: "Être au passé simple avec « elle » → fut." },
+            { sentence: "Il ___ (avoir) une idée géniale.", answer: "eut", hint: "avoir – passé simple – il", explanation: "Avoir au passé simple avec « il » → eut." },
+            { sentence: "Ils ___ (dire) adieu et partirent.", answer: "dirent", hint: "dire – passé simple – ils", explanation: "Dire au passé simple avec « ils » → dirent." },
+            { sentence: "Le chevalier ___ (venir) au secours de la princesse.", answer: "vint", hint: "venir – passé simple – il", explanation: "Venir au passé simple avec « il » → vint." },
+        ];
+
+        // ── NATURE DES MOTS ──
+        const natureQuestions = [
+            // ─── Noms ───
+            { sentence: "Le <span class='highlight'>chat</span> dort sur le canapé.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« chat » = nom commun (un être vivant)." },
+            { sentence: "La <span class='highlight'>montagne</span> est couverte de neige.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« montagne » = nom commun (un lieu)." },
+            { sentence: "Ma <span class='highlight'>sœur</span> est très gentille.", answer: "nom", choices: ["nom","verbe","adjectif","pronom"], explanation: "« sœur » = nom commun (une personne)." },
+            { sentence: "Le <span class='highlight'>courage</span> est une grande qualité.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« courage » = nom commun abstrait." },
+            { sentence: "J'adore la <span class='highlight'>musique</span> classique.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« musique » = nom commun." },
+            { sentence: "Les <span class='highlight'>étoiles</span> brillent dans le ciel.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« étoiles » = nom commun pluriel." },
+            { sentence: "La <span class='highlight'>liberté</span> est un droit fondamental.", answer: "nom", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« liberté » = nom commun abstrait." },
+            { sentence: "Le <span class='highlight'>boulanger</span> prépare le pain.", answer: "nom", choices: ["nom","verbe","adjectif","déterminant"], explanation: "« boulanger » = nom commun (un métier)." },
+
+            // ─── Verbes ───
+            { sentence: "Elle <span class='highlight'>mange</span> une pomme.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« mange » = verbe (action de manger)." },
+            { sentence: "Le chien <span class='highlight'>aboie</span> fort.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« aboie » = verbe (action du chien)." },
+            { sentence: "Le soleil <span class='highlight'>brille</span> dans le ciel.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« brille » = verbe (action du soleil)." },
+            { sentence: "Nous <span class='highlight'>partons</span> en vacances.", answer: "verbe", choices: ["nom","verbe","adjectif","pronom"], explanation: "« partons » = verbe partir conjugué." },
+            { sentence: "Le bébé <span class='highlight'>pleure</span> souvent la nuit.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« pleure » = verbe (action du bébé)." },
+            { sentence: "Les enfants <span class='highlight'>dessinent</span> avec des feutres.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« dessinent » = verbe dessiner conjugué." },
+            { sentence: "L'avion <span class='highlight'>atterrit</span> sur la piste.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« atterrit » = verbe atterrir conjugué." },
+            { sentence: "Le vent <span class='highlight'>souffle</span> très fort.", answer: "verbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« souffle » = verbe (action du vent)." },
+
+            // ─── Adjectifs ───
+            { sentence: "Le ciel est <span class='highlight'>bleu</span> aujourd'hui.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« bleu » = adjectif (décrit le ciel)." },
+            { sentence: "La <span class='highlight'>petite</span> fille joue dehors.", answer: "adjectif", choices: ["nom","verbe","adjectif","déterminant"], explanation: "« petite » = adjectif (décrit la fille)." },
+            { sentence: "Ce gâteau est <span class='highlight'>délicieux</span>.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« délicieux » = adjectif (décrit le gâteau)." },
+            { sentence: "Le renard est <span class='highlight'>rusé</span>.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« rusé » = adjectif (décrit le renard)." },
+            { sentence: "Cette maison est <span class='highlight'>immense</span>.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« immense » = adjectif (décrit la maison)." },
+            { sentence: "L'eau est <span class='highlight'>froide</span> ce matin.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« froide » = adjectif (décrit l'eau)." },
+            { sentence: "Un <span class='highlight'>énorme</span> chien garde la maison.", answer: "adjectif", choices: ["nom","verbe","adjectif","déterminant"], explanation: "« énorme » = adjectif (décrit le chien)." },
+            { sentence: "La route est <span class='highlight'>longue</span> jusqu'à la mer.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« longue » = adjectif (décrit la route)." },
+            { sentence: "Ces fleurs sont <span class='highlight'>magnifiques</span>.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« magnifiques » = adjectif (décrit les fleurs)." },
+            { sentence: "Le film était <span class='highlight'>passionnant</span>.", answer: "adjectif", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« passionnant » = adjectif (décrit le film)." },
+
+            // ─── Adverbes ───
+            { sentence: "Il court <span class='highlight'>vite</span> dans le parc.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« vite » = adverbe (modifie le verbe courir)." },
+            { sentence: "Elle parle <span class='highlight'>doucement</span>.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« doucement » = adverbe (modifie le verbe parler)." },
+            { sentence: "J'aime <span class='highlight'>beaucoup</span> la musique.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« beaucoup » = adverbe (modifie le verbe aimer)." },
+            { sentence: "Il est <span class='highlight'>très</span> grand pour son âge.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« très » = adverbe (modifie l'adjectif grand)." },
+            { sentence: "Tu chantes <span class='highlight'>bien</span>.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« bien » = adverbe (modifie le verbe chanter)." },
+            { sentence: "Elle ne vient <span class='highlight'>jamais</span> en retard.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« jamais » = adverbe de temps / négation." },
+            { sentence: "Le chat marche <span class='highlight'>silencieusement</span>.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« silencieusement » = adverbe (modifie le verbe marcher)." },
+            { sentence: "Il pleut <span class='highlight'>souvent</span> en automne.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« souvent » = adverbe de fréquence." },
+            { sentence: "Nous sommes <span class='highlight'>presque</span> arrivés.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« presque » = adverbe (modifie l'adjectif arrivés)." },
+            { sentence: "Elle court <span class='highlight'>rapidement</span>.", answer: "adverbe", choices: ["nom","verbe","adjectif","adverbe"], explanation: "« rapidement » = adverbe (modifie le verbe courir)." },
+
+            // ─── Déterminants ───
+            { sentence: "<span class='highlight'>Les</span> élèves lisent un livre.", answer: "déterminant", choices: ["nom","verbe","pronom","déterminant"], explanation: "« Les » = déterminant (article défini pluriel)." },
+            { sentence: "J'ai vu <span class='highlight'>trois</span> oiseaux.", answer: "déterminant", choices: ["nom","adjectif","adverbe","déterminant"], explanation: "« trois » = déterminant numéral (combien d'oiseaux)." },
+            { sentence: "<span class='highlight'>Mon</span> vélo est rouge.", answer: "déterminant", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« Mon » = déterminant possessif." },
+            { sentence: "Passe-moi <span class='highlight'>ce</span> crayon.", answer: "déterminant", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« ce » = déterminant démonstratif." },
+            { sentence: "<span class='highlight'>Chaque</span> élève a un cahier.", answer: "déterminant", choices: ["nom","adjectif","adverbe","déterminant"], explanation: "« Chaque » = déterminant indéfini." },
+            { sentence: "<span class='highlight'>Une</span> étoile brille dans le ciel.", answer: "déterminant", choices: ["nom","verbe","adverbe","déterminant"], explanation: "« Une » = déterminant (article indéfini)." },
+            { sentence: "Donne-moi <span class='highlight'>plusieurs</span> feuilles.", answer: "déterminant", choices: ["nom","adjectif","adverbe","déterminant"], explanation: "« plusieurs » = déterminant indéfini." },
+
+            // ─── Pronoms ───
+            { sentence: "<span class='highlight'>Il</span> joue au football.", answer: "pronom", choices: ["nom","verbe","pronom","déterminant"], explanation: "« Il » = pronom personnel sujet." },
+            { sentence: "<span class='highlight'>Nous</span> partons en vacances.", answer: "pronom", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« Nous » = pronom personnel sujet." },
+            { sentence: "Ce livre est à <span class='highlight'>moi</span>.", answer: "pronom", choices: ["nom","pronom","adjectif","adverbe"], explanation: "« moi » = pronom personnel tonique." },
+            { sentence: "<span class='highlight'>Celui-ci</span> est plus grand.", answer: "pronom", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« Celui-ci » = pronom démonstratif." },
+            { sentence: "<span class='highlight'>Qui</span> veut jouer ?", answer: "pronom", choices: ["nom","pronom","adverbe","déterminant"], explanation: "« Qui » = pronom interrogatif." },
+            { sentence: "Je <span class='highlight'>te</span> parle.", answer: "pronom", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« te » = pronom personnel COI." },
+            { sentence: "<span class='highlight'>Rien</span> ne l'arrête.", answer: "pronom", choices: ["nom","pronom","adverbe","déterminant"], explanation: "« Rien » = pronom indéfini." },
+            { sentence: "C'est <span class='highlight'>elle</span> qui a gagné.", answer: "pronom", choices: ["nom","pronom","adjectif","déterminant"], explanation: "« elle » = pronom personnel tonique." },
+
+            // ─── Prépositions ───
+            { sentence: "Le chat est <span class='highlight'>sous</span> la table.", answer: "préposition", choices: ["nom","adverbe","préposition","déterminant"], explanation: "« sous » = préposition (indique un lieu)." },
+            { sentence: "Il va <span class='highlight'>chez</span> le docteur.", answer: "préposition", choices: ["nom","adverbe","préposition","déterminant"], explanation: "« chez » = préposition (indique un lieu)." },
+            { sentence: "Le cadeau est <span class='highlight'>pour</span> toi.", answer: "préposition", choices: ["nom","adverbe","préposition","pronom"], explanation: "« pour » = préposition (indique le destinataire)." },
+            { sentence: "Il marche <span class='highlight'>vers</span> la maison.", answer: "préposition", choices: ["nom","adverbe","préposition","déterminant"], explanation: "« vers » = préposition (indique une direction)." },
+            { sentence: "On joue <span class='highlight'>dans</span> le jardin.", answer: "préposition", choices: ["nom","adverbe","préposition","déterminant"], explanation: "« dans » = préposition (indique un lieu)." },
+            { sentence: "Elle dessine <span class='highlight'>avec</span> des feutres.", answer: "préposition", choices: ["nom","adverbe","préposition","pronom"], explanation: "« avec » = préposition (indique le moyen)." },
+
+            // ─── Conjonctions ───
+            { sentence: "Il pleut <span class='highlight'>mais</span> il fait chaud.", answer: "conjonction", choices: ["nom","adverbe","préposition","conjonction"], explanation: "« mais » = conjonction de coordination (opposition)." },
+            { sentence: "Je mange <span class='highlight'>car</span> j'ai faim.", answer: "conjonction", choices: ["nom","adverbe","conjonction","préposition"], explanation: "« car » = conjonction de coordination (cause)." },
+            { sentence: "Ni toi <span class='highlight'>ni</span> moi ne pouvons venir.", answer: "conjonction", choices: ["pronom","adverbe","conjonction","préposition"], explanation: "« ni » = conjonction de coordination (négation)." },
+            { sentence: "Il rit <span class='highlight'>donc</span> il est content.", answer: "conjonction", choices: ["nom","adverbe","conjonction","préposition"], explanation: "« donc » = conjonction de coordination (conséquence)." },
+        ];
+
+        // ── ACCORDS ──
+        const accordQuestions = [
+            // ─── Adjectifs qualificatifs ───
+            { sentence: "Les filles sont ___.", answer: "contentes", choices: ["content","contente","contents","contentes"], explanation: "Féminin pluriel → contentes (les filles)." },
+            { sentence: "Le garçon est ___.", answer: "grand", choices: ["grand","grande","grands","grandes"], explanation: "Masculin singulier → grand (le garçon)." },
+            { sentence: "Ces fleurs sont très ___.", answer: "belles", choices: ["beau","belle","beaux","belles"], explanation: "Féminin pluriel → belles (ces fleurs)." },
+            { sentence: "Les chats ___ dorment au soleil.", answer: "noirs", choices: ["noir","noire","noirs","noires"], explanation: "Masculin pluriel → noirs (les chats)." },
+            { sentence: "Ma sœur est ___.", answer: "heureuse", choices: ["heureux","heureuse","heureux","heureuses"], explanation: "Féminin singulier → heureuse (ma sœur)." },
+            { sentence: "Les gâteaux sont ___.", answer: "délicieux", choices: ["délicieux","délicieuse","délicieux","délicieuses"], explanation: "Masculin pluriel → délicieux (les gâteaux)." },
+            { sentence: "La porte est ___.", answer: "ouverte", choices: ["ouvert","ouverte","ouverts","ouvertes"], explanation: "Féminin singulier → ouverte (la porte)." },
+            { sentence: "Les enfants sont ___ en classe.", answer: "attentifs", choices: ["attentif","attentive","attentifs","attentives"], explanation: "Masculin pluriel → attentifs (les enfants)." },
+            { sentence: "Cette histoire est très ___.", answer: "longue", choices: ["long","longue","longs","longues"], explanation: "Féminin singulier → longue (cette histoire)." },
+            { sentence: "Les pommes sont ___.", answer: "mûres", choices: ["mûr","mûre","mûrs","mûres"], explanation: "Féminin pluriel → mûres (les pommes)." },
+            { sentence: "Le livre est ___.", answer: "intéressant", choices: ["intéressant","intéressante","intéressants","intéressantes"], explanation: "Masculin singulier → intéressant (le livre)." },
+            { sentence: "Les étoiles sont ___.", answer: "brillantes", choices: ["brillant","brillante","brillants","brillantes"], explanation: "Féminin pluriel → brillantes (les étoiles)." },
+            { sentence: "La rivière est ___ et calme.", answer: "profonde", choices: ["profond","profonde","profonds","profondes"], explanation: "Féminin singulier → profonde (la rivière)." },
+            { sentence: "Les lions sont ___.", answer: "féroces", choices: ["féroce","féroces","féroce","féroces"], explanation: "Pluriel → féroces (les lions). « féroce » est invariable en genre." },
+            { sentence: "La robe est ___.", answer: "neuve", choices: ["neuf","neuve","neufs","neuves"], explanation: "Féminin singulier → neuve (la robe)." },
+            { sentence: "Les murs sont ___.", answer: "blancs", choices: ["blanc","blanche","blancs","blanches"], explanation: "Masculin pluriel → blancs (les murs)." },
+            { sentence: "Cette chanson est ___.", answer: "douce", choices: ["doux","douce","doux","douces"], explanation: "Féminin singulier → douce (cette chanson)." },
+            { sentence: "Les routes sont ___.", answer: "dangereuses", choices: ["dangereux","dangereuse","dangereux","dangereuses"], explanation: "Féminin pluriel → dangereuses (les routes)." },
+            { sentence: "Le château est très ___.", answer: "ancien", choices: ["ancien","ancienne","anciens","anciennes"], explanation: "Masculin singulier → ancien (le château)." },
+            { sentence: "Les chaises sont ___.", answer: "cassées", choices: ["cassé","cassée","cassés","cassées"], explanation: "Féminin pluriel → cassées (les chaises)." },
+            { sentence: "L'exercice est ___.", answer: "facile", choices: ["facile","faciles","facile","faciles"], explanation: "Singulier → facile (l'exercice). « facile » est invariable en genre." },
+            { sentence: "Les fenêtres sont ___.", answer: "fermées", choices: ["fermé","fermée","fermés","fermées"], explanation: "Féminin pluriel → fermées (les fenêtres)." },
+            { sentence: "Cette soupe est ___.", answer: "chaude", choices: ["chaud","chaude","chauds","chaudes"], explanation: "Féminin singulier → chaude (cette soupe)." },
+            { sentence: "Les garçons sont ___.", answer: "sportifs", choices: ["sportif","sportive","sportifs","sportives"], explanation: "Masculin pluriel → sportifs (les garçons)." },
+            { sentence: "La mer est ___ aujourd'hui.", answer: "calme", choices: ["calme","calmes","calme","calmes"], explanation: "Singulier → calme (la mer). « calme » est invariable en genre." },
+            { sentence: "Les montagnes sont ___.", answer: "hautes", choices: ["haut","haute","hauts","hautes"], explanation: "Féminin pluriel → hautes (les montagnes)." },
+
+            // ─── Participes passés avec être ───
+            { sentence: "La lettre est ___ par le facteur.", answer: "apportée", choices: ["apporté","apportée","apportés","apportées"], explanation: "Avec « être », le participe s'accorde : fém. sing. → apportée (la lettre)." },
+            { sentence: "Les arbres sont ___ par le vent.", answer: "secoués", choices: ["secoué","secouée","secoués","secouées"], explanation: "Avec « être » : masc. pluriel → secoués (les arbres)." },
+            { sentence: "Ma mère est ___ au magasin.", answer: "allée", choices: ["allé","allée","allés","allées"], explanation: "Avec « être » : fém. sing. → allée (ma mère)." },
+            { sentence: "Les feuilles sont ___ des arbres.", answer: "tombées", choices: ["tombé","tombée","tombés","tombées"], explanation: "Avec « être » : fém. pluriel → tombées (les feuilles)." },
+            { sentence: "Les garçons sont ___ à l'heure.", answer: "arrivés", choices: ["arrivé","arrivée","arrivés","arrivées"], explanation: "Avec « être » : masc. pluriel → arrivés (les garçons)." },
+            { sentence: "La maison est ___ en pierre.", answer: "construite", choices: ["construit","construite","construits","construites"], explanation: "Avec « être » : fém. sing. → construite (la maison)." },
+            { sentence: "Les bougies sont ___.", answer: "éteintes", choices: ["éteint","éteinte","éteints","éteintes"], explanation: "Avec « être » : fém. pluriel → éteintes (les bougies)." },
+            { sentence: "Le message est ___ sur le tableau.", answer: "écrit", choices: ["écrit","écrite","écrits","écrites"], explanation: "Avec « être » : masc. sing. → écrit (le message)." },
+
+            // ─── Accord sujet-verbe ───
+            { sentence: "Les oiseaux ___ dans le ciel.", answer: "volent", choices: ["vole","volent","voles","volons"], explanation: "Sujet pluriel « les oiseaux » → volent (3e pers. pluriel)." },
+            { sentence: "Ma mère et moi ___ au marché.", answer: "allons", choices: ["va","vais","allons","allez"], explanation: "« Ma mère et moi » = nous → allons." },
+            { sentence: "Le chien ___ dans le jardin.", answer: "court", choices: ["court","courent","cours","courons"], explanation: "Sujet singulier « le chien » → court (3e pers. singulier)." },
+            { sentence: "Les nuages ___ le soleil.", answer: "cachent", choices: ["cache","cachent","caches","cachons"], explanation: "Sujet pluriel « les nuages » → cachent." },
+            { sentence: "Toi et moi ___ des amis.", answer: "sommes", choices: ["est","êtes","sommes","sont"], explanation: "« Toi et moi » = nous → sommes." },
+            { sentence: "La pluie et le vent ___ violents.", answer: "sont", choices: ["est","sont","suis","sommes"], explanation: "Deux sujets coordonnés → sont (pluriel)." },
+            { sentence: "Qui ___ à la porte ?", answer: "frappe", choices: ["frappe","frappent","frappes","frappons"], explanation: "« Qui » sujet singulier → frappe." },
+            { sentence: "Les élèves et leur professeur ___ en sortie.", answer: "partent", choices: ["part","partent","partons","partez"], explanation: "Sujets coordonnés = ils → partent." },
+
+            // ─── Accord déterminant + nom ───
+            { sentence: "___ tables sont rangées.", answer: "Les", choices: ["Le","La","Les","Un"], explanation: "« tables » = féminin pluriel → Les." },
+            { sentence: "J'ai vu ___ éléphant au zoo.", answer: "un", choices: ["un","une","des","le"], explanation: "« éléphant » = masculin singulier → un." },
+            { sentence: "___ chatte dort sur le fauteuil.", answer: "La", choices: ["Le","La","Les","Un"], explanation: "« chatte » = féminin singulier → La." },
+            { sentence: "Il a acheté ___ crayons.", answer: "des", choices: ["un","une","le","des"], explanation: "« crayons » = pluriel → des." },
+        ];
+
+        // ═══════════════════════════════════════
+        // Banque par mode — on pioche aléatoirement
+        // ═══════════════════════════════════════
+        let usedIndices = {};  // per-mode used indices
+
+        function pickQuestion(bank, mode) {
+            // 1. Try AI-generated question first
+            if (Ollama.isReady) {
+                const aiQ = Ollama.getQuestion(mode);
+                if (aiQ) {
+                    console.log(`[Grammar] Using AI question for ${mode}`);
+                    return aiQ;
+                }
+            }
+
+            // 2. Fallback to static bank
+            if (!usedIndices[mode]) usedIndices[mode] = [];
+            if (usedIndices[mode].length >= bank.length) usedIndices[mode] = [];
+            let idx;
+            do { idx = randInt(0, bank.length - 1); } while (usedIndices[mode].includes(idx));
+            usedIndices[mode].push(idx);
+            return bank[idx];
+        }
+
+        function getBank() {
+            switch (gameMode) {
+                case 'homophones':  return homophoneQuestions;
+                case 'conjugaison': return conjugaisonQuestions;
+                case 'nature':      return natureQuestions;
+                case 'accord':      return accordQuestions;
+            }
+        }
+
+        // ═══════════════════════════════════════
+        // Required by shared.js
+        // ═══════════════════════════════════════
+
+        function generateQuestion() {
+            switch (gameMode) {
+                case 'homophones':  generateHomophone(); break;
+                case 'conjugaison': generateConjugaison(); break;
+                case 'nature':      generateNature(); break;
+                case 'accord':      generateAccord(); break;
+            }
+        }
+
+        // ── HOMOPHONES ──
+        function generateHomophone() {
+            const q = pickQuestion(homophoneQuestions, 'homophones');
+            cardModeLabel.textContent = 'Choisis le bon homophone';
+
+            const display = q.sentence.replace('___', '<span class="blank">???</span>');
+            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
+
+            currentAnswer = q.answer.toLowerCase();
+            currentExplanation = q.explanation;
+
+            const btns = shuffle(q.choices).map(c =>
+                `<button class="choice-btn" onclick="validateChoice('${c}')">${c}</button>`
+            ).join('');
+            answerZone.innerHTML = `<div class="choice-btns">${btns}</div>`;
+        }
+
+        // ── CONJUGAISON ──
+        function generateConjugaison() {
+            const q = pickQuestion(conjugaisonQuestions, 'conjugaison');
+            cardModeLabel.textContent = 'Conjugue le verbe';
+
+            const display = q.sentence.replace('___', '<span class="blank">???</span>');
+            questionArea.innerHTML = `
+                <div class="sentence-text">${display}</div>
+                <div class="instruction">${q.hint}</div>`;
+
+            currentAnswer = q.answer.toLowerCase();
+            currentExplanation = q.explanation;
+
+            answerZone.innerHTML = `
+                <input type="text" class="answer-input" id="grammar-input" placeholder="?" autocomplete="off" autocapitalize="off" spellcheck="false">
+                <button class="btn-validate" onclick="validateAnswer()">OK</button>
+            `;
+            setTimeout(() => document.getElementById('grammar-input').focus(), 100);
+        }
+
+        // ── NATURE DES MOTS ──
+        function generateNature() {
+            const q = pickQuestion(natureQuestions, 'nature');
+            cardModeLabel.textContent = 'Quelle est la nature du mot ?';
+
+            questionArea.innerHTML = `<div class="sentence-text">${q.sentence}</div>`;
+
+            currentAnswer = q.answer.toLowerCase();
+            currentExplanation = q.explanation;
+
+            const btns = shuffle(q.choices).map(c =>
+                `<button class="choice-btn" onclick="validateChoice('${c}')">${c}</button>`
+            ).join('');
+            answerZone.innerHTML = `<div class="choice-btns">${btns}</div>`;
+        }
+
+        // ── ACCORDS ──
+        function generateAccord() {
+            const q = pickQuestion(accordQuestions, 'accord');
+            cardModeLabel.textContent = 'Choisis le bon accord';
+
+            const display = q.sentence.replace('___', '<span class="blank">???</span>');
+            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
+
+            currentAnswer = q.answer.toLowerCase();
+            currentExplanation = q.explanation;
+
+            // Deduplicate choices for display
+            const unique = [...new Set(q.choices)];
+            const btns = shuffle(unique).map(c =>
+                `<button class="choice-btn" onclick="validateChoice('${c}')">${c}</button>`
+            ).join('');
+            answerZone.innerHTML = `<div class="choice-btns">${btns}</div>`;
+        }
+
+        // ═══════════════════════════════════════
+        // Validation
+        // ═══════════════════════════════════════
+        function validateChoice(choice) {
+            if (isFlipped) return;
+            const isCorrect = choice.toLowerCase() === currentAnswer;
+            explanationEl.textContent = currentExplanation;
+            showResult(isCorrect, currentAnswer);
+        }
+
+        function validateAnswer() {
+            if (isFlipped) return;
+            const input = document.getElementById('grammar-input');
+            const userVal = input.value.trim().toLowerCase();
+
+            if (!userVal) {
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+                return;
+            }
+
+            const isCorrect = userVal === currentAnswer;
+            input.disabled = true;
+            explanationEl.textContent = currentExplanation;
+            showResult(isCorrect, currentAnswer);
+        }
+
+        function getFocusInput() {
+            return document.getElementById('grammar-input');
+        }
+
+        function canEnterValidate() {
+            // Only allow Enter for text-input modes
+            return gameMode === 'conjugaison';
+        }
+
+        // ═══════════════════════════════════════
+        // Log panel toggle
+        // ═══════════════════════════════════════
+        function toggleLog() {
+            document.getElementById('log-panel').classList.toggle('visible');
+        }
+        Ollama.attachLog(document.getElementById('log-panel'));
+
+        // ═══════════════════════════════════════
+        // Ollama auto-discovery on page load
+        // ═══════════════════════════════════════
+        const aiStatusEl   = document.getElementById('ai-status');
+        const aiStatusText = document.getElementById('ai-status-text');
+
+        Ollama.onStatus = (status, url, model) => {
+            aiStatusEl.className = 'ai-status ' + status;
+            switch (status) {
+                case 'searching':
+                    aiStatusText.textContent = '🔍 Recherche du serveur IA…';
+                    break;
+                case 'found':
+                    const shortModel = model.split(':')[0];
+                    aiStatusText.textContent = `🤖 IA connectée (${shortModel})`;
+                    break;
+                case 'offline':
+                    aiStatusText.textContent = '📦 Mode hors-ligne (banque locale)';
+                    break;
+            }
+        };
+
+        // Start discovery immediately
+        Ollama.discover().then(found => {
+            if (found) {
+                Ollama.prefill(['homophones', 'conjugaison', 'nature', 'accord']);
+            }
+        });
+    </script>
+</body>
+</html>
