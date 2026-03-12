@@ -102,11 +102,10 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 10px;
-            padding: 6px 12px;
+            padding: 4px 10px;
             border-radius: 999px;
             font-family: 'Fredoka One', cursive;
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             letter-spacing: 0.5px;
             text-transform: uppercase;
             color: #fff;
@@ -120,6 +119,42 @@
         .question-source-badge.local {
             background: linear-gradient(135deg, #4facfe, #00f2fe);
             box-shadow: 0 4px 12px rgba(79,172,254,0.35);
+        }
+
+        /* ── In-game AI indicator ── */
+        .ingame-ai-indicator {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: rgba(255,255,255,0.85);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            white-space: nowrap;
+        }
+
+        .ingame-ai-indicator .ai-mini-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .ingame-ai-indicator .ai-mini-dot.generating {
+            background: #ffd700;
+            animation: pulse-dot 1s infinite alternate;
+        }
+
+        .ingame-ai-indicator .ai-mini-dot.idle {
+            background: #43e97b;
+        }
+
+        .ingame-ai-indicator .ai-mini-dot.offline {
+            background: #ff5858;
         }
 
         .card-front .instruction {
@@ -180,11 +215,25 @@
         }
 
         /* ── AI status indicator ── */
+        .ai-control-panel {
+            width: 100%;
+            max-width: 520px;
+            margin: 14px auto 0;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
         .ai-status {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            margin-top: 14px;
             padding: 8px 18px;
             border-radius: 30px;
             background: rgba(255,255,255,0.12);
@@ -214,6 +263,42 @@
 
         .ai-status.offline .ai-dot {
             background: #ff5858;
+        }
+
+        .ai-model-picker {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.85);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            width: 100%;
+        }
+
+        .ai-model-picker label {
+            opacity: 0.9;
+        }
+
+        .ai-model-picker select {
+            min-width: 230px;
+            max-width: 100%;
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            backdrop-filter: blur(8px);
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .ai-model-picker select option {
+            color: #222;
+            background: #fff;
         }
 
         @keyframes pulse-dot {
@@ -271,6 +356,10 @@
             .card-back .result { font-size: 1.6rem; }
             .choice-btn { font-size: 1rem; padding: 10px 16px; min-width: 70px; }
             .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
+            .ai-control-panel { padding: 10px; gap: 8px; }
+            .ai-model-picker { flex-direction: column; align-items: stretch; }
+            .ai-model-picker label { text-align: left; margin-left: 2px; }
+            .ai-model-picker select { min-width: 100%; }
         }
     </style>
 </head>
@@ -300,9 +389,15 @@
         </div>
 
         <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
-        <div class="ai-status searching" id="ai-status">
-            <span class="ai-dot"></span>
-            <span id="ai-status-text">🔍 Recherche du serveur IA…</span>
+        <div class="ai-control-panel" id="ai-control-panel">
+            <div class="ai-status searching" id="ai-status">
+                <span class="ai-dot"></span>
+                <span id="ai-status-text">🔍 Recherche du serveur IA…</span>
+            </div>
+            <div class="ai-model-picker" id="ai-model-picker">
+                <label for="ai-model-select">Modèle IA</label>
+                <select id="ai-model-select" aria-label="Choisir le modèle IA"></select>
+            </div>
         </div>
         <br>
         <button class="log-toggle" onclick="toggleLog()">📋 Voir les logs</button>
@@ -318,6 +413,7 @@
         <div class="game-controls">
             <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
             <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
+            <span class="ingame-ai-indicator" id="ingame-ai-indicator"></span>
         </div>
 
         <div class="stats-bar">
@@ -416,10 +512,33 @@
 
         function sourceBadgeHtml() {
             if (currentQuestionSource === 'ai') {
-                return `<div class="question-source-badge ai">✨ Question IA</div>`;
+                return `<div class="question-source-badge ai">✨ IA</div>`;
             }
-            return `<div class="question-source-badge local">📚 Banque locale</div>`;
+            return `<div class="question-source-badge local">📚 Locale</div>`;
         }
+
+        function updateIngameAiIndicator() {
+            const el = document.getElementById('ingame-ai-indicator');
+            if (!el) return;
+
+            if (!Ollama.isReady) {
+                el.innerHTML = `<span class="ai-mini-dot offline"></span> Hors-ligne`;
+                return;
+            }
+
+            const count = Ollama.bufferCount(gameMode);
+            const generating = Ollama.isGenerating;
+
+            if (generating) {
+                el.innerHTML = `<span class="ai-mini-dot generating"></span> IA… ${count} prête${count > 1 ? 's' : ''}`;
+            } else if (count > 0) {
+                el.innerHTML = `<span class="ai-mini-dot idle"></span> IA : ${count} prête${count > 1 ? 's' : ''}`;
+            } else {
+                el.innerHTML = `<span class="ai-mini-dot idle"></span> IA : 0`;
+            }
+        }
+
+        setInterval(updateIngameAiIndicator, 1000);
 
         // ═══════════════════════════════════════
         // Question banks
@@ -982,30 +1101,64 @@
         // ═══════════════════════════════════════
         const aiStatusEl   = document.getElementById('ai-status');
         const aiStatusText = document.getElementById('ai-status-text');
+        const aiModelPicker = document.getElementById('ai-model-picker');
+        const aiModelSelect = document.getElementById('ai-model-select');
+
+        function refreshModelPicker(selectedModel) {
+            const models = Ollama.models || [];
+            if (!models || models.length <= 1) {
+                aiModelPicker.style.display = 'none';
+                aiModelSelect.innerHTML = '';
+                return;
+            }
+
+            aiModelPicker.style.display = 'flex';
+            const currentOptions = Array.from(aiModelSelect.options).map(o => o.value);
+            const sameList = currentOptions.length === models.length && currentOptions.every((v, i) => v === models[i]);
+
+            if (!sameList) {
+                aiModelSelect.innerHTML = '';
+                models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    aiModelSelect.appendChild(option);
+                });
+            }
+
+            aiModelSelect.value = selectedModel;
+        }
+
+        aiModelSelect.addEventListener('change', (e) => {
+            const chosen = e.target.value;
+            const ok = Ollama.setModel(chosen);
+            if (!ok) {
+                aiModelSelect.value = Ollama.model || '';
+            }
+        });
 
         Ollama.onStatus = (status, url, model, backendType) => {
             aiStatusEl.className = 'ai-status ' + status;
             switch (status) {
                 case 'searching':
                     aiStatusText.textContent = '🔍 Recherche du serveur IA…';
+                    aiModelPicker.style.display = 'none';
                     break;
                 case 'found':
                     const shortModel = model.split(':')[0];
                     const backendName = backendType === 'lmstudio' ? 'LM Studio' : 'Ollama';
                     aiStatusText.textContent = `🤖 ${backendName} (${shortModel})`;
+                    refreshModelPicker(model);
                     break;
                 case 'offline':
                     aiStatusText.textContent = '📦 Mode hors-ligne (banque locale)';
+                    aiModelPicker.style.display = 'none';
                     break;
             }
         };
 
         // Start discovery immediately
-        Ollama.discover().then(found => {
-            if (found) {
-                Ollama.prefill(['homophones', 'conjugaison', 'nature', 'accord']);
-            }
-        });
+        Ollama.discover();
     </script>
 </body>
 </html>

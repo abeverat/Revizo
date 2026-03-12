@@ -157,6 +157,11 @@ function startGame() {
     totalCards  = 0;
     scoreEl.textContent = '0';
 
+    // Start AI generation for the active mode only
+    if (typeof Ollama !== 'undefined' && Ollama.isReady && typeof gameMode !== 'undefined') {
+        Ollama.startBackgroundRefill(gameMode);
+    }
+
     startTimer();
     newRound();
 }
@@ -261,6 +266,7 @@ function continueGame() {
 
 function resetGame() {
     stopTimer();
+    if (typeof Ollama !== 'undefined') Ollama.stopBackgroundRefill();
     pauseScreen.style.display = 'none';
     gameScreen.style.display  = 'none';
     startScreen.style.display = 'block';
@@ -291,6 +297,7 @@ function resumeGame() {
 
 function stopSeries() {
     isPaused = false;
+    if (typeof Ollama !== 'undefined') Ollama.stopBackgroundRefill();
     ingamePauseOverlay.classList.remove('visible');
     showPauseScreen();
 }

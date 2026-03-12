@@ -4,11 +4,13 @@
 
 const Ollama = (() => {
     const CACHE_KEY = 'cartestoto.ai.target.v1';
+    const MODEL_CACHE_KEY = 'cartestoto.ai.model.v1';
     const FINAL_FALLBACK_HOSTS = ['192.168.1.229'];
 
     // ── State ──
     let serverUrl = null;
     let modelName = null;
+    let availableModels = [];
     let discovering = false;
     let ready = false;
     let backend = null; // 'ollama' | 'lmstudio'
@@ -233,6 +235,38 @@ const Ollama = (() => {
         } catch (_) {}
     }
 
+    function saveCachedModel(url, backendType, model) {
+        if (!url || !backendType || !model) return;
+        try {
+            localStorage.setItem(MODEL_CACHE_KEY, JSON.stringify({
+                url,
+                backend: backendType,
+                model,
+                ts: Date.now()
+            }));
+        } catch (_) {}
+    }
+
+    function loadCachedModel(url, backendType) {
+        try {
+            const raw = localStorage.getItem(MODEL_CACHE_KEY);
+            if (!raw) return null;
+            const data = JSON.parse(raw);
+            if (!data || !data.model) return null;
+
+            // Ignore stale cache after 14 days.
+            if (!data.ts || (Date.now() - data.ts) > 14 * 24 * 60 * 60 * 1000) {
+                localStorage.removeItem(MODEL_CACHE_KEY);
+                return null;
+            }
+
+            if (data.url !== url || data.backend !== backendType) return null;
+            return data.model;
+        } catch (_) {
+            return null;
+        }
+    }
+
     // ═══════════════════════════════════════
     // Discovery
     // ═══════════════════════════════════════
@@ -295,11 +329,17 @@ const Ollama = (() => {
     function finishDiscovery(result) {
         serverUrl = result.url;
         backend = result.backend;
+        availableModels = Array.isArray(result.models) ? [...result.models] : [];
         modelName = pickBestModel(result.models);
+        const cachedModel = loadCachedModel(serverUrl, backend);
+        if (cachedModel && availableModels.includes(cachedModel)) {
+            modelName = cachedModel;
+            log(`→ Modèle mémorisé restauré : ${modelName}`);
+        }
         ready = true;
         discovering = false;
         saveCachedTarget(serverUrl, backend);
-        startBackgroundRefill();
+        saveCachedModel(serverUrl, backend, modelName);
         const backendName = backend === 'lmstudio' ? 'LM Studio' : 'Ollama';
         log(`🎉 Serveur ${backendName} trouvé : ${serverUrl}`);
         log(`🤖 Modèle sélectionné : ${modelName}`);
@@ -467,6 +507,18 @@ const Ollama = (() => {
 
         log(`→ Modèle choisi : ${best} (score: ${bestScore})`);
         return best;
+    }
+
+    function setModel(nextModel) {
+        if (!ready) return false;
+        if (!nextModel || !availableModels.includes(nextModel)) return false;
+        if (modelName === nextModel) return true;
+
+        modelName = nextModel;
+        saveCachedModel(serverUrl, backend, modelName);
+        log(`🤖 Modèle changé : ${modelName}`);
+        setStatus('found');
+        return true;
     }
 
     // ═══════════════════════════════════════
@@ -734,16 +786,27 @@ Exemple de format :
         }
     }
 
-    function startBackgroundRefill() {
-        if (refillTimer) return;
+    let activeMode = null;
+
+    function startBackgroundRefill(mode) {
+        activeMode = mode;
+        if (refillTimer) clearInterval(refillTimer);
         refillTimer = setInterval(() => {
-            if (!ready) return;
-            for (const mode of Object.keys(buffer)) {
-                if (buffer[mode].length < BUFFER_TARGET) {
-                    enqueueFill(mode);
-                }
+            if (!ready || !activeMode) return;
+            if (buffer[activeMode].length < BUFFER_TARGET) {
+                enqueueFill(activeMode);
             }
         }, 2000);
+    }
+
+    function stopBackgroundRefill() {
+        activeMode = null;
+        if (refillTimer) {
+            clearInterval(refillTimer);
+            refillTimer = null;
+        }
+        fillQueue = [];
+        queuedModes.clear();
     }
 
     function getQuestion(mode) {
@@ -769,15 +832,21 @@ Exemple de format :
     return {
         discover,
         debugEndpoint,
+        setModel,
         getQuestion,
         prefill,
         fillBuffer,
+        startBackgroundRefill,
+        stopBackgroundRefill,
         attachLog,
         get isReady()  { return ready; },
         get server()   { return serverUrl; },
         get model()    { return modelName; },
+        get models()   { return [...availableModels]; },
         get backendType() { return backend; },
         get logs()     { return logLines; },
+        get isGenerating() { return filling.size > 0 || fillQueue.length > 0; },
+        bufferCount(mode) { return (buffer[mode] || []).length; },
         set onStatus(fn) { onStatusChange = fn; },
     };
 })();
