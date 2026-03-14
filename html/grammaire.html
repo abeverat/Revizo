@@ -98,65 +98,6 @@
             border-radius: 3px;
         }
 
-        .question-source-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.65rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: #fff;
-        }
-
-        .question-source-badge.ai {
-            background: linear-gradient(135deg, #ff9966, #ff5e62);
-            box-shadow: 0 4px 12px rgba(255,94,98,0.35);
-        }
-
-        .question-source-badge.local {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            box-shadow: 0 4px 12px rgba(79,172,254,0.35);
-        }
-
-        /* ── In-game AI indicator ── */
-        .ingame-ai-indicator {
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: rgba(255,255,255,0.85);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(8px);
-            white-space: nowrap;
-        }
-
-        .ingame-ai-indicator .ai-mini-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .ingame-ai-indicator .ai-mini-dot.generating {
-            background: #ffd700;
-            animation: pulse-dot 1s infinite alternate;
-        }
-
-        .ingame-ai-indicator .ai-mini-dot.idle {
-            background: #43e97b;
-        }
-
-        .ingame-ai-indicator .ai-mini-dot.offline {
-            background: #ff5858;
-        }
-
         .card-front .instruction {
             font-family: 'Fredoka One', cursive;
             font-size: 0.8rem;
@@ -214,266 +155,6 @@
             width: 200px;
         }
 
-        /* ── AI status indicator ── */
-        .ai-control-panel {
-            width: 100%;
-            max-width: 520px;
-            margin: 14px auto 0;
-            padding: 12px;
-            border-radius: 16px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.08);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .ai-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 18px;
-            border-radius: 30px;
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(10px);
-            color: rgba(255,255,255,0.8);
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.4s;
-        }
-
-        .ai-status .ai-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #aaa;
-            transition: background 0.4s;
-        }
-
-        .ai-status.searching .ai-dot {
-            background: #ffd700;
-            animation: pulse-dot 1s infinite alternate;
-        }
-
-        .ai-status.found .ai-dot {
-            background: #43e97b;
-        }
-
-        .ai-status.offline .ai-dot {
-            background: #ff5858;
-        }
-
-        .ai-model-picker {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: rgba(255,255,255,0.85);
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            width: 100%;
-        }
-
-        .ai-model-picker label {
-            opacity: 0.9;
-        }
-
-        .ai-model-picker select {
-            min-width: 230px;
-            max-width: 100%;
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 2px solid rgba(255,255,255,0.4);
-            background: rgba(255,255,255,0.15);
-            color: #fff;
-            backdrop-filter: blur(8px);
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            outline: none;
-        }
-
-        .ai-model-picker select option {
-            color: #222;
-            background: #fff;
-        }
-
-        @keyframes pulse-dot {
-            from { opacity: 0.4; transform: scale(0.8); }
-            to   { opacity: 1;   transform: scale(1.2); }
-        }
-
-        /* ── Log panel ── */
-        .log-toggle {
-            display: inline-block;
-            margin-top: 8px;
-            color: rgba(255,255,255,0.5);
-            font-size: 0.8rem;
-            cursor: pointer;
-            text-decoration: none;
-            border: none;
-            background: none;
-            font-family: 'Nunito', sans-serif;
-        }
-
-        .log-toggle:hover {
-            color: rgba(255,255,255,0.8);
-        }
-
-        .log-panel {
-            display: none;
-            width: 90%;
-            max-width: 520px;
-            max-height: 200px;
-            margin: 10px auto 0;
-            padding: 12px;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.15);
-            font-family: 'Courier New', monospace;
-            font-size: 0.72rem;
-            color: rgba(255,255,255,0.75);
-            text-align: left;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-break: break-all;
-            line-height: 1.5;
-        }
-
-        .log-panel.visible {
-            display: block;
-        }
-
-        .exchange-modal {
-            display: none;
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .exchange-modal.visible {
-            display: block;
-        }
-
-        .exchange-modal-card {
-            width: min(520px, 42vw);
-            height: min(78vh, 720px);
-            background: linear-gradient(180deg, rgba(13,68,62,0.95), rgba(8,40,37,0.95));
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 16px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.35);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            pointer-events: auto;
-        }
-
-        .exchange-modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            color: #fff;
-            font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
-        }
-
-        .exchange-modal-actions {
-            display: inline-flex;
-            gap: 8px;
-        }
-
-        .exchange-modal-btn {
-            border: 1px solid rgba(255,255,255,0.35);
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-            border-radius: 10px;
-            padding: 6px 10px;
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .exchange-modal-btn:hover {
-            background: rgba(255,255,255,0.22);
-        }
-
-        .exchange-modal-body {
-            padding: 12px;
-            overflow-y: auto;
-            display: grid;
-            gap: 10px;
-            min-height: 0;
-        }
-
-        .exchange-empty {
-            color: rgba(255,255,255,0.8);
-            font-family: 'Nunito', sans-serif;
-            text-align: center;
-            padding: 20px 10px;
-        }
-
-        .exchange-item {
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            background: rgba(255,255,255,0.08);
-            padding: 10px;
-        }
-
-        .exchange-item-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 8px;
-            color: rgba(255,255,255,0.9);
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 700;
-        }
-
-        .exchange-chip {
-            border-radius: 999px;
-            padding: 2px 8px;
-            background: rgba(255,255,255,0.16);
-        }
-
-        .exchange-chip.error {
-            background: rgba(255,88,88,0.35);
-        }
-
-        .exchange-block-title {
-            color: rgba(255,255,255,0.85);
-            font-family: 'Nunito', sans-serif;
-            font-size: 0.78rem;
-            font-weight: 800;
-            margin: 6px 0 4px;
-        }
-
-        .exchange-block {
-            margin: 0;
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(0,0,0,0.35);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: rgba(255,255,255,0.92);
-            font-family: 'Courier New', monospace;
-            font-size: 0.72rem;
-            line-height: 1.45;
-            white-space: pre-wrap;
-            word-break: break-word;
-            max-height: 220px;
-            overflow: auto;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 500px) {
             #start-screen h1 { font-size: 2.4rem; }
@@ -482,24 +163,6 @@
             .card-back .result { font-size: 1.6rem; }
             .choice-btn { font-size: 1rem; padding: 10px 16px; min-width: 70px; }
             .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
-            .ai-control-panel { padding: 10px; gap: 8px; }
-            .ai-model-picker { flex-direction: column; align-items: stretch; }
-            .ai-model-picker label { text-align: left; margin-left: 2px; }
-            .ai-model-picker select { min-width: 100%; }
-        }
-
-        @media (max-width: 980px) {
-            .exchange-modal {
-                top: auto;
-                right: 8px;
-                left: 8px;
-                bottom: 8px;
-            }
-
-            .exchange-modal-card {
-                width: 100%;
-                height: min(56vh, 520px);
-            }
         }
     </style>
 </head>
@@ -529,20 +192,6 @@
         </div>
 
         <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
-        <div class="ai-control-panel" id="ai-control-panel">
-            <div class="ai-status searching" id="ai-status">
-                <span class="ai-dot"></span>
-                <span id="ai-status-text">🔍 Recherche du serveur IA…</span>
-            </div>
-            <div class="ai-model-picker" id="ai-model-picker">
-                <label for="ai-model-select">Modèle IA</label>
-                <select id="ai-model-select" aria-label="Choisir le modèle IA"></select>
-            </div>
-        </div>
-        <br>
-        <button class="log-toggle" onclick="toggleLog()">📋 Voir les logs</button>
-        <button class="log-toggle" onclick="openExchangeModal()">🧠 Voir échanges LLM</button>
-        <div class="log-panel" id="log-panel"></div>
         <br>
         <a class="nav-link" href="index.html">🃏 Multiplications</a>
         <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
@@ -554,7 +203,6 @@
         <div class="game-controls">
             <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
             <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
-            <span class="ingame-ai-indicator" id="ingame-ai-indicator"></span>
         </div>
 
         <div class="stats-bar">
@@ -616,21 +264,7 @@
         </div>
     </div>
 
-    <div class="exchange-modal" id="exchange-modal" role="dialog" aria-modal="false" aria-label="Historique des echanges LLM">
-        <div class="exchange-modal-card">
-            <div class="exchange-modal-header">
-                <span>Historique LLM</span>
-                <div class="exchange-modal-actions">
-                    <button class="exchange-modal-btn" onclick="clearExchanges()">Vider</button>
-                    <button class="exchange-modal-btn" onclick="closeExchangeModal()">Fermer</button>
-                </div>
-            </div>
-            <div class="exchange-modal-body" id="exchange-modal-body"></div>
-        </div>
-    </div>
-
     <script src="shared.js"></script>
-    <script src="ollama.js"></script>
     <script>
         // ═══════════════════════════════════════
         // Grammar-specific logic — CM2
@@ -638,7 +272,6 @@
         let gameMode = 'homophones';
         let currentAnswer = null;
         let currentExplanation = '';
-        let currentQuestionSource = 'local';
 
         const questionArea  = document.getElementById('question-area');
         const cardModeLabel = document.getElementById('card-mode-label');
@@ -663,36 +296,6 @@
             }
             return a;
         }
-
-        function sourceBadgeHtml() {
-            if (currentQuestionSource === 'ai') {
-                return `<div class="question-source-badge ai">✨ IA</div>`;
-            }
-            return `<div class="question-source-badge local">📚 Locale</div>`;
-        }
-
-        function updateIngameAiIndicator() {
-            const el = document.getElementById('ingame-ai-indicator');
-            if (!el) return;
-
-            if (!Ollama.isReady) {
-                el.innerHTML = `<span class="ai-mini-dot offline"></span> Hors-ligne`;
-                return;
-            }
-
-            const count = Ollama.bufferCount(gameMode);
-            const generating = Ollama.isGenerating;
-
-            if (generating) {
-                el.innerHTML = `<span class="ai-mini-dot generating"></span> IA… ${count} prête${count > 1 ? 's' : ''}`;
-            } else if (count > 0) {
-                el.innerHTML = `<span class="ai-mini-dot idle"></span> IA : ${count} prête${count > 1 ? 's' : ''}`;
-            } else {
-                el.innerHTML = `<span class="ai-mini-dot idle"></span> IA : 0`;
-            }
-        }
-
-        setInterval(updateIngameAiIndicator, 1000);
 
         // ═══════════════════════════════════════
         // Question banks
@@ -1091,23 +694,11 @@
         let usedIndices = {};  // per-mode used indices
 
         function pickQuestion(bank, mode) {
-            // 1. Try AI-generated question first
-            if (Ollama.isReady) {
-                const aiQ = Ollama.getQuestion(mode);
-                if (aiQ) {
-                    console.log(`[Grammar] Using AI question for ${mode}`);
-                    currentQuestionSource = 'ai';
-                    return aiQ;
-                }
-            }
-
-            // 2. Fallback to static bank
             if (!usedIndices[mode]) usedIndices[mode] = [];
             if (usedIndices[mode].length >= bank.length) usedIndices[mode] = [];
             let idx;
             do { idx = randInt(0, bank.length - 1); } while (usedIndices[mode].includes(idx));
             usedIndices[mode].push(idx);
-            currentQuestionSource = 'local';
             return bank[idx];
         }
 
@@ -1139,7 +730,7 @@
             cardModeLabel.textContent = 'Choisis le bon homophone';
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
-            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${display}</div>`;
+            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -1157,7 +748,6 @@
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
             questionArea.innerHTML = `
-                ${sourceBadgeHtml()}
                 <div class="sentence-text">${display}</div>
                 <div class="instruction">${q.hint}</div>`;
 
@@ -1176,7 +766,7 @@
             const q = pickQuestion(natureQuestions, 'nature');
             cardModeLabel.textContent = 'Quelle est la nature du mot ?';
 
-            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${q.sentence}</div>`;
+            questionArea.innerHTML = `<div class="sentence-text">${q.sentence}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -1193,7 +783,7 @@
             cardModeLabel.textContent = 'Choisis le bon accord';
 
             const display = q.sentence.replace('___', '<span class="blank">???</span>');
-            questionArea.innerHTML = `${sourceBadgeHtml()}<div class="sentence-text">${display}</div>`;
+            questionArea.innerHTML = `<div class="sentence-text">${display}</div>`;
 
             currentAnswer = q.answer.toLowerCase();
             currentExplanation = q.explanation;
@@ -1242,151 +832,6 @@
             return gameMode === 'conjugaison';
         }
 
-        // ═══════════════════════════════════════
-        // Log panel toggle
-        // ═══════════════════════════════════════
-        function toggleLog() {
-            document.getElementById('log-panel').classList.toggle('visible');
-        }
-        Ollama.attachLog(document.getElementById('log-panel'));
-
-        function escapeHtml(str) {
-            return String(str || '')
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
-        }
-
-        function renderExchanges(list) {
-            const body = document.getElementById('exchange-modal-body');
-            if (!body) return;
-
-            if (!list || list.length === 0) {
-                body.innerHTML = `<div class="exchange-empty">Aucun echange LLM pour le moment. Les entrees apparaissent apres la premiere generation IA en jeu.</div>`;
-                return;
-            }
-
-            const rows = [...list].reverse().map((x) => {
-                const t = new Date(x.ts).toLocaleTimeString();
-                const mode = x.mode || 'n/a';
-                const model = x.model || 'n/a';
-                const status = x.ok ? 'OK' : `Erreur${x.error ? ': ' + x.error : ''}`;
-                const statusCls = x.ok ? 'exchange-chip' : 'exchange-chip error';
-                return `
-                <article class="exchange-item">
-                    <div class="exchange-item-meta">
-                        <span class="exchange-chip">${escapeHtml(t)}</span>
-                        <span class="exchange-chip">mode: ${escapeHtml(mode)}</span>
-                        <span class="exchange-chip">${escapeHtml(x.backendName || '')}</span>
-                        <span class="exchange-chip">model: ${escapeHtml(model)}</span>
-                        <span class="exchange-chip">${Math.round((x.durationMs || 0) / 10) / 100}s</span>
-                        <span class="${statusCls}">${escapeHtml(status)}</span>
-                    </div>
-                    <div class="exchange-block-title">Prompt envoye</div>
-                    <pre class="exchange-block">${escapeHtml(x.prompt || '')}</pre>
-                    <div class="exchange-block-title">Reponse LLM</div>
-                    <pre class="exchange-block">${escapeHtml(x.response || '')}</pre>
-                </article>`;
-            }).join('');
-
-            body.innerHTML = rows;
-        }
-
-        function openExchangeModal() {
-            document.getElementById('exchange-modal').classList.add('visible');
-            renderExchanges(Ollama.exchanges || []);
-        }
-
-        function closeExchangeModal() {
-            document.getElementById('exchange-modal').classList.remove('visible');
-        }
-
-        function clearExchanges() {
-            Ollama.clearExchanges();
-            renderExchanges([]);
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key !== 'Escape') return;
-            const modal = document.getElementById('exchange-modal');
-            if (!modal || !modal.classList.contains('visible')) return;
-            e.preventDefault();
-            e.stopPropagation();
-            closeExchangeModal();
-        }, true);
-
-        // ═══════════════════════════════════════
-        // Ollama auto-discovery on page load
-        // ═══════════════════════════════════════
-        const aiStatusEl   = document.getElementById('ai-status');
-        const aiStatusText = document.getElementById('ai-status-text');
-        const aiModelPicker = document.getElementById('ai-model-picker');
-        const aiModelSelect = document.getElementById('ai-model-select');
-
-        function refreshModelPicker(selectedModel) {
-            const models = Ollama.models || [];
-            if (!models || models.length <= 1) {
-                aiModelPicker.style.display = 'none';
-                aiModelSelect.innerHTML = '';
-                return;
-            }
-
-            aiModelPicker.style.display = 'flex';
-            const currentOptions = Array.from(aiModelSelect.options).map(o => o.value);
-            const sameList = currentOptions.length === models.length && currentOptions.every((v, i) => v === models[i]);
-
-            if (!sameList) {
-                aiModelSelect.innerHTML = '';
-                models.forEach(model => {
-                    const option = document.createElement('option');
-                    option.value = model;
-                    option.textContent = model;
-                    aiModelSelect.appendChild(option);
-                });
-            }
-
-            aiModelSelect.value = selectedModel;
-        }
-
-        aiModelSelect.addEventListener('change', (e) => {
-            const chosen = e.target.value;
-            const ok = Ollama.setModel(chosen);
-            if (!ok) {
-                aiModelSelect.value = Ollama.model || '';
-            }
-        });
-
-        Ollama.onExchange = (items) => {
-            const modal = document.getElementById('exchange-modal');
-            if (modal && modal.classList.contains('visible')) {
-                renderExchanges(items);
-            }
-        };
-
-        Ollama.onStatus = (status, url, model, backendType) => {
-            aiStatusEl.className = 'ai-status ' + status;
-            switch (status) {
-                case 'searching':
-                    aiStatusText.textContent = '🔍 Recherche du serveur IA…';
-                    aiModelPicker.style.display = 'none';
-                    break;
-                case 'found':
-                    const shortModel = model.split(':')[0];
-                    const backendName = backendType === 'lmstudio' ? 'LM Studio' : 'Ollama';
-                    aiStatusText.textContent = `🤖 ${backendName} (${shortModel})`;
-                    refreshModelPicker(model);
-                    break;
-                case 'offline':
-                    aiStatusText.textContent = '📦 Mode hors-ligne (banque locale)';
-                    aiModelPicker.style.display = 'none';
-                    break;
-            }
-        };
-
-        // Start discovery immediately
-        Ollama.discover();
     </script>
 </body>
 </html>
