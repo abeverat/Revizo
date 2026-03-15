@@ -1,0 +1,28 @@
+QUESTIONS["terminale"] = [
+  { question: "lim(x→+∞) eˣ/x² = ?", choices: ["0", "1", "+∞", "e", "Indéterminée"], answer: 2, difficulty: 1, explanation: "Croissance comparée : eˣ >> x² → +∞" },
+  { question: "La primitive de cos(x) est :", choices: ["-sin(x) + C", "sin(x) + C", "cos(x) + C", "-cos(x) + C", "tan(x) + C"], answer: 1, difficulty: 1, explanation: "∫cos(x)dx = sin(x) + C" },
+  { question: "Si f'(x) > 0 sur ]a,b[, alors f est :", choices: ["Décroissante", "Croissante", "Constante", "Concave", "Convexe"], answer: 1, difficulty: 1, explanation: "f' > 0 → f croissante." },
+  { question: "ln(ab) = ?", choices: ["ln(a) × ln(b)", "ln(a) + ln(b)", "ln(a) - ln(b)", "a × ln(b)", "ln(a)/ln(b)"], answer: 1, difficulty: 1, explanation: "Propriété fondamentale du logarithme." },
+  { question: "Le module de z = -3 + 4i est :", choices: ["1", "5", "7", "√7", "25"], answer: 1, difficulty: 1, explanation: "|z| = √(9+16) = 5" },
+  { question: "e^(ln 7) = ?", choices: ["1", "e⁷", "7", "7e", "ln 7"], answer: 2, difficulty: 1, explanation: "e^(ln x) = x" },
+  { question: "∫₀^π sin(x) dx = ?", choices: ["0", "1", "2", "-1", "π"], answer: 2, difficulty: 1, explanation: "[-cos(x)]₀^π = -cos(π)+cos(0) = 1+1 = 2" },
+  { question: "Si uₙ = n/(n+1), lim(n→∞) uₙ = ?", choices: ["0", "1/2", "1", "+∞", "Pas de limite"], answer: 2, difficulty: 1, explanation: "n/(n+1) → 1" },
+
+  { question: "La dérivée de f(x) = eˢⁱⁿ⁽ˣ⁾ est :", choices: ["cos(x)·eˢⁱⁿ⁽ˣ⁾", "sin(x)·eˢⁱⁿ⁽ˣ⁾", "eᶜᵒˢ⁽ˣ⁾", "eˢⁱⁿ⁽ˣ⁾/cos(x)", "-cos(x)·eˢⁱⁿ⁽ˣ⁾"], answer: 0, difficulty: 2, explanation: "Dérivée de e^(u) = u'·e^(u). u=sin(x), u'=cos(x)." },
+  { question: "∫ xe^x dx = ? (par parties)", choices: ["(x+1)e^x + C", "xe^x + e^x + C", "x²e^x/2 + C", "e^x(x²-1) + C", "(x-1)e^x + C"], answer: 4, difficulty: 2, explanation: "∫xe^x = xe^x - ∫e^x = xe^x - e^x = (x-1)e^x + C" },
+  { question: "L'argument de z = -1 + i est :", choices: ["π/4", "3π/4", "-π/4", "5π/4", "π/2"], answer: 1, difficulty: 2, explanation: "z est dans le 2e quadrant. arg = π - π/4 = 3π/4." },
+  { question: "La suite uₙ = (-1)ⁿ/n est :", choices: ["Convergente vers 0", "Convergente vers 1", "Divergente", "Oscillante sans limite", "Constante"], answer: 0, difficulty: 2, explanation: "|uₙ| = 1/n → 0, donc uₙ → 0." },
+  { question: "Si X ~ N(100, 15²), P(X < 100) = ?", choices: ["0", "0,25", "0,5", "0,68", "1"], answer: 2, difficulty: 2, explanation: "X < μ → P = 0,5 par symétrie." },
+  { question: "L'équation différentielle y' = 2y a pour solution :", choices: ["y = Ce²ˣ", "y = 2eˣ", "y = Ce²", "y = Ce^(x²)", "y = 2Ceˣ"], answer: 0, difficulty: 2, explanation: "y'/y = 2 → ln|y| = 2x + k → y = Ce²ˣ" },
+  { question: "lim(x→0) (eˣ - 1)/x = ?", choices: ["0", "1", "e", "∞", "ln 2"], answer: 1, difficulty: 2, explanation: "DL : eˣ ≈ 1 + x, donc (eˣ-1)/x → 1." },
+  { question: "Le nombre de surjections de {1,2,3,4} vers {a,b,c} est :", choices: ["12", "24", "36", "48", "81"], answer: 2, difficulty: 2, explanation: "Par inclusion-exclusion : 3⁴ - C(3,1)×2⁴ + C(3,2)×1⁴ = 81-48+3 = 36" },
+
+  { question: "∫₁^e (ln x)² / x dx = ?", choices: ["1/2", "1/3", "1", "e-1", "2/3"], answer: 1, difficulty: 3, explanation: "u = ln x, du = dx/x. ∫₀¹ u² du = 1/3." },
+  { question: "Si f(x) = x·ln(x) - x, alors f'(x) = ?", choices: ["ln(x)", "ln(x) + 1", "ln(x) - 1", "1/x", "x/ln(x)"], answer: 0, difficulty: 3, explanation: "f'(x) = ln(x) + x·(1/x) - 1 = ln(x)" },
+  { question: "Les racines de z³ = 8 dans ℂ sont :", choices: ["2, -2, 2i", "2, 2e^(2iπ/3), 2e^(4iπ/3)", "2, -1+i√3, -1-i√3", "2 seulement", "B et C"], answer: 4, difficulty: 3, explanation: "z = 2·e^(2ikπ/3), k=0,1,2. Ce sont B et C (mêmes nombres)." },
+  { question: "La série Σ 1/n² converge vers :", choices: ["1", "π²/6", "e", "ln 2", "π/4"], answer: 1, difficulty: 3, explanation: "Résultat d'Euler : ζ(2) = π²/6" },
+  { question: "Si f(x) = arctan(x), alors f'(x) = ?", choices: ["1/(1+x²)", "1/(1-x²)", "1/√(1-x²)", "1/√(1+x²)", "-1/(1+x²)"], answer: 0, difficulty: 3, explanation: "Dérivée classique de arctan." },
+  { question: "L'intégrale ∫₀^(+∞) e⁻ˣ dx vaut :", choices: ["0", "1", "e", "+∞", "-1"], answer: 1, difficulty: 3, explanation: "[-e⁻ˣ]₀^∞ = 0 - (-1) = 1. Intégrale convergente." },
+  { question: "dim(Ker(f)) + dim(Im(f)) = ?", choices: ["dim(E)", "dim(F)", "dim(E) + dim(F)", "dim(E) × dim(F)", "0"], answer: 0, difficulty: 3, explanation: "Théorème du rang : dim(Ker f) + rg(f) = dim(E)." },
+  { question: "La transformée de Laplace de f(t) = 1 est :", choices: ["1/s", "s", "1/s²", "e⁻ˢ", "δ(s)"], answer: 0, difficulty: 3, explanation: "L{1} = ∫₀^∞ e⁻ˢᵗ dt = 1/s pour Re(s) > 0." },
+];

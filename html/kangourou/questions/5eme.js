@@ -1,0 +1,28 @@
+QUESTIONS["5eme"] = [
+  { question: "Combien vaut (-3) × (-5) ?", choices: ["-15", "-8", "8", "15", "0"], answer: 3, difficulty: 1, explanation: "Moins × moins = plus. (-3)×(-5)=15" },
+  { question: "Quelle fraction est égale à 0,75 ?", choices: ["1/2", "2/3", "3/4", "4/5", "7/10"], answer: 2, difficulty: 1, explanation: "3/4 = 0,75" },
+  { question: "Un angle droit mesure :", choices: ["45°", "60°", "90°", "120°", "180°"], answer: 2, difficulty: 1, explanation: "Un angle droit = 90°." },
+  { question: "Combien font 15% de 200 ?", choices: ["15", "20", "25", "30", "35"], answer: 3, difficulty: 1, explanation: "15% × 200 = 30" },
+  { question: "Si x + 7 = 12, alors x = ?", choices: ["3", "4", "5", "7", "19"], answer: 2, difficulty: 1, explanation: "x = 12 - 7 = 5" },
+  { question: "Combien de cm³ y a-t-il dans 1 litre ?", choices: ["10", "100", "1 000", "10 000", "100 000"], answer: 2, difficulty: 1, explanation: "1 L = 1 000 cm³" },
+  { question: "La somme des angles d'un triangle vaut :", choices: ["90°", "120°", "180°", "270°", "360°"], answer: 2, difficulty: 1, explanation: "La somme des angles d'un triangle = 180°." },
+  { question: "Quel est l'opposé de -8 ?", choices: ["-8", "0", "8", "1/8", "-1/8"], answer: 2, difficulty: 1, explanation: "L'opposé de -8 est 8." },
+
+  { question: "Dans un triangle rectangle, les côtés de l'angle droit mesurent 3 et 4. Que vaut l'hypoténuse ?", choices: ["5", "6", "7", "√7", "12"], answer: 0, difficulty: 2, explanation: "3² + 4² = 25, √25 = 5" },
+  { question: "Combien vaut 2/3 + 3/4 ?", choices: ["5/7", "5/12", "17/12", "11/12", "1"], answer: 2, difficulty: 2, explanation: "2/3 + 3/4 = 8/12 + 9/12 = 17/12" },
+  { question: "Un article à 80 € est soldé à -30%. Son nouveau prix est :", choices: ["24 €", "50 €", "54 €", "56 €", "60 €"], answer: 3, difficulty: 2, explanation: "30% de 80 = 24, 80 - 24 = 56 €" },
+  { question: "Le symétrique du point A(2, 3) par rapport à l'origine est :", choices: ["(2, -3)", "(-2, 3)", "(-2, -3)", "(3, 2)", "(-3, -2)"], answer: 2, difficulty: 2, explanation: "Symétrique par rapport à O : (-2, -3)" },
+  { question: "Combien vaut 5! (factorielle 5) ?", choices: ["15", "25", "60", "120", "720"], answer: 3, difficulty: 2, explanation: "5! = 5×4×3×2×1 = 120" },
+  { question: "Quel pourcentage représente 45 sur 180 ?", choices: ["15%", "20%", "25%", "30%", "35%"], answer: 2, difficulty: 2, explanation: "45/180 = 1/4 = 25%" },
+  { question: "Le volume d'un pavé droit de dimensions 3 cm, 4 cm, 5 cm est :", choices: ["12 cm³", "30 cm³", "47 cm³", "60 cm³", "120 cm³"], answer: 3, difficulty: 2, explanation: "V = 3 × 4 × 5 = 60 cm³" },
+  { question: "Si 3x - 7 = 14, alors x = ?", choices: ["3", "5", "7", "9", "11"], answer: 2, difficulty: 2, explanation: "3x = 21, x = 7" },
+
+  { question: "Un nombre est divisible par 9 si :", choices: ["Son dernier chiffre est 9", "La somme de ses chiffres est divisible par 9", "Il est impair", "Il finit par 0 ou 9", "Son chiffre des dizaines est 9"], answer: 1, difficulty: 3, explanation: "Critère de divisibilité par 9." },
+  { question: "Combien de diagonales possède un hexagone régulier ?", choices: ["6", "7", "8", "9", "12"], answer: 3, difficulty: 3, explanation: "n(n-3)/2 = 6×3/2 = 9 diagonales" },
+  { question: "On plie une feuille en deux, puis encore en deux, puis encore. On fait un trou. En dépliant, combien de trous y a-t-il ?", choices: ["2", "3", "4", "6", "8"], answer: 4, difficulty: 3, explanation: "Chaque pliage double le nombre de trous : 2³ = 8." },
+  { question: "Quelle est la somme des 10 premiers nombres impairs ?", choices: ["55", "81", "99", "100", "110"], answer: 3, difficulty: 3, explanation: "La somme des n premiers impairs = n². 10² = 100." },
+  { question: "Si a/b = 3/5 et b/c = 5/7, alors a/c = ?", choices: ["3/7", "5/7", "3/5", "7/3", "15/35"], answer: 0, difficulty: 3, explanation: "a/c = (a/b)×(b/c) = (3/5)×(5/7) = 3/7" },
+  { question: "Un train de 100 m traverse un tunnel de 400 m à 50 m/s. Combien de temps met-il ?", choices: ["2 s", "8 s", "10 s", "12 s", "20 s"], answer: 2, difficulty: 3, explanation: "Distance totale = 100 + 400 = 500 m. t = 500/50 = 10 s." },
+  { question: "Combien de carrés (de toutes tailles) peut-on compter sur un échiquier 4×4 ?", choices: ["16", "20", "25", "30", "36"], answer: 3, difficulty: 3, explanation: "1×1:16, 2×2:9, 3×3:4, 4×4:1 → 30" },
+  { question: "Si le produit de deux entiers consécutifs est 182, quels sont ces nombres ?", choices: ["12 et 13", "13 et 14", "14 et 15", "11 et 12", "10 et 11"], answer: 1, difficulty: 3, explanation: "13 × 14 = 182" },
+];

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kangourou — Entraînement Mathématiques</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- ÉCRAN D'ACCUEIL -->
+    <section id="screen-home" class="screen active">
+      <div class="logo">🦘</div>
+      <h1>Kangourou des Mathématiques</h1>
+      <p class="subtitle">Entraînement — Choisis ton niveau pour commencer</p>
+      <div class="source-toggle">
+        <label class="toggle-label">
+          <input type="checkbox" id="use-generated" checked />
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">Questions illimitées (générées)</span>
+        </label>
+        <p class="toggle-hint" id="toggle-hint">Les questions sont générées aléatoirement — chaque quiz est unique.</p>
+      </div>
+      <p class="back-link-wrap"><a href="../index.html" class="back-link">← Retour a Cartes Toto</a></p>
+      <div id="level-grid" class="level-grid">
+        <!-- Généré par JS -->
+      </div>
+    </section>
+
+    <!-- ÉCRAN QUIZ -->
+    <section id="screen-quiz" class="screen">
+      <header class="quiz-header">
+        <div class="quiz-info">
+          <span id="quiz-level-label" class="badge"></span>
+          <span id="quiz-progress">Question 1 / 24</span>
+        </div>
+        <div class="timer-area">
+          <span id="timer" class="timer">00:00</span>
+          <button id="btn-pause" class="btn btn-pause" title="Pause">⏸️</button>
+          <button id="btn-stop" class="btn btn-stop" title="Arrêter">⏹️</button>
+        </div>
+      </header>
+
+      <!-- OVERLAY PAUSE -->
+      <div id="pause-overlay" class="pause-overlay hidden">
+        <div class="pause-box">
+          <h2>⏸️ Pause</h2>
+          <p>Le chronomètre est en pause.</p>
+          <button id="btn-resume" class="btn btn-primary">▶️ Reprendre</button>
+          <button id="btn-quit-pause" class="btn btn-danger">🚪 Quitter le quiz</button>
+        </div>
+      </div>
+
+      <div id="question-container" class="question-container">
+        <div class="question-difficulty" id="question-difficulty"></div>
+        <h2 id="question-text" class="question-text"></h2>
+        <div id="choices" class="choices">
+          <!-- Généré par JS -->
+        </div>
+      </div>
+
+      <div class="quiz-nav">
+        <button id="btn-prev" class="btn btn-secondary" disabled>← Précédente</button>
+        <button id="btn-next" class="btn btn-primary">Suivante →</button>
+        <button id="btn-finish" class="btn btn-success hidden">✅ Terminer</button>
+      </div>
+    </section>
+
+    <!-- ÉCRAN RÉSULTATS -->
+    <section id="screen-results" class="screen">
+      <h1>📊 Résultats</h1>
+      <div class="results-summary">
+        <div class="result-card">
+          <span class="result-label">Score</span>
+          <span id="result-score" class="result-value">0 / 24</span>
+        </div>
+        <div class="result-card">
+          <span class="result-label">Points</span>
+          <span id="result-points" class="result-value">0</span>
+        </div>
+        <div class="result-card">
+          <span class="result-label">Temps</span>
+          <span id="result-time" class="result-value">00:00</span>
+        </div>
+      </div>
+      <div id="results-detail" class="results-detail">
+        <!-- Détail question par question -->
+      </div>
+      <div class="results-actions">
+        <button id="btn-retry" class="btn btn-primary">🔄 Recommencer ce niveau</button>
+        <button id="btn-home" class="btn btn-secondary">🏠 Choisir un autre niveau</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Questions : config + banque statique par niveau -->
+  <script src="questions/levels.js"></script>
+  <script src="questions/6eme.js"></script>
+  <script src="questions/5eme.js"></script>
+  <script src="questions/4eme.js"></script>
+  <script src="questions/3eme.js"></script>
+  <script src="questions/2nde.js"></script>
+  <script src="questions/1ere.js"></script>
+  <script src="questions/terminale.js"></script>
+
+  <!-- Générateurs : utilitaires + par niveau + API -->
+  <script src="generators/utils.js"></script>
+  <script src="generators/6eme.js"></script>
+  <script src="generators/5eme.js"></script>
+  <script src="generators/4eme.js"></script>
+  <script src="generators/3eme.js"></script>
+  <script src="generators/2nde.js"></script>
+  <script src="generators/1ere.js"></script>
+  <script src="generators/terminale.js"></script>
+  <script src="generators/api.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>

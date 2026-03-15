@@ -1,0 +1,28 @@
+QUESTIONS["4eme"] = [
+  { question: "Que vaut √144 ?", choices: ["10", "11", "12", "13", "14"], answer: 2, difficulty: 1, explanation: "√144 = 12" },
+  { question: "Si 2x = 18, alors x = ?", choices: ["6", "7", "8", "9", "10"], answer: 3, difficulty: 1, explanation: "x = 18/2 = 9" },
+  { question: "Combien vaut (-2)³ ?", choices: ["-8", "-6", "6", "8", "12"], answer: 0, difficulty: 1, explanation: "(-2)³ = -8" },
+  { question: "Quelle est la médiane de : 3, 7, 1, 9, 5 ?", choices: ["1", "3", "5", "7", "9"], answer: 2, difficulty: 1, explanation: "Ordonné : 1,3,5,7,9. Médiane = 5." },
+  { question: "Convertir 3,5 km en mètres :", choices: ["35 m", "350 m", "3 500 m", "35 000 m", "3,5 m"], answer: 2, difficulty: 1, explanation: "3,5 × 1000 = 3 500 m" },
+  { question: "Quel est l'inverse de 4 ?", choices: ["-4", "0,4", "1/4", "0,25", "1/4 et 0,25"], answer: 4, difficulty: 1, explanation: "L'inverse de 4 est 1/4 = 0,25." },
+  { question: "10⁻² = ?", choices: ["-100", "-20", "0,01", "0,1", "100"], answer: 2, difficulty: 1, explanation: "10⁻² = 1/100 = 0,01" },
+  { question: "Un losange a combien d'axes de symétrie ?", choices: ["0", "1", "2", "3", "4"], answer: 2, difficulty: 1, explanation: "Un losange a 2 axes de symétrie (ses diagonales)." },
+
+  { question: "Développer : (x + 3)(x - 2) = ?", choices: ["x² + x - 6", "x² - x - 6", "x² + x + 6", "x² - 5x - 6", "x² + 5x + 6"], answer: 0, difficulty: 2, explanation: "(x+3)(x-2) = x² -2x +3x -6 = x² + x - 6" },
+  { question: "La fonction f(x) = 3x - 5. Combien vaut f(4) ?", choices: ["2", "5", "7", "8", "12"], answer: 2, difficulty: 2, explanation: "f(4) = 3×4 - 5 = 7" },
+  { question: "Un triangle a des angles de 40° et 75°. Que vaut le troisième ?", choices: ["55°", "60°", "65°", "70°", "75°"], answer: 2, difficulty: 2, explanation: "180 - 40 - 75 = 65°" },
+  { question: "Quel est le PPCM de 12 et 18 ?", choices: ["6", "24", "36", "72", "216"], answer: 2, difficulty: 2, explanation: "12 = 2²×3, 18 = 2×3². PPCM = 2²×3² = 36" },
+  { question: "Si un cercle a un rayon de 7 cm, son aire vaut environ :", choices: ["22 cm²", "44 cm²", "154 cm²", "308 cm²", "49 cm²"], answer: 2, difficulty: 2, explanation: "π × 7² ≈ 3,14 × 49 ≈ 154 cm²" },
+  { question: "Résoudre : 5x + 3 = 2x + 18", choices: ["x = 3", "x = 5", "x = 7", "x = 15", "x = 21"], answer: 1, difficulty: 2, explanation: "3x = 15, x = 5" },
+  { question: "La moyenne de 12, 15, 18, 9 et 6 est :", choices: ["10", "11", "12", "13", "14"], answer: 2, difficulty: 2, explanation: "(12+15+18+9+6)/5 = 60/5 = 12" },
+  { question: "Deux droites parallèles coupées par une sécante forment des angles alternes-internes qui sont :", choices: ["Supplémentaires", "Complémentaires", "Égaux", "Adjacents", "Nuls"], answer: 2, difficulty: 2, explanation: "Angles alternes-internes = égaux." },
+
+  { question: "Factoriser : x² - 9 = ?", choices: ["(x-3)²", "(x+3)²", "(x-3)(x+3)", "(x-9)(x+1)", "x(x-9)"], answer: 2, difficulty: 3, explanation: "Identité remarquable : a²-b² = (a-b)(a+b). x²-9 = (x-3)(x+3)" },
+  { question: "Un rectangle a un périmètre de 40 cm et une aire de 96 cm². Quelles sont ses dimensions ?", choices: ["6 et 16", "8 et 12", "4 et 24", "10 et 10", "7 et 13"], answer: 1, difficulty: 3, explanation: "l+L=20, l×L=96 → 8 et 12." },
+  { question: "Combien de nombres entiers positifs sont diviseurs de 72 ?", choices: ["8", "10", "12", "14", "16"], answer: 2, difficulty: 3, explanation: "72 = 2³×3². Nombre de diviseurs = (3+1)(2+1) = 12" },
+  { question: "Soit la suite : 2, 6, 18, 54, … Quel est le 6e terme ?", choices: ["108", "162", "324", "486", "972"], answer: 3, difficulty: 3, explanation: "Suite géométrique de raison 3. u₆ = 2 × 3⁵ = 486" },
+  { question: "Dans un repère, à quelle distance se trouvent les points A(1,2) et B(4,6) ?", choices: ["3", "4", "5", "7", "√13"], answer: 2, difficulty: 3, explanation: "d = √((4-1)²+(6-2)²) = √(9+16) = √25 = 5" },
+  { question: "Combien y a-t-il d'anagrammes du mot « MATH » ?", choices: ["6", "12", "16", "24", "120"], answer: 3, difficulty: 3, explanation: "4! = 24 anagrammes (lettres distinctes)." },
+  { question: "Le prix d'un objet augmente de 20% puis baisse de 20%. Par rapport au prix initial :", choices: ["C'est le même prix", "Il a augmenté de 4%", "Il a diminué de 4%", "Il a augmenté de 2%", "Il a diminué de 2%"], answer: 2, difficulty: 3, explanation: "1,20 × 0,80 = 0,96 → diminution de 4%." },
+  { question: "Combien vaut la somme 1 + 2 + 3 + … + 100 ?", choices: ["4950", "5000", "5050", "5100", "10000"], answer: 2, difficulty: 3, explanation: "n(n+1)/2 = 100×101/2 = 5050" },
+];

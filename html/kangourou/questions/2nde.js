@@ -1,0 +1,28 @@
+QUESTIONS["2nde"] = [
+  { question: "Résoudre : |x - 3| = 5", choices: ["x = 2", "x = 8", "x = -2 ou x = 8", "x = 2 ou x = -8", "x = -2 ou x = -8"], answer: 2, difficulty: 1, explanation: "x-3=5 → x=8, x-3=-5 → x=-2" },
+  { question: "Quel est l'ensemble de définition de f(x) = 1/(x-2) ?", choices: ["ℝ", "ℝ \\ {0}", "ℝ \\ {2}", "ℝ \\ {-2}", "[2, +∞["], answer: 2, difficulty: 1, explanation: "Interdit : x = 2 (division par 0)." },
+  { question: "Si f(x) = 2x + 1, que vaut f(f(2)) ?", choices: ["9", "10", "11", "12", "13"], answer: 2, difficulty: 1, explanation: "f(2) = 5, f(5) = 11" },
+  { question: "Simplifier : (x³)² = ?", choices: ["x⁵", "x⁶", "x⁹", "2x³", "x⁸"], answer: 1, difficulty: 1, explanation: "(x³)² = x⁶" },
+  { question: "Quel est le coefficient directeur de la droite y = -3x + 7 ?", choices: ["-3", "3", "7", "-7", "1/3"], answer: 0, difficulty: 1, explanation: "y = mx + b, m = -3" },
+  { question: "Combien vaut √(2) × √(8) ?", choices: ["2", "4", "8", "√10", "√16"], answer: 1, difficulty: 1, explanation: "√2 × √8 = √16 = 4" },
+  { question: "La fonction f(x) = x² est-elle paire, impaire ou ni l'un ni l'autre ?", choices: ["Paire", "Impaire", "Ni l'un ni l'autre", "Les deux", "Ça dépend"], answer: 0, difficulty: 1, explanation: "f(-x) = (-x)² = x² = f(x) → paire." },
+  { question: "Le discriminant de x² + 4x + 4 = 0 vaut :", choices: ["-4", "0", "4", "8", "16"], answer: 1, difficulty: 1, explanation: "Δ = 16 - 16 = 0" },
+
+  { question: "L'ensemble des solutions de x² - x - 6 ≤ 0 est :", choices: ["[-2, 3]", "]-∞, -2] ∪ [3, +∞[", "[-3, 2]", "]-∞, -3] ∪ [2, +∞[", "{-2, 3}"], answer: 0, difficulty: 2, explanation: "x²-x-6 = (x-3)(x+2), négatif sur [-2, 3]." },
+  { question: "Soit f(x) = (x²-1)/(x-1) pour x ≠ 1. Simplifier f(x) :", choices: ["x - 1", "x + 1", "x", "x² + 1", "1/(x+1)"], answer: 1, difficulty: 2, explanation: "x²-1 = (x-1)(x+1), on simplifie par (x-1)." },
+  { question: "La droite passant par A(1,3) et B(4,9) a pour équation :", choices: ["y = 2x + 1", "y = 3x", "y = 2x - 1", "y = x + 2", "y = 3x - 3"], answer: 0, difficulty: 2, explanation: "m = (9-3)/(4-1) = 2. y = 2x + b, 3 = 2+b, b = 1." },
+  { question: "Si f(x) = √(x+3), l'ensemble de définition est :", choices: ["ℝ", "[0, +∞[", "[-3, +∞[", "]-3, +∞[", "]0, +∞["], answer: 2, difficulty: 2, explanation: "x + 3 ≥ 0 → x ≥ -3" },
+  { question: "Combien de solutions a le système : 2x + y = 5 et 4x + 2y = 10 ?", choices: ["0", "1", "2", "Infinité", "Impossible à déterminer"], answer: 3, difficulty: 2, explanation: "Les deux équations sont proportionnelles → infinité de solutions." },
+  { question: "La variance de {2, 4, 6, 8, 10} est :", choices: ["4", "6", "8", "10", "12"], answer: 2, difficulty: 2, explanation: "Moyenne = 6. Var = ((16+4+0+4+16)/5) = 8" },
+  { question: "Si cos(θ) = -1/2 et θ ∈ [0, π], alors θ = ?", choices: ["π/6", "π/3", "π/2", "2π/3", "5π/6"], answer: 3, difficulty: 2, explanation: "cos(2π/3) = -1/2" },
+  { question: "Factoriser : x³ - 8 = ?", choices: ["(x-2)(x²+2x+4)", "(x-2)³", "(x-2)(x+2)²", "(x-8)(x²+1)", "(x-2)(x²-2x+4)"], answer: 0, difficulty: 2, explanation: "a³-b³ = (a-b)(a²+ab+b²)" },
+
+  { question: "La dérivée de f(x) = x·eˣ est :", choices: ["eˣ", "xeˣ", "(1+x)eˣ", "(x-1)eˣ", "x²eˣ"], answer: 2, difficulty: 3, explanation: "f'(x) = eˣ + xeˣ = (1+x)eˣ" },
+  { question: "Combien de façons de choisir 3 élèves parmi 10 ?", choices: ["30", "60", "90", "120", "720"], answer: 3, difficulty: 3, explanation: "C(10,3) = 10!/(3!×7!) = 120" },
+  { question: "L'intégrale de 0 à 1 de x² dx vaut :", choices: ["1/4", "1/3", "1/2", "1", "2/3"], answer: 1, difficulty: 3, explanation: "∫x²dx = x³/3. De 0 à 1 : 1/3." },
+  { question: "Si ln(a) + ln(b) = ln(6) et ln(a) - ln(b) = ln(2/3), que vaut a ?", choices: ["1", "2", "3", "4", "6"], answer: 1, difficulty: 3, explanation: "ln(ab)=ln(6), ln(a/b)=ln(2/3). ab=6, a/b=2/3 → a²=4, a=2." },
+  { question: "La limite de (sin x)/x quand x → 0 est :", choices: ["0", "1", "∞", "π", "Indéterminée"], answer: 1, difficulty: 3, explanation: "Limite classique : lim(sin x/x) = 1 quand x→0." },
+  { question: "Combien vaut Σ(k=1 à n) k² pour n=5 ?", choices: ["15", "25", "30", "55", "91"], answer: 3, difficulty: 3, explanation: "1+4+9+16+25 = 55" },
+  { question: "L'équation x⁴ - 5x² + 4 = 0 a combien de solutions réelles ?", choices: ["0", "2", "3", "4", "Infinité"], answer: 3, difficulty: 3, explanation: "Poser X=x² : X²-5X+4=0 → X=1 ou X=4 → x=±1 ou x=±2 → 4 solutions." },
+  { question: "Si z = 3 + 4i, que vaut |z| ?", choices: ["3", "4", "5", "7", "√7"], answer: 2, difficulty: 3, explanation: "|z| = √(9+16) = √25 = 5" },
+];

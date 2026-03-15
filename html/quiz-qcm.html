@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Toto - Quiz QCM (IA)</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #f857a6, #ff5858);
+            box-shadow: 0 8px 20px rgba(248,87,166,0.4);
+        }
+
+        .btn:hover {
+            box-shadow: 0 12px 28px rgba(248,87,166,0.5);
+        }
+
+        #game-screen {
+            max-width: 580px;
+        }
+
+        .card-container {
+            width: 320px;
+            height: 400px;
+        }
+
+        /* ── Discovery / Config screens ── */
+        #discovery-screen, #config-screen, #loading-screen {
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+            padding: 20px;
+            max-width: 520px;
+        }
+
+        #discovery-screen h1, #config-screen h1, #loading-screen h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.8rem;
+            color: #fff;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+
+        #discovery-screen p, #config-screen p, #loading-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* ── Scan box ── */
+        .scan-box {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .scan-status {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .scan-progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .scan-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .scan-log {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            max-height: 80px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 8px;
+        }
+
+        .scan-found {
+            background: rgba(67,233,123,0.2);
+            border: 2px solid rgba(67,233,123,0.5);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 12px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .scan-found .found-label {
+            font-family: 'Fredoka One', cursive;
+            color: #43e97b;
+            font-size: 1.1rem;
+        }
+
+        .scan-found .found-url {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+
+        /* ── Manual input ── */
+        .manual-input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .manual-input {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            padding: 10px 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            outline: none;
+            width: 220px;
+        }
+
+        .manual-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .manual-input:focus {
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .btn-small {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.95rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+            transition: transform 0.2s;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-2px);
+        }
+
+        .hint-text {
+            color: rgba(255,255,255,0.5);
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* ── Config screen ── */
+        .config-section {
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 2px solid rgba(255,255,255,0.2);
+            text-align: left;
+        }
+
+        .config-label {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 10px;
+        }
+
+        .config-select {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            padding: 10px 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            outline: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .config-select option {
+            background: #4a4a8a;
+            color: #fff;
+        }
+
+        /* ── Subject picker ── */
+        .subject-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .subject-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.95rem;
+            padding: 10px 16px;
+            border: 3px solid rgba(255,255,255,0.4);
+            border-radius: 16px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            transition: all 0.2s;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .subject-btn:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .subject-btn.selected {
+            background: rgba(255,255,255,0.85);
+            color: #667eea;
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .subject-btn .subj-icon {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .custom-topic-input {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1rem;
+            padding: 10px 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            outline: none;
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .custom-topic-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .custom-topic-input:focus {
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .server-badge {
+            display: inline-block;
+            background: rgba(67,233,123,0.2);
+            border: 1px solid rgba(67,233,123,0.4);
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.8rem;
+            color: #43e97b;
+            margin-bottom: 16px;
+        }
+
+        /* ── Loading screen ── */
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255,255,255,0.2);
+            border-top: 5px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* ── Question card ── */
+        .question-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.2rem;
+            color: #333;
+            line-height: 1.5;
+            padding: 0 10px;
+            text-align: center;
+        }
+
+        .card-front .instruction {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 14px;
+            letter-spacing: 1px;
+        }
+
+        .card-back .result {
+            font-size: 1.8rem;
+            padding: 0 16px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .card-back .explanation {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.85);
+            margin-top: 10px;
+            padding: 0 16px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* ── Choice buttons (QCM) ── */
+        .choice-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            padding: 10px 16px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 16px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: all 0.2s;
+            min-width: 120px;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ── Error display ── */
+        .error-box {
+            background: rgba(248,87,87,0.2);
+            border: 2px solid rgba(248,87,87,0.5);
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 12px;
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 500px) {
+            #discovery-screen h1, #config-screen h1 { font-size: 2.2rem; }
+            .card-container { width: 280px; height: 370px; }
+            .question-text { font-size: 1.05rem; }
+            .card-back .result { font-size: 1.5rem; }
+            .choice-btn { font-size: 0.9rem; padding: 8px 12px; min-width: 100px; }
+            .subject-btn { min-width: 80px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ══════════════ DISCOVERY SCREEN ══════════════ -->
+    <div id="discovery-screen">
+        <h1>🤖 Quiz QCM</h1>
+        <p>Quiz généré par IA — niveau CM2</p>
+
+        <div class="scan-box" id="scan-box">
+            <div class="scan-status" id="scan-status">Recherche du serveur Ollama…</div>
+            <div class="scan-progress-bar">
+                <div class="scan-progress-fill" id="scan-progress"></div>
+            </div>
+            <div class="scan-log" id="scan-log"></div>
+            <div class="scan-found" id="scan-found" style="display:none">
+                <div class="found-label">✅ Ollama trouvé !</div>
+                <div class="found-url" id="found-url"></div>
+            </div>
+        </div>
+
+        <div class="manual-input-group">
+            <input type="text" class="manual-input" id="manual-ip" placeholder="IP du serveur (ex: 192.168.1.50)">
+            <button class="btn-small" onclick="tryManualIP()">Tester</button>
+        </div>
+        <div class="hint-text">Ollama doit écouter sur le port 11434 avec OLLAMA_HOST=0.0.0.0</div>
+
+        <div class="error-box" id="discovery-error"></div>
+
+        <br>
+        <button class="btn" id="btn-to-config" onclick="goToConfig()" style="display:none">Configurer le quiz ➜</button>
+
+        <br>
+        <a class="nav-link" href="index.html">🃏 Multiplications</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="fractions.html">🥧 Fractions</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="grammaire.html">📝 Grammaire</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="kangourou/index.html">🦘 Kangourou</a>
+    </div>
+
+    <!-- ══════════════ CONFIG SCREEN ══════════════ -->
+    <div id="config-screen" style="display:none">
+        <h1>⚙️ Configuration</h1>
+        <div class="server-badge" id="server-badge"></div>
+
+        <div class="config-section">
+            <div class="config-label">🧠 Modèle LLM</div>
+            <select class="config-select" id="model-select"></select>
+        </div>
+
+        <div class="config-section">
+            <div class="config-label">📚 Sujet</div>
+            <div class="subject-grid" id="subject-grid">
+                <div class="subject-btn selected" onclick="selectSubject(this, 'Mathématiques CM2')" data-subject="Mathématiques CM2">
+                    <span class="subj-icon">📐</span>Maths
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, 'Sciences CM2')" data-subject="Sciences CM2">
+                    <span class="subj-icon">🔬</span>Sciences
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, 'Histoire de France CM2')" data-subject="Histoire de France CM2">
+                    <span class="subj-icon">🏛️</span>Histoire
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, 'Géographie CM2')" data-subject="Géographie CM2">
+                    <span class="subj-icon">🌍</span>Géo
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, 'Français - vocabulaire CM2')" data-subject="Français - vocabulaire CM2">
+                    <span class="subj-icon">📖</span>Français
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, 'Anglais niveau CM2')" data-subject="Anglais niveau CM2">
+                    <span class="subj-icon">🇬🇧</span>Anglais
+                </div>
+                <div class="subject-btn" onclick="selectSubject(this, '__custom__')" data-subject="__custom__">
+                    <span class="subj-icon">✏️</span>Autre…
+                </div>
+            </div>
+            <input type="text" class="custom-topic-input" id="custom-topic" placeholder="Ex: Les volcans, Le système solaire…">
+        </div>
+
+        <button class="btn" onclick="startQuiz()">🚀 Lancer le quiz !</button>
+        <br>
+        <a class="nav-link" onclick="backToDiscovery()" style="cursor:pointer">← Changer de serveur</a>
+    </div>
+
+    <!-- ══════════════ LOADING SCREEN ══════════════ -->
+    <div id="loading-screen" style="display:none">
+        <h1>🤖 Génération…</h1>
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loading-text">Le LLM prépare tes questions…</div>
+        <div class="error-box" id="loading-error"></div>
+    </div>
+
+    <!-- ══════════════ START SCREEN (hidden, needed by shared.js) ══════════════ -->
+    <div id="start-screen" style="display:none"></div>
+
+    <!-- ══════════════ GAME SCREEN ══════════════ -->
+    <div id="game-screen">
+        <div class="game-controls">
+            <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
+            <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="label">Carte</div>
+                <div class="value" id="card-count">1 / 10</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">⏱ Chrono</div>
+                <div class="value" id="timer">00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">✅ Score</div>
+                <div class="value" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="card-front">
+                    <div class="card-label" id="card-mode-label">Quiz QCM</div>
+                    <div id="question-area"></div>
+                    <div class="card-number" id="card-num">#1</div>
+                </div>
+                <div class="card-face card-back" id="card-back">
+                    <div class="result-label">La réponse est</div>
+                    <div class="result" id="result"></div>
+                    <div class="result-icon" id="result-icon">✅</div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-zone" id="answer-zone"></div>
+        <button class="btn-next" id="btn-next" onclick="nextCard()">Carte suivante ➜</button>
+    </div>
+
+    <!-- ══════════════ PAUSE SCREEN ══════════════ -->
+    <div id="pause-screen">
+        <h2 id="pause-title">🎉 Bravo !</h2>
+        <p class="pause-stats">Score : <strong id="pause-score">0 / 0</strong></p>
+        <p class="pause-stats">Temps : <strong id="pause-time">00:00</strong></p>
+        <p id="pause-message" style="color:rgba(255,255,255,0.85);margin-top:8px;"></p>
+        <div class="pause-buttons">
+            <button class="btn btn-continue" onclick="continueQuiz()">🔄 Encore 10 !</button>
+            <button class="btn btn-stop" onclick="backToConfig()">🏠 Menu</button>
+        </div>
+    </div>
+
+    <!-- ══════════════ IN-GAME PAUSE OVERLAY ══════════════ -->
+    <div id="ingame-pause-overlay">
+        <div class="pause-overlay-box">
+            <h2>⏸️ Pause</h2>
+            <p>Prends ton temps !</p>
+            <div class="pause-overlay-buttons">
+                <button class="btn btn-resume" onclick="resumeGame()">▶️ Reprendre</button>
+                <button class="btn btn-quit" onclick="stopSeries()">⏹️ Arrêter la série</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+    // ═══════════════════════════════════════
+    // Quiz QCM — Ollama-powered
+    // ═══════════════════════════════════════
+
+    // ── State ──
+    let ollamaBaseURL = '';
+    let selectedModel = '';
+    let selectedSubject = 'Mathématiques CM2';
+    let questions = [];
+    let questionIndex = 0;
+
+    // ── DOM ──
+    const discoveryScreen = document.getElementById('discovery-screen');
+    const configScreen    = document.getElementById('config-screen');
+    const loadingScreen   = document.getElementById('loading-screen');
+    const questionArea    = document.getElementById('question-area');
+    const explanationEl   = document.getElementById('explanation');
+
+    // ═══════════════════════════════════════
+    // Network scanning for Ollama
+    // ═══════════════════════════════════════
+
+    const OLLAMA_PORT = 11434;
+    const SCAN_TIMEOUT_MS = 1500;
+    const BATCH_SIZE = 20;
+
+    function ollamaURL(host) {
+        return `http://${host}:${OLLAMA_PORT}`;
+    }
+
+    async function probeOllama(host) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), SCAN_TIMEOUT_MS);
+        try {
+            const resp = await fetch(`${ollamaURL(host)}/api/tags`, {
+                signal: controller.signal
+            });
+            clearTimeout(timer);
+            if (resp.ok) {
+                const data = await resp.json();
+                return { host, models: data.models || [] };
+            }
+        } catch {
+            clearTimeout(timer);
+        }
+        return null;
+    }
+
+    function logScan(msg) {
+        const log = document.getElementById('scan-log');
+        log.textContent = msg;
+    }
+
+    function setProgress(pct) {
+        document.getElementById('scan-progress').style.width = pct + '%';
+    }
+
+    function buildScanTargets() {
+        const targets = [];
+
+        // Priority: localhost and common hostnames
+        targets.push('127.0.0.1');
+        targets.push('localhost');
+
+        // Common subnets for home networks
+        const subnets = ['192.168.1', '192.168.0', '10.0.0', '192.168.2', '172.16.0'];
+        for (const subnet of subnets) {
+            for (let i = 1; i <= 254; i++) {
+                targets.push(`${subnet}.${i}`);
+            }
+        }
+
+        return targets;
+    }
+
+    async function scanNetwork() {
+        const statusEl = document.getElementById('scan-status');
+        const foundEl  = document.getElementById('scan-found');
+        const btnConf  = document.getElementById('btn-to-config');
+
+        // 1. Check localStorage for previously found server
+        const savedURL = localStorage.getItem('cartestoto_ollama_url');
+        if (savedURL) {
+            statusEl.textContent = 'Vérification du serveur précédent…';
+            setProgress(5);
+            try {
+                const host = new URL(savedURL).hostname;
+                const result = await probeOllama(host);
+                if (result) {
+                    onServerFound(result.host, result.models);
+                    return;
+                }
+            } catch { /* URL parse failed, continue scanning */ }
+            logScan('Serveur précédent non disponible, scan en cours…');
+        }
+
+        // 2. Full scan
+        const targets = buildScanTargets();
+        const total = targets.length;
+        let scanned = 0;
+
+        statusEl.textContent = 'Scan du réseau en cours…';
+
+        for (let i = 0; i < total; i += BATCH_SIZE) {
+            const batch = targets.slice(i, i + BATCH_SIZE);
+            const promises = batch.map(host => probeOllama(host));
+            const results = await Promise.all(promises);
+
+            scanned += batch.length;
+            setProgress(Math.round((scanned / total) * 100));
+            logScan(`Testé ${scanned} / ${total} adresses…`);
+
+            const found = results.find(r => r !== null);
+            if (found) {
+                onServerFound(found.host, found.models);
+                return;
+            }
+        }
+
+        // Not found
+        statusEl.textContent = '❌ Aucun serveur Ollama trouvé';
+        setProgress(100);
+        logScan('Scan terminé. Entrez l\'adresse IP manuellement ci-dessous.');
+    }
+
+    function onServerFound(host, models) {
+        const url = ollamaURL(host);
+        ollamaBaseURL = url;
+        localStorage.setItem('cartestoto_ollama_url', url);
+
+        document.getElementById('scan-status').textContent = '✅ Serveur trouvé !';
+        setProgress(100);
+
+        const foundEl = document.getElementById('scan-found');
+        foundEl.style.display = 'block';
+        document.getElementById('found-url').textContent = `${url} — ${models.length} modèle(s)`;
+
+        document.getElementById('btn-to-config').style.display = 'inline-block';
+
+        // Store models for config screen
+        window._discoveredModels = models;
+    }
+
+    async function tryManualIP() {
+        const input = document.getElementById('manual-ip').value.trim();
+        if (!input) return;
+
+        const errorEl = document.getElementById('discovery-error');
+        errorEl.style.display = 'none';
+
+        document.getElementById('scan-status').textContent = `Test de ${input}…`;
+        const result = await probeOllama(input);
+
+        if (result) {
+            onServerFound(result.host, result.models);
+        } else {
+            errorEl.textContent = `Impossible de contacter Ollama sur ${input}:${OLLAMA_PORT}. Vérifiez que le serveur est lancé avec OLLAMA_HOST=0.0.0.0`;
+            errorEl.style.display = 'block';
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Config screen
+    // ═══════════════════════════════════════
+
+    function goToConfig() {
+        discoveryScreen.style.display = 'none';
+        configScreen.style.display = 'block';
+
+        document.getElementById('server-badge').textContent = '🟢 ' + ollamaBaseURL;
+
+        // Populate model selector
+        const select = document.getElementById('model-select');
+        select.innerHTML = '';
+        const models = window._discoveredModels || [];
+        if (models.length === 0) {
+            const opt = document.createElement('option');
+            opt.textContent = 'Aucun modèle trouvé';
+            opt.disabled = true;
+            select.appendChild(opt);
+        } else {
+            for (const m of models) {
+                const opt = document.createElement('option');
+                opt.value = m.name;
+                const sizeGB = m.size ? (m.size / 1e9).toFixed(1) + ' GB' : '';
+                opt.textContent = m.name + (sizeGB ? ` (${sizeGB})` : '');
+                select.appendChild(opt);
+            }
+            selectedModel = models[0].name;
+            select.addEventListener('change', () => { selectedModel = select.value; });
+        }
+    }
+
+    function selectSubject(btn, subject) {
+        document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        const customInput = document.getElementById('custom-topic');
+        if (subject === '__custom__') {
+            customInput.style.display = 'block';
+            customInput.focus();
+            selectedSubject = '';
+        } else {
+            customInput.style.display = 'none';
+            selectedSubject = subject;
+        }
+    }
+
+    function backToDiscovery() {
+        configScreen.style.display = 'none';
+        discoveryScreen.style.display = 'block';
+    }
+
+    function backToConfig() {
+        pauseScreen.style.display = 'none';
+        gameScreen.style.display  = 'none';
+        configScreen.style.display = 'block';
+    }
+
+    // ═══════════════════════════════════════
+    // Question generation via Ollama
+    // ═══════════════════════════════════════
+
+    async function generateQuestions(subject) {
+        const prompt = `Tu es un enseignant pour élèves de CM2 (10-11 ans) en France.
+Génère exactement 10 questions QCM (quiz à choix multiples) sur le sujet : "${subject}".
+
+Réponds UNIQUEMENT avec un tableau JSON valide, sans texte avant ni après. Format :
+[
+  {
+    "question": "La question ici ?",
+    "choices": ["Réponse A", "Réponse B", "Réponse C", "Réponse D"],
+    "answer": 0,
+    "explanation": "Courte explication de la bonne réponse."
+  }
+]
+
+Règles :
+- Exactement 4 choix par question
+- "answer" est l'index (0, 1, 2 ou 3) de la bonne réponse
+- Questions variées et adaptées au niveau CM2
+- Tout en français
+- Ne répète pas les mêmes questions`;
+
+        const resp = await fetch(`${ollamaBaseURL}/api/generate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: selectedModel,
+                prompt: prompt,
+                stream: false,
+                options: { temperature: 0.8 }
+            })
+        });
+
+        if (!resp.ok) {
+            throw new Error(`Erreur serveur : ${resp.status} ${resp.statusText}`);
+        }
+
+        const data = await resp.json();
+        const text = data.response || '';
+
+        // Extract JSON from the response (handle markdown code blocks)
+        const jsonMatch = text.match(/\[[\s\S]*\]/);
+        if (!jsonMatch) {
+            throw new Error('Le LLM n\'a pas retourné de JSON valide.');
+        }
+
+        const parsed = JSON.parse(jsonMatch[0]);
+
+        // Validate structure
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            throw new Error('Le JSON ne contient pas de questions.');
+        }
+
+        for (const q of parsed) {
+            if (!q.question || !Array.isArray(q.choices) || q.choices.length < 2 ||
+                typeof q.answer !== 'number' || q.answer < 0 || q.answer >= q.choices.length) {
+                throw new Error('Format de question invalide.');
+            }
+        }
+
+        return parsed;
+    }
+
+    // ═══════════════════════════════════════
+    // Quiz flow
+    // ═══════════════════════════════════════
+
+    async function startQuiz() {
+        if (selectedSubject === '__custom__' || selectedSubject === '') {
+            selectedSubject = document.getElementById('custom-topic').value.trim();
+        }
+        if (!selectedSubject) {
+            return;
+        }
+        if (!selectedModel) {
+            return;
+        }
+
+        configScreen.style.display  = 'none';
+        loadingScreen.style.display = 'block';
+
+        const errorEl = document.getElementById('loading-error');
+        errorEl.style.display = 'none';
+
+        try {
+            document.getElementById('loading-text').textContent = 'Le LLM prépare tes questions…';
+            questions = await generateQuestions(selectedSubject);
+            questionIndex = 0;
+
+            loadingScreen.style.display = 'none';
+
+            // Use shared.js game engine
+            document.getElementById('card-mode-label').textContent = selectedSubject;
+            startGame();
+        } catch (err) {
+            document.getElementById('loading-text').textContent = 'Erreur de génération';
+            errorEl.textContent = err.message;
+            errorEl.style.display = 'block';
+
+            // Add retry button
+            setTimeout(() => {
+                errorEl.innerHTML = err.message +
+                    '<br><br><button class="btn-small" onclick="retryGeneration()">🔄 Réessayer</button>' +
+                    ' <button class="btn-small" onclick="backToConfigFromLoading()">← Retour</button>';
+            }, 100);
+        }
+    }
+
+    function retryGeneration() {
+        loadingScreen.style.display = 'none';
+        startQuiz();
+    }
+
+    function backToConfigFromLoading() {
+        loadingScreen.style.display = 'none';
+        configScreen.style.display  = 'block';
+    }
+
+    async function continueQuiz() {
+        pauseScreen.style.display = 'none';
+
+        // Generate new questions for the next round
+        loadingScreen.style.display = 'block';
+        document.getElementById('loading-error').style.display = 'none';
+        document.getElementById('loading-text').textContent = 'Nouvelles questions en préparation…';
+
+        try {
+            questions = await generateQuestions(selectedSubject);
+            questionIndex = 0;
+            loadingScreen.style.display = 'none';
+            continueGame();
+        } catch (err) {
+            document.getElementById('loading-text').textContent = 'Erreur de génération';
+            const errorEl = document.getElementById('loading-error');
+            errorEl.textContent = err.message;
+            errorEl.style.display = 'block';
+            setTimeout(() => {
+                errorEl.innerHTML = err.message +
+                    '<br><br><button class="btn-small" onclick="continueQuiz()">🔄 Réessayer</button>' +
+                    ' <button class="btn-small" onclick="backToConfig()">← Menu</button>';
+            }, 100);
+        }
+    }
+
+    // ═══════════════════════════════════════
+    // Interface required by shared.js
+    // ═══════════════════════════════════════
+
+    function generateQuestion() {
+        const q = questions[questionIndex % questions.length];
+        questionIndex++;
+
+        // Set question on card front
+        questionArea.innerHTML = `<div class="question-text">${escapeHtml(q.question)}</div>`;
+
+        // Build choice buttons in answer zone
+        const zone = document.getElementById('answer-zone');
+        zone.innerHTML = '<div class="choice-btns" id="choice-btns"></div>';
+        const btnsContainer = document.getElementById('choice-btns');
+
+        q.choices.forEach((choice, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = choice;
+            btn.onclick = () => submitChoice(idx);
+            btnsContainer.appendChild(btn);
+        });
+
+        // Store current question for validation
+        window._currentQ = q;
+    }
+
+    function submitChoice(chosenIdx) {
+        const q = window._currentQ;
+        const isCorrect = (chosenIdx === q.answer);
+        const correctText = q.choices[q.answer];
+
+        explanationEl.textContent = q.explanation || '';
+        showResult(isCorrect, correctText);
+    }
+
+    function validateAnswer() {
+        // Not used — choices are validated via button clicks
+    }
+
+    function getFocusInput() {
+        const firstBtn = document.querySelector('#choice-btns .choice-btn');
+        return firstBtn || null;
+    }
+
+    function canEnterValidate() {
+        return false; // Validation is done by clicking choice buttons
+    }
+
+    // ═══════════════════════════════════════
+    // Utilities
+    // ═══════════════════════════════════════
+
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    // ═══════════════════════════════════════
+    // Init — start scanning on page load
+    // ═══════════════════════════════════════
+    (function init() {
+        // Hide start-screen (shared.js expects it), show discovery
+        startScreen.style.display     = 'none';
+        gameScreen.style.display      = 'none';
+        discoveryScreen.style.display = 'block';
+
+        scanNetwork();
+    })();
+    </script>
+</body>
+</html>

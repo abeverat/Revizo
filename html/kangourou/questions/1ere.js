@@ -1,0 +1,28 @@
+QUESTIONS["1ere"] = [
+  { question: "La dérivée de f(x) = 3x⁴ est :", choices: ["3x³", "4x³", "12x³", "12x⁴", "x³"], answer: 2, difficulty: 1, explanation: "f'(x) = 3×4x³ = 12x³" },
+  { question: "Que vaut e⁰ ?", choices: ["0", "1", "e", "2,718", "∞"], answer: 1, difficulty: 1, explanation: "e⁰ = 1" },
+  { question: "ln(e³) = ?", choices: ["1/3", "1", "3", "e³", "3e"], answer: 2, difficulty: 1, explanation: "ln(eⁿ) = n" },
+  { question: "cos(π) = ?", choices: ["-1", "0", "1", "π", "-π"], answer: 0, difficulty: 1, explanation: "cos(π) = -1" },
+  { question: "Combien vaut C(5,2) ?", choices: ["5", "10", "15", "20", "25"], answer: 1, difficulty: 1, explanation: "C(5,2) = 5!/(2!3!) = 10" },
+  { question: "Si P(A) = 0,3 et P(B) = 0,5 avec A et B indépendants, P(A∩B) = ?", choices: ["0,15", "0,2", "0,35", "0,5", "0,8"], answer: 0, difficulty: 1, explanation: "Indépendants : P(A∩B) = P(A)×P(B) = 0,15" },
+  { question: "La suite uₙ = 3n + 1 est :", choices: ["Arithmétique", "Géométrique", "Ni l'un ni l'autre", "Constante", "Alternée"], answer: 0, difficulty: 1, explanation: "uₙ₊₁ - uₙ = 3 (raison constante)." },
+  { question: "Le vecteur AB⃗ avec A(1,2) et B(4,6) a pour coordonnées :", choices: ["(5,8)", "(3,4)", "(4,6)", "(1,2)", "(2,3)"], answer: 1, difficulty: 1, explanation: "AB⃗ = (4-1, 6-2) = (3, 4)" },
+
+  { question: "La tangente à f(x) = x² au point x = 3 a pour équation :", choices: ["y = 6x - 9", "y = 6x + 9", "y = 3x - 9", "y = 3x + 9", "y = 6x - 3"], answer: 0, difficulty: 2, explanation: "f'(3) = 6, f(3) = 9. y = 6(x-3) + 9 = 6x - 9." },
+  { question: "Résoudre : eˣ = 5", choices: ["x = 5/e", "x = ln 5", "x = log₁₀ 5", "x = 5", "x = e⁵"], answer: 1, difficulty: 2, explanation: "eˣ = 5 → x = ln 5" },
+  { question: "Si uₙ est géométrique avec u₀ = 2 et q = 3, que vaut u₄ ?", choices: ["24", "54", "81", "162", "486"], answer: 3, difficulty: 2, explanation: "u₄ = 2 × 3⁴ = 2 × 81 = 162" },
+  { question: "L'équation de la droite perpendiculaire à y = 2x + 1 passant par (0,0) est :", choices: ["y = -2x", "y = -x/2", "y = x/2", "y = -1/(2x)", "y = 2x"], answer: 1, difficulty: 2, explanation: "Pente perpendiculaire = -1/2. y = -x/2." },
+  { question: "Soit X une variable aléatoire suivant la loi binomiale B(10, 0.5). E(X) = ?", choices: ["2", "3", "5", "10", "25"], answer: 2, difficulty: 2, explanation: "E(X) = np = 10 × 0,5 = 5" },
+  { question: "∫₀¹ eˣ dx = ?", choices: ["1", "e", "e - 1", "e + 1", "1/e"], answer: 2, difficulty: 2, explanation: "[eˣ]₀¹ = e¹ - e⁰ = e - 1" },
+  { question: "Le produit scalaire de u⃗(1,2) et v⃗(3,-1) est :", choices: ["-1", "0", "1", "5", "7"], answer: 2, difficulty: 2, explanation: "u⃗·v⃗ = 1×3 + 2×(-1) = 1" },
+  { question: "La limite de (1 + 1/n)ⁿ quand n → ∞ est :", choices: ["0", "1", "2", "e", "∞"], answer: 3, difficulty: 2, explanation: "C'est la définition de e." },
+
+  { question: "Résoudre : ln(x²-1) = 0", choices: ["x = √2", "x = ±√2", "x = 0", "x = 1", "x = 2"], answer: 1, difficulty: 3, explanation: "x²-1 = 1 → x² = 2 → x = ±√2" },
+  { question: "La dérivée de f(x) = ln(x²+1) est :", choices: ["1/(x²+1)", "2x/(x²+1)", "x/(x²+1)", "2/(x²+1)", "2x·ln(x²+1)"], answer: 1, difficulty: 3, explanation: "f'(x) = 2x/(x²+1)" },
+  { question: "Soit Sₙ = Σ(k=0 à n) 2ᵏ. Exprimer Sₙ :", choices: ["2ⁿ", "2ⁿ - 1", "2ⁿ⁺¹ - 1", "2ⁿ + 1", "n × 2ⁿ"], answer: 2, difficulty: 3, explanation: "Somme géométrique : (2ⁿ⁺¹ - 1)/(2-1) = 2ⁿ⁺¹ - 1" },
+  { question: "La courbe de f(x) = 1/x a pour centre de symétrie :", choices: ["(0,0)", "(1,1)", "(0,1)", "(1,0)", "Aucun"], answer: 0, difficulty: 3, explanation: "f est une fonction impaire : centre de symétrie = origine." },
+  { question: "∫ 1/x dx = ?", choices: ["x²/2", "ln|x| + C", "-1/x² + C", "eˣ + C", "1 + C"], answer: 1, difficulty: 3, explanation: "Primitive de 1/x = ln|x| + C" },
+  { question: "Si z = 2e^(iπ/3), la partie réelle de z est :", choices: ["1", "√3", "2", "1/2", "2√3"], answer: 0, difficulty: 3, explanation: "Re(z) = 2cos(π/3) = 2×1/2 = 1" },
+  { question: "La probabilité qu'une loi normale centrée réduite dépasse 0 est :", choices: ["0", "0,25", "0,5", "0,68", "1"], answer: 2, difficulty: 3, explanation: "Par symétrie, P(Z > 0) = 0,5." },
+  { question: "Soit f(x) = xe⁻ˣ. f admet un maximum en :", choices: ["x = -1", "x = 0", "x = 1", "x = e", "x = 1/e"], answer: 2, difficulty: 3, explanation: "f'(x) = e⁻ˣ(1-x). f'(x)=0 → x=1. f''(1)<0 → max." },
+];

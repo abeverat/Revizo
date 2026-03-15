@@ -1,0 +1,28 @@
+QUESTIONS["3eme"] = [
+  { question: "Simplifier : √50 = ?", choices: ["5√2", "2√5", "√25 + √25", "10√5", "25√2"], answer: 0, difficulty: 1, explanation: "√50 = √(25×2) = 5√2" },
+  { question: "Résoudre : x² = 49. Les solutions sont :", choices: ["x = 7", "x = -7", "x = 7 ou x = -7", "x = √7", "Aucune solution"], answer: 2, difficulty: 1, explanation: "x = ±7" },
+  { question: "Que vaut 3⁰ ?", choices: ["0", "1", "3", "9", "Indéfini"], answer: 1, difficulty: 1, explanation: "Tout nombre non nul à la puissance 0 vaut 1." },
+  { question: "Quelle est l'écriture scientifique de 0,00042 ?", choices: ["42 × 10⁻⁵", "4,2 × 10⁻⁴", "0,42 × 10⁻³", "4,2 × 10⁻³", "42 × 10⁻⁴"], answer: 1, difficulty: 1, explanation: "0,00042 = 4,2 × 10⁻⁴" },
+  { question: "Si f(x) = x² - 4x + 3, combien vaut f(1) ?", choices: ["-2", "0", "1", "2", "4"], answer: 1, difficulty: 1, explanation: "f(1) = 1 - 4 + 3 = 0" },
+  { question: "Un cylindre de rayon 3 et de hauteur 10 a pour volume :", choices: ["30π", "60π", "90π", "270π", "900π"], answer: 2, difficulty: 1, explanation: "V = π×r²×h = π×9×10 = 90π" },
+  { question: "Le cosinus de 60° vaut :", choices: ["0", "1/2", "√2/2", "√3/2", "1"], answer: 1, difficulty: 1, explanation: "cos(60°) = 1/2" },
+  { question: "Combien vaut |−15| ?", choices: ["-15", "0", "1/15", "15", "-1/15"], answer: 3, difficulty: 1, explanation: "|−15| = 15" },
+
+  { question: "Résoudre le système : x + y = 10 et x - y = 4", choices: ["x=6, y=4", "x=7, y=3", "x=8, y=2", "x=5, y=5", "x=4, y=6"], answer: 1, difficulty: 2, explanation: "2x = 14 → x = 7, y = 3" },
+  { question: "Développer : (2x - 3)² = ?", choices: ["4x² - 9", "4x² + 9", "4x² - 12x + 9", "4x² - 6x + 9", "2x² - 12x + 9"], answer: 2, difficulty: 2, explanation: "(2x-3)² = 4x² - 12x + 9" },
+  { question: "La probabilité de tirer un roi dans un jeu de 32 cartes est :", choices: ["1/13", "1/8", "4/32", "2/16", "1/8 et 4/32 et 2/16"], answer: 4, difficulty: 2, explanation: "4 rois sur 32 = 4/32 = 2/16 = 1/8. Tous sont corrects." },
+  { question: "Le théorème de Thalès s'applique dans un triangle coupé par une droite parallèle à un côté. Si DE // BC, AD=3, DB=2, AE=4,5 alors EC = ?", choices: ["2", "2,5", "3", "3,5", "4"], answer: 2, difficulty: 2, explanation: "AD/AB = AE/AC → 3/5 = 4,5/AC → AC = 7,5, EC = 3." },
+  { question: "Factoriser : 2x² - 8 = ?", choices: ["2(x²-4)", "2(x-2)(x+2)", "(2x-4)(x+2)", "2(x-4)(x+4)", "(x-2)(2x+4)"], answer: 1, difficulty: 2, explanation: "2x²-8 = 2(x²-4) = 2(x-2)(x+2)" },
+  { question: "La fonction f(x) = -x² + 4 est-elle croissante ou décroissante sur [0, +∞[ ?", choices: ["Croissante", "Décroissante", "Constante", "Ni l'un ni l'autre", "On ne peut pas savoir"], answer: 1, difficulty: 2, explanation: "f'(x) = -2x ≤ 0 pour x ≥ 0, donc décroissante." },
+  { question: "Quel est le volume d'une sphère de rayon 3 ?", choices: ["12π", "27π", "36π", "108π", "36"], answer: 2, difficulty: 2, explanation: "V = (4/3)πr³ = (4/3)π×27 = 36π" },
+  { question: "Si sin(α) = 0,6 et α est aigu, que vaut cos(α) ?", choices: ["0,4", "0,6", "0,8", "1", "0,36"], answer: 2, difficulty: 2, explanation: "cos²+sin²=1 → cos²=0,64 → cos=0,8" },
+
+  { question: "Les solutions de x² - 5x + 6 = 0 sont :", choices: ["1 et 6", "2 et 3", "-2 et -3", "1 et 5", "−1 et 6"], answer: 1, difficulty: 3, explanation: "Δ = 25-24 = 1. x = (5±1)/2 → 2 et 3." },
+  { question: "Dans un cercle de rayon 5, un triangle inscrit a un angle au sommet face au diamètre. Cet angle vaut :", choices: ["30°", "45°", "60°", "90°", "120°"], answer: 3, difficulty: 3, explanation: "Théorème de Thalès : angle inscrit dans un demi-cercle = 90°." },
+  { question: "On tire 2 cartes d'un jeu de 52. Combien de mains possibles ?", choices: ["104", "1 326", "2 652", "2 704", "52²"], answer: 1, difficulty: 3, explanation: "C(52,2) = 52×51/2 = 1 326" },
+  { question: "Si log₁₀(x) = 3, alors x = ?", choices: ["3", "30", "100", "1000", "10³ "], answer: 3, difficulty: 3, explanation: "log₁₀(x) = 3 → x = 10³ = 1000" },
+  { question: "La somme des angles intérieurs d'un polygone à 7 côtés est :", choices: ["720°", "900°", "1080°", "1260°", "1440°"], answer: 1, difficulty: 3, explanation: "(7-2)×180 = 900°" },
+  { question: "Quelle est la dérivée de f(x) = x³ - 3x + 1 ?", choices: ["3x² - 3", "3x² + 1", "x² - 3", "3x³ - 3x", "3x² - 3x"], answer: 0, difficulty: 3, explanation: "f'(x) = 3x² - 3" },
+  { question: "Combien y a-t-il de nombres premiers entre 1 et 50 ?", choices: ["12", "13", "14", "15", "16"], answer: 3, difficulty: 3, explanation: "2,3,5,7,11,13,17,19,23,29,31,37,41,43,47 → 15 nombres." },
+  { question: "Si la suite (uₙ) est définie par u₀=2 et uₙ₊₁ = 2uₙ - 1, que vaut u₃ ?", choices: ["5", "7", "9", "11", "15"], answer: 2, difficulty: 3, explanation: "u₁=3, u₂=5, u₃=9" },
+];
