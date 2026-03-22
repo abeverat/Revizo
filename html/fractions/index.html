@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Toto - Fractions CM2</title>
+    <link rel="stylesheet" href="../shared.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ══════════════ ÉCRAN D'ACCUEIL ══════════════ -->
+    <div id="start-screen">
+        <h1>🥧 Fractions Toto</h1>
+        <p>Entraîne-toi aux fractions — CM2</p>
+
+        <div class="mode-selector">
+            <div class="mode-btn selected" onclick="selectMode('pie')" id="mode-pie">
+                <span class="mode-icon">🥧</span>Identifier
+            </div>
+            <div class="mode-btn" onclick="selectMode('simplify')" id="mode-simplify">
+                <span class="mode-icon">✂️</span>Simplifier
+            </div>
+            <div class="mode-btn" onclick="selectMode('compare')" id="mode-compare">
+                <span class="mode-icon">⚖️</span>Comparer
+            </div>
+            <div class="mode-btn" onclick="selectMode('add')" id="mode-add">
+                <span class="mode-icon">➕</span>Additionner
+            </div>
+        </div>
+
+        <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
+        <br>
+        <a class="nav-link" href="../index.html">🏠 Accueil</a>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE JEU ══════════════ -->
+    <div id="game-screen">
+        <div class="game-controls">
+            <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
+            <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="label">Carte</div>
+                <div class="value" id="card-count">1 / 10</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">⏱ Chrono</div>
+                <div class="value" id="timer">00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">✅ Score</div>
+                <div class="value" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="card-front">
+                    <div class="card-label" id="card-mode-label">Identifier la fraction</div>
+                    <div id="question-area"></div>
+                    <div class="card-number" id="card-num">#1</div>
+                </div>
+                <div class="card-face card-back" id="card-back">
+                    <div class="result-label">La réponse est</div>
+                    <div class="result" id="result"></div>
+                    <div class="result-icon" id="result-icon">✅</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-zone" id="answer-zone"></div>
+        <button class="btn-next" id="btn-next" onclick="nextCard()">Carte suivante ➜</button>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE PAUSE ══════════════ -->
+    <div id="pause-screen">
+        <h2 id="pause-title">🎉 Bravo !</h2>
+        <p class="pause-stats">Score : <strong id="pause-score">0 / 10</strong></p>
+        <p class="pause-stats">Temps : <strong id="pause-time">00:00</strong></p>
+        <p class="pause-stats" id="pause-message"></p>
+        <div class="pause-buttons">
+            <button class="btn btn-continue" onclick="continueGame()">🔄 Encore 10 !</button>
+            <button class="btn btn-stop" onclick="resetGame()">🏠 Accueil</button>
+        </div>
+    </div>
+
+    <!-- ══════════════ OVERLAY PAUSE EN JEU ══════════════ -->
+    <div id="ingame-pause-overlay">
+        <div class="pause-overlay-box">
+            <h2>⏸️ Pause</h2>
+            <p>Prends ton temps !</p>
+            <div class="pause-overlay-buttons">
+                <button class="btn btn-resume" onclick="resumeGame()">▶️ Reprendre</button>
+                <button class="btn btn-quit" onclick="stopSeries()">⏹️ Arrêter la série</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../shared.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

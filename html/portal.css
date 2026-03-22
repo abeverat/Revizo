@@ -1,0 +1,165 @@
+/* ═══════════════════════════════════════
+   Portal — Cartes Toto Home Page
+   ═══════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    overflow-x: hidden;
+}
+
+@keyframes gradientShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ── Stars background ── */
+.stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.star {
+    position: absolute;
+    background: rgba(255,255,255,0.7);
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    0%   { opacity: 0.3; transform: scale(0.8); }
+    100% { opacity: 1;   transform: scale(1.2); }
+}
+
+/* ── Header ── */
+.portal-header {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 1;
+}
+
+.portal-header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem;
+    color: #fff;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+    margin-bottom: 10px;
+}
+
+.portal-header p {
+    font-size: 1.2rem;
+    color: rgba(255,255,255,0.85);
+    font-weight: 700;
+}
+
+/* ── Module grid ── */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 900px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Module card ── */
+.module-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(14px);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 24px;
+    padding: 32px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 5px;
+    border-radius: 24px 24px 0 0;
+}
+
+.module-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    background: rgba(255,255,255,0.25);
+}
+
+.module-card .card-icon {
+    font-size: 3.5rem;
+    display: block;
+    margin-bottom: 14px;
+}
+
+.module-card .card-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+}
+
+.module-card .card-desc {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.4;
+}
+
+/* ── Color accents per module ── */
+.module-card.multiply::before { background: linear-gradient(90deg, #f857a6, #ff5858); }
+.module-card.fractions::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
+.module-card.grammaire::before { background: linear-gradient(90deg, #11998e, #38ef7d); }
+.module-card.geometrie::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
+.module-card.quiz-qcm::before  { background: linear-gradient(90deg, #667eea, #764ba2); }
+.module-card.kangourou::before { background: linear-gradient(90deg, #f7b733, #fc4a1a); }
+
+/* ── Footer ── */
+.portal-footer {
+    margin-top: 50px;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Responsive ── */
+@media (max-width: 750px) {
+    .module-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+    .portal-header h1 { font-size: 2.6rem; }
+}
+
+@media (max-width: 480px) {
+    body { padding: 24px 14px; }
+    .module-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .portal-header h1 { font-size: 2.2rem; }
+    .module-card { padding: 24px 16px; }
+    .module-card .card-icon { font-size: 2.8rem; }
+}

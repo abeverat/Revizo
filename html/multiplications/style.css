@@ -1,0 +1,45 @@
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    overflow: hidden;
+}
+
+.btn {
+    background: linear-gradient(135deg, #f857a6, #ff5858);
+    box-shadow: 0 8px 20px rgba(248,87,166,0.4);
+}
+
+.btn:hover {
+    box-shadow: 0 12px 28px rgba(248,87,166,0.5);
+}
+
+#game-screen {
+    max-width: 500px;
+}
+
+.card-container {
+    width: 280px;
+    height: 360px;
+}
+
+.card-front .multiplication {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.5rem;
+    color: #333;
+    line-height: 1.2;
+}
+
+.card-back .result {
+    font-size: 4rem;
+}
+
+#answer-input {
+    width: 140px;
+}
+
+@media (max-width: 500px) {
+    #start-screen h1 { font-size: 2.4rem; }
+    .card-container { width: 220px; height: 300px; }
+    .card-front .multiplication { font-size: 2.6rem; }
+    .card-back .result { font-size: 3rem; }
+    #answer-input { width: 110px; font-size: 1.4rem; }
+}

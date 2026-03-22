@@ -1,0 +1,17 @@
+// ── MESURES (périmètre / aire) ──
+const mesuresQuestions = [
+    { question: "Comment appelle-t-on la longueur du contour d'une figure ?", answer: "Le périmètre", choices: ["Le périmètre", "L'aire", "Le volume", "La diagonale"], explanation: "Le périmètre est la mesure du tour complet d'une figure. Il s'exprime en unités de longueur (cm, m…)." },
+    { question: "Comment appelle-t-on la mesure de la surface d'une figure ?", answer: "L'aire", choices: ["L'aire", "Le périmètre", "Le volume", "La longueur"], explanation: "L'aire mesure la surface intérieure d'une figure. Elle s'exprime en unités carrées (cm², m²…)." },
+    { question: "Quelle est la formule du périmètre d'un carré de côté c ?", answer: "P = 4 × c", choices: ["P = 4 × c", "P = 2 × c", "P = c × c", "P = c + 4"], explanation: "Le carré a 4 côtés égaux, donc son périmètre = 4 × côté." },
+    { question: "Quelle est la formule de l'aire d'un carré de côté c ?", answer: "A = c × c", choices: ["A = c × c", "A = 4 × c", "A = 2 × c", "A = c + c"], explanation: "L'aire du carré = côté × côté = c²." },
+    { question: "Quelle est la formule du périmètre d'un rectangle (longueur L, largeur l) ?", answer: "P = 2 × (L + l)", choices: ["P = 2 × (L + l)", "P = L × l", "P = L + l", "P = 4 × L"], explanation: "Le périmètre du rectangle = 2 × longueur + 2 × largeur = 2 × (L + l)." },
+    { question: "Quelle est la formule de l'aire d'un rectangle (longueur L, largeur l) ?", answer: "A = L × l", choices: ["A = L × l", "A = 2 × (L + l)", "A = L + l", "A = 4 × l"], explanation: "L'aire du rectangle = longueur × largeur." },
+    { question: "Quelle est la formule de l'aire d'un triangle (base b, hauteur h) ?", answer: "A = (b × h) ÷ 2", choices: ["A = (b × h) ÷ 2", "A = b × h", "A = b + h", "A = 2 × b × h"], explanation: "L'aire du triangle = (base × hauteur) ÷ 2. C'est la moitié de l'aire du rectangle correspondant." },
+    { question: "Un carré a un côté de 5 cm. Quel est son périmètre ?", answer: "20 cm", choices: ["20 cm", "25 cm", "10 cm", "15 cm"], explanation: "Périmètre = 4 × 5 = 20 cm." },
+    { question: "Un carré a un côté de 5 cm. Quelle est son aire ?", answer: "25 cm²", choices: ["25 cm²", "20 cm²", "10 cm²", "50 cm²"], explanation: "Aire = 5 × 5 = 25 cm²." },
+    { question: "Un rectangle mesure 8 cm de long et 3 cm de large. Quel est son périmètre ?", answer: "22 cm", choices: ["22 cm", "24 cm", "11 cm", "32 cm"], explanation: "Périmètre = 2 × (8 + 3) = 2 × 11 = 22 cm." },
+    { question: "Un rectangle mesure 8 cm de long et 3 cm de large. Quelle est son aire ?", answer: "24 cm²", choices: ["24 cm²", "22 cm²", "11 cm²", "32 cm²"], explanation: "Aire = 8 × 3 = 24 cm²." },
+    { question: "L'aire s'exprime en :", answer: "Unités carrées (cm², m²…)", choices: ["Unités carrées (cm², m²…)", "Centimètres (cm)", "Litres (L)", "Kilogrammes (kg)"], explanation: "L'aire mesure une surface, on utilise donc des unités carrées." },
+    { question: "Le périmètre s'exprime en :", answer: "Unités de longueur (cm, m…)", choices: ["Unités de longueur (cm, m…)", "Unités carrées (cm², m²)", "Litres (L)", "Kilogrammes (kg)"], explanation: "Le périmètre mesure une longueur, on utilise donc des cm, m, km…" },
+    { question: "Un triangle a une base de 10 cm et une hauteur de 6 cm. Quelle est son aire ?", answer: "30 cm²", choices: ["30 cm²", "60 cm²", "16 cm²", "36 cm²"], explanation: "Aire = (10 × 6) ÷ 2 = 60 ÷ 2 = 30 cm²." },
+];

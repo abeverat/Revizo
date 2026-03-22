@@ -1,0 +1,185 @@
+body {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+}
+
+.btn:hover {
+    box-shadow: 0 12px 28px rgba(102,126,234,0.5);
+}
+
+#game-screen {
+    max-width: 540px;
+}
+
+.card-container {
+    width: 300px;
+    height: 380px;
+}
+
+.card-front .card-label {
+    font-size: 0.85rem;
+}
+
+.card-front .question-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 16px;
+}
+
+/* ── Mode selector ── */
+.mode-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.mode-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 14px 24px;
+    border: 3px solid rgba(255,255,255,0.5);
+    border-radius: 20px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    transition: all 0.3s;
+    text-align: center;
+    min-width: 140px;
+}
+
+.mode-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-3px);
+}
+
+.mode-btn.selected {
+    background: rgba(255,255,255,0.9);
+    color: #f5576c;
+    border-color: #fff;
+    transform: scale(1.05);
+}
+
+.mode-btn .mode-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 6px;
+}
+
+/* ── Pie chart SVG ── */
+.pie-chart {
+    width: 160px;
+    height: 160px;
+    margin: 10px auto;
+}
+
+/* ── Fraction display ── */
+.fraction-display {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    color: #333;
+    line-height: 1;
+}
+
+.fraction-display .numerator,
+.fraction-display .denominator {
+    padding: 4px 12px;
+}
+
+.fraction-display .fraction-bar {
+    width: 100%;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+}
+
+.fraction-display-small {
+    font-size: 1.8rem;
+}
+
+.fraction-display-small .fraction-bar {
+    height: 3px;
+}
+
+/* ── Fractions row for comparison / addition ── */
+.fractions-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.comparison-symbol {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    color: #f5576c;
+}
+
+/* ── Fraction input group ── */
+.fraction-input-group {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.fraction-input-group .answer-input {
+    width: 80px;
+    font-size: 1.5rem;
+    padding: 8px;
+}
+
+.fraction-input-group .input-bar {
+    width: 80px;
+    height: 4px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 2px;
+}
+
+/* ── Comparison buttons ── */
+.comparison-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.cmp-btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    padding: 14px 28px;
+    border: 3px solid rgba(255,255,255,0.5);
+    border-radius: 16px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    transition: all 0.2s;
+    min-width: 70px;
+}
+
+.cmp-btn:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateY(-2px);
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+    #start-screen h1 { font-size: 2.4rem; }
+    .card-container { width: 260px; height: 340px; }
+    .fraction-display { font-size: 2.2rem; }
+    .pie-chart { width: 120px; height: 120px; }
+    .answer-input { width: 80px; font-size: 1.4rem; }
+    .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
+}

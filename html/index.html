@@ -3,208 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cartes Toto - Multiplications</title>
-    <link rel="stylesheet" href="shared.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            overflow: hidden;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #f857a6, #ff5858);
-            box-shadow: 0 8px 20px rgba(248,87,166,0.4);
-        }
-
-        .btn:hover {
-            box-shadow: 0 12px 28px rgba(248,87,166,0.5);
-        }
-
-        #game-screen {
-            max-width: 500px;
-        }
-
-        .card-container {
-            width: 280px;
-            height: 360px;
-        }
-
-        .card-front .multiplication {
-            font-family: 'Fredoka One', cursive;
-            font-size: 3.5rem;
-            color: #333;
-            line-height: 1.2;
-        }
-
-        .card-back .result {
-            font-size: 4rem;
-        }
-
-        #answer-input {
-            width: 140px;
-        }
-
-        @media (max-width: 500px) {
-            #start-screen h1 { font-size: 2.4rem; }
-            .card-container { width: 220px; height: 300px; }
-            .card-front .multiplication { font-size: 2.6rem; }
-            .card-back .result { font-size: 3rem; }
-            #answer-input { width: 110px; font-size: 1.4rem; }
-        }
-    </style>
+    <title>Cartes Toto — Apprends en t'amusant !</title>
+    <link rel="stylesheet" href="portal.css">
 </head>
 <body>
 
     <div class="stars" id="stars"></div>
-    <canvas id="confetti-canvas"></canvas>
 
-    <!-- ══════════════ ÉCRAN D'ACCUEIL ══════════════ -->
-    <div id="start-screen">
+    <header class="portal-header">
         <h1>🃏 Cartes Toto</h1>
-        <p>Entraîne-toi aux multiplications !</p>
-        <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
-        <br>
-        <a class="nav-link" href="fractions.html">🥧 Fractions</a>
-        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
-        <a class="nav-link" href="grammaire.html">📝 Grammaire</a>
-        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
-        <a class="nav-link" href="quiz-qcm.html">🤖 Quiz QCM</a>
-        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
-        <a class="nav-link" href="kangourou/index.html">🦘 Kangourou</a>
-        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
-        <a class="nav-link" href="geometrie.html">📐 Géométrie</a>
+        <p>Apprends en t'amusant !</p>
+    </header>
+
+    <div class="module-grid">
+        <a class="module-card multiply" href="multiplications/index.html">
+            <span class="card-icon">🃏</span>
+            <div class="card-title">Multiplications</div>
+            <div class="card-desc">Entraîne-toi aux tables</div>
+        </a>
+
+        <a class="module-card fractions" href="fractions/index.html">
+            <span class="card-icon">🥧</span>
+            <div class="card-title">Fractions</div>
+            <div class="card-desc">Identifier, simplifier, comparer</div>
+        </a>
+
+        <a class="module-card grammaire" href="grammaire/index.html">
+            <span class="card-icon">📝</span>
+            <div class="card-title">Grammaire</div>
+            <div class="card-desc">Homophones, conjugaison, nature…</div>
+        </a>
+
+        <a class="module-card geometrie" href="geometrie/index.html">
+            <span class="card-icon">📐</span>
+            <div class="card-title">Géométrie</div>
+            <div class="card-desc">Cercle, droites, figures, angles</div>
+        </a>
+
+        <a class="module-card quiz-qcm" href="quiz-qcm/index.html">
+            <span class="card-icon">🤖</span>
+            <div class="card-title">Quiz QCM</div>
+            <div class="card-desc">Quiz IA avec Ollama</div>
+        </a>
+
+        <a class="module-card kangourou" href="kangourou/index.html">
+            <span class="card-icon">🦘</span>
+            <div class="card-title">Kangourou</div>
+            <div class="card-desc">Prépare la compétition !</div>
+        </a>
     </div>
 
-    <!-- ══════════════ ÉCRAN DE JEU ══════════════ -->
-    <div id="game-screen">
-        <div class="game-controls">
-            <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
-            <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
-        </div>
+    <footer class="portal-footer">
+        Cartes Toto — CM2
+    </footer>
 
-        <div class="stats-bar">
-            <div class="stat-box">
-                <div class="label">Carte</div>
-                <div class="value" id="card-count">1 / 10</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">⏱ Chrono</div>
-                <div class="value" id="timer">00:00</div>
-            </div>
-            <div class="stat-box">
-                <div class="label">✅ Score</div>
-                <div class="value" id="score">0</div>
-            </div>
-        </div>
-
-        <div class="card-container">
-            <div class="card" id="card">
-                <div class="card-face card-front">
-                    <div class="card-label">Carte Toto</div>
-                    <div class="multiplication" id="question">? × ?</div>
-                    <div class="card-number" id="card-num">#1</div>
-                </div>
-                <div class="card-face card-back" id="card-back">
-                    <div class="result-label">Le résultat est</div>
-                    <div class="result" id="result">0</div>
-                    <div class="result-icon" id="result-icon">✅</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="answer-zone" id="answer-zone">
-            <input type="number" class="answer-input" id="answer-input" placeholder="?" autocomplete="off">
-            <button class="btn-validate" id="btn-validate" onclick="validateAnswer()">OK</button>
-        </div>
-        <button class="btn-next" id="btn-next" onclick="nextCard()">Carte suivante ➜</button>
-    </div>
-
-    <!-- ══════════════ ÉCRAN DE PAUSE ══════════════ -->
-    <div id="pause-screen">
-        <h2 id="pause-title">🎉 Bravo !</h2>
-        <p class="pause-stats">Score : <strong id="pause-score">0 / 10</strong></p>
-        <p class="pause-stats">Temps : <strong id="pause-time">00:00</strong></p>
-        <p class="pause-stats" id="pause-message"></p>
-        <div class="pause-buttons">
-            <button class="btn btn-continue" onclick="continueGame()">🔄 Encore 10 !</button>
-            <button class="btn btn-stop" onclick="resetGame()">🏠 Accueil</button>
-        </div>
-    </div>
-
-    <!-- ══════════════ OVERLAY PAUSE EN JEU ══════════════ -->
-    <div id="ingame-pause-overlay">
-        <div class="pause-overlay-box">
-            <h2>⏸️ Pause</h2>
-            <p>Prends ton temps !</p>
-            <div class="pause-overlay-buttons">
-                <button class="btn btn-resume" onclick="resumeGame()">▶️ Reprendre</button>
-                <button class="btn btn-quit" onclick="stopSeries()">⏹️ Arrêter la série</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="shared.js"></script>
     <script>
-        // ═══════════════════════════════════════
-        // Multiplication-specific logic
-        // ═══════════════════════════════════════
-        let a, b, correctAnswer;
-
-        const questionEl   = document.getElementById('question');
-        const answerInput  = document.getElementById('answer-input');
-        const btnValidate  = document.getElementById('btn-validate');
-
-        // Weighted pool: 3–8 appear 4× more often than 0,1,2,9,10
-        const weightedPool = [
-            0, 1, 2,
-            3,3,3,3, 4,4,4,4, 5,5,5,5,
-            6,6,6,6, 7,7,7,7, 8,8,8,8,
-            9, 10
-        ];
-
-        function pickNumber() {
-            return weightedPool[Math.floor(Math.random() * weightedPool.length)];
-        }
-
-        // ── Required by shared.js ──
-
-        function generateQuestion() {
-            a = pickNumber();
-            b = pickNumber();
-            correctAnswer = a * b;
-            questionEl.textContent = `${a} × ${b}`;
-
-            answerInput.value    = '';
-            answerInput.disabled = false;
-            btnValidate.style.display = 'inline-block';
-            setTimeout(() => answerInput.focus(), 100);
-        }
-
-        function validateAnswer() {
-            if (isFlipped) return;
-
-            const userAnswer = parseInt(answerInput.value);
-            if (isNaN(userAnswer)) {
-                answerInput.classList.add('shake');
-                setTimeout(() => answerInput.classList.remove('shake'), 500);
-                return;
+        // Decorative stars
+        (function() {
+            const container = document.getElementById('stars');
+            for (let i = 0; i < 40; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top  = Math.random() * 100 + '%';
+                star.style.animationDelay = (Math.random() * 3) + 's';
+                star.style.width = star.style.height = (Math.random() * 4 + 3) + 'px';
+                container.appendChild(star);
             }
-
-            const isCorrect = userAnswer === correctAnswer;
-
-            answerInput.disabled      = true;
-            btnValidate.style.display = 'none';
-
-            showResult(isCorrect, String(correctAnswer));
-        }
-
-        function getFocusInput() {
-            return answerInput;
-        }
-
-        function canEnterValidate() {
-            return true;
-        }
+        })();
     </script>
 </body>
 </html>

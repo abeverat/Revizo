@@ -1,0 +1,56 @@
+// ── ACCORDS ──
+const accordQuestions = [
+    // ─── Adjectifs qualificatifs ───
+    { sentence: "Les petites filles sont ___ (content).", answer: "contentes", choices: ["content", "contente", "contents", "contentes"], explanation: "L'adjectif s'accorde avec « filles » : féminin pluriel → contentes." },
+    { sentence: "Le chien est ___ (gentil).", answer: "gentil", choices: ["gentil", "gentille", "gentils", "gentilles"], explanation: "L'adjectif s'accorde avec « chien » : masculin singulier → gentil." },
+    { sentence: "Ces fleurs sont ___ (beau).", answer: "belles", choices: ["beau", "belle", "beaux", "belles"], explanation: "L'adjectif s'accorde avec « fleurs » : féminin pluriel → belles." },
+    { sentence: "La mer est ___ (bleu).", answer: "bleue", choices: ["bleu", "bleue", "bleus", "bleues"], explanation: "L'adjectif s'accorde avec « mer » : féminin singulier → bleue." },
+    { sentence: "Les garçons sont ___ (fatigué).", answer: "fatigués", choices: ["fatigué", "fatiguée", "fatigués", "fatiguées"], explanation: "L'adjectif s'accorde avec « garçons » : masculin pluriel → fatigués." },
+    { sentence: "Cette robe est ___ (joli).", answer: "jolie", choices: ["joli", "jolie", "jolis", "jolies"], explanation: "L'adjectif s'accorde avec « robe » : féminin singulier → jolie." },
+    { sentence: "Des nuages ___ (gris) couvrent le ciel.", answer: "gris", choices: ["gri", "gris", "grise", "grises"], explanation: "L'adjectif s'accorde avec « nuages » : masculin pluriel → gris (invariable au pluriel)." },
+    { sentence: "Les chattes sont ___ (noir).", answer: "noires", choices: ["noir", "noire", "noirs", "noires"], explanation: "L'adjectif s'accorde avec « chattes » : féminin pluriel → noires." },
+    { sentence: "Une journée ___ (ensoleillé) s'annonce.", answer: "ensoleillée", choices: ["ensoleillé", "ensoleillée", "ensoleillés", "ensoleillées"], explanation: "L'adjectif s'accorde avec « journée » : féminin singulier → ensoleillée." },
+    { sentence: "Les arbres sont ___ (grand).", answer: "grands", choices: ["grand", "grande", "grands", "grandes"], explanation: "L'adjectif s'accorde avec « arbres » : masculin pluriel → grands." },
+    { sentence: "La soupe est ___ (chaud).", answer: "chaude", choices: ["chaud", "chaude", "chauds", "chaudes"], explanation: "L'adjectif s'accorde avec « soupe » : féminin singulier → chaude." },
+    { sentence: "Les élèves sont ___ (attentif).", answer: "attentifs", choices: ["attentif", "attentive", "attentifs", "attentives"], explanation: "L'adjectif s'accorde avec « élèves » (masc. par défaut) : masculin pluriel → attentifs." },
+    { sentence: "Ces pommes sont ___ (mûr).", answer: "mûres", choices: ["mûr", "mûre", "mûrs", "mûres"], explanation: "L'adjectif s'accorde avec « pommes » : féminin pluriel → mûres." },
+    { sentence: "Ma sœur est ___ (sportif).", answer: "sportive", choices: ["sportif", "sportive", "sportifs", "sportives"], explanation: "L'adjectif s'accorde avec « sœur » : féminin singulier → sportive." },
+    { sentence: "Un paysage ___ (magnifique) s'étend devant nous.", answer: "magnifique", choices: ["magnifique", "magnifiques", "magnific", "magnifiqué"], explanation: "L'adjectif s'accorde avec « paysage » : masculin singulier → magnifique." },
+    { sentence: "Des histoires ___ (passionnant) nous attendent.", answer: "passionnantes", choices: ["passionnant", "passionnante", "passionnants", "passionnantes"], explanation: "L'adjectif s'accorde avec « histoires » : féminin pluriel → passionnantes." },
+    { sentence: "Le ciel est ___ (clair).", answer: "clair", choices: ["clair", "claire", "clairs", "claires"], explanation: "L'adjectif s'accorde avec « ciel » : masculin singulier → clair." },
+    { sentence: "Les routes sont ___ (dangereux).", answer: "dangereuses", choices: ["dangereux", "dangereuse", "dangereux", "dangereuses"], explanation: "L'adjectif s'accorde avec « routes » : féminin pluriel → dangereuses." },
+    { sentence: "Une voix ___ (doux) résonne dans la pièce.", answer: "douce", choices: ["doux", "douce", "douces", "doux"], explanation: "L'adjectif s'accorde avec « voix » : féminin singulier → douce." },
+    { sentence: "Les enfants sont ___ (heureux).", answer: "heureux", choices: ["heureux", "heureuse", "heureux", "heureuses"], explanation: "L'adjectif s'accorde avec « enfants » : masculin pluriel → heureux (invariable au pluriel)." },
+    { sentence: "La vieille dame est très ___ (aimable).", answer: "aimable", choices: ["aimable", "aimables", "aimablé", "aimablée"], explanation: "L'adjectif s'accorde avec « dame » : féminin singulier → aimable (même forme au m. et f.)." },
+    { sentence: "Ses cheveux sont ___ (long).", answer: "longs", choices: ["long", "longue", "longs", "longues"], explanation: "L'adjectif s'accorde avec « cheveux » : masculin pluriel → longs." },
+    { sentence: "Les étoiles sont ___ (brillant).", answer: "brillantes", choices: ["brillant", "brillante", "brillants", "brillantes"], explanation: "L'adjectif s'accorde avec « étoiles » : féminin pluriel → brillantes." },
+    { sentence: "Ce film est ___ (intéressant).", answer: "intéressant", choices: ["intéressant", "intéressante", "intéressants", "intéressantes"], explanation: "L'adjectif s'accorde avec « film » : masculin singulier → intéressant." },
+    { sentence: "Les fenêtres sont ___ (ouvert).", answer: "ouvertes", choices: ["ouvert", "ouverte", "ouverts", "ouvertes"], explanation: "L'adjectif s'accorde avec « fenêtres » : féminin pluriel → ouvertes." },
+    { sentence: "L'eau est ___ (froid).", answer: "froide", choices: ["froid", "froide", "froids", "froides"], explanation: "L'adjectif s'accorde avec « eau » : féminin singulier → froide." },
+
+    // ─── Participes passés avec être ───
+    { sentence: "Les filles sont ___ (arrivé) en retard.", answer: "arrivées", choices: ["arrivé", "arrivée", "arrivés", "arrivées"], explanation: "Avec « être », le participe s'accorde avec le sujet « filles » : fém. pluriel → arrivées." },
+    { sentence: "Il est ___ (tombé) dans la cour.", answer: "tombé", choices: ["tombé", "tombée", "tombés", "tombées"], explanation: "Avec « être », le participe s'accorde avec « il » : masc. singulier → tombé." },
+    { sentence: "Elles sont ___ (parti) ce matin.", answer: "parties", choices: ["parti", "partie", "partis", "parties"], explanation: "Avec « être », le participe s'accorde avec « elles » : fém. pluriel → parties." },
+    { sentence: "Nous sommes ___ (allé) au cinéma. (groupe de garçons)", answer: "allés", choices: ["allé", "allée", "allés", "allées"], explanation: "Avec « être », le participe s'accorde avec « nous » (masc.) : masc. pluriel → allés." },
+    { sentence: "Ma mère est ___ (venu) me chercher.", answer: "venue", choices: ["venu", "venue", "venus", "venues"], explanation: "Avec « être », le participe s'accorde avec « mère » : fém. singulier → venue." },
+    { sentence: "Les chats sont ___ (resté) au soleil.", answer: "restés", choices: ["resté", "restée", "restés", "restées"], explanation: "Avec « être », le participe s'accorde avec « chats » : masc. pluriel → restés." },
+    { sentence: "Elle est ___ (né) en 2014.", answer: "née", choices: ["né", "née", "nés", "nées"], explanation: "Avec « être », le participe s'accorde avec « elle » : fém. singulier → née." },
+    { sentence: "Les portes sont ___ (ouvert).", answer: "ouvertes", choices: ["ouvert", "ouverte", "ouverts", "ouvertes"], explanation: "Avec « être », le participe s'accorde avec « portes » : fém. pluriel → ouvertes." },
+
+    // ─── Accord sujet-verbe ───
+    { sentence: "Les oiseaux ___ (chanter – présent) au lever du jour.", answer: "chantent", choices: ["chante", "chantes", "chantent", "chantons"], explanation: "Le verbe s'accorde avec « les oiseaux » (3e pers. pluriel) → chantent." },
+    { sentence: "Mon frère et moi ___ (aller – présent) au parc.", answer: "allons", choices: ["vais", "va", "allons", "allez"], explanation: "« Mon frère et moi » = nous → allons." },
+    { sentence: "La maîtresse ___ (distribuer – présent) les cahiers.", answer: "distribue", choices: ["distribue", "distribues", "distribuent", "distribuons"], explanation: "Le verbe s'accorde avec « la maîtresse » (3e pers. singulier) → distribue." },
+    { sentence: "Pierre et Léa ___ (être – présent) dans la même classe.", answer: "sont", choices: ["est", "es", "sont", "sommes"], explanation: "« Pierre et Léa » = ils → sont." },
+    { sentence: "Le chat et le chien ___ (dormir – présent) ensemble.", answer: "dorment", choices: ["dort", "dors", "dormons", "dorment"], explanation: "Deux sujets = 3e pers. pluriel → dorment." },
+    { sentence: "Les nuages ___ (cacher – présent) le soleil.", answer: "cachent", choices: ["cache", "caches", "cachent", "cachons"], explanation: "Le verbe s'accorde avec « les nuages » (3e pers. pluriel) → cachent." },
+    { sentence: "Tout le monde ___ (avoir – présent) un stylo.", answer: "a", choices: ["a", "ont", "avons", "as"], explanation: "« Tout le monde » est singulier → a." },
+    { sentence: "Mes parents ___ (venir – présent) me chercher.", answer: "viennent", choices: ["vient", "viens", "venons", "viennent"], explanation: "Le verbe s'accorde avec « mes parents » (3e pers. pluriel) → viennent." },
+
+    // ─── Accord déterminant + nom ───
+    { sentence: "___ (ce) fille est ma voisine.", answer: "Cette", choices: ["Ce", "Cet", "Cette", "Ces"], explanation: "Le déterminant s'accorde avec « fille » : féminin singulier → cette." },
+    { sentence: "___ (mon) amie est très gentille.", answer: "Mon", choices: ["Mon", "Ma", "Mes", "Son"], explanation: "Devant un nom féminin commençant par une voyelle, on utilise « mon » (et non « ma »)." },
+    { sentence: "Il a acheté ___ (un) glace.", answer: "une", choices: ["un", "une", "des", "le"], explanation: "Le déterminant s'accorde avec « glace » : féminin singulier → une." },
+    { sentence: "___ (tout) les enfants sont prêts.", answer: "Tous", choices: ["Tout", "Tous", "Toute", "Toutes"], explanation: "Le déterminant s'accorde avec « enfants » : masculin pluriel → tous." },
+];
