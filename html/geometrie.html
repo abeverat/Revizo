@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes Toto - Géométrie CM2</title>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            box-shadow: 0 8px 20px rgba(245,87,108,0.4);
+        }
+
+        .btn:hover {
+            box-shadow: 0 12px 28px rgba(245,87,108,0.5);
+        }
+
+        #game-screen {
+            max-width: 580px;
+        }
+
+        .card-container {
+            width: 320px;
+            height: 400px;
+        }
+
+        /* ── Question on card ── */
+        .question-text {
+            font-family: 'Nunito', sans-serif;
+            font-size: 1.25rem;
+            color: #333;
+            line-height: 1.6;
+            padding: 0 14px;
+            text-align: center;
+        }
+
+        .question-label {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .geo-icon {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .card-back .result {
+            font-size: 1.8rem;
+            padding: 0 16px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .card-back .explanation {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.85);
+            margin-top: 12px;
+            padding: 0 16px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        /* ── Choice buttons ── */
+        .choice-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .choice-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.05rem;
+            padding: 12px 20px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 16px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: all 0.2s;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .choice-btn:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ── Mode selector ── */
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .mode-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            padding: 14px 24px;
+            border: 3px solid rgba(255,255,255,0.5);
+            border-radius: 20px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            transition: all 0.3s;
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .mode-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        .mode-btn.selected {
+            background: rgba(255,255,255,0.9);
+            color: #4facfe;
+            border-color: #fff;
+            transform: scale(1.05);
+        }
+
+        .mode-btn .mode-icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 500px) {
+            #start-screen h1 { font-size: 2.4rem; }
+            .card-container { width: 280px; height: 370px; }
+            .question-text { font-size: 1.1rem; }
+            .card-back .result { font-size: 1.5rem; }
+            .choice-btn { font-size: 0.95rem; padding: 10px 14px; min-width: 100px; }
+            .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars" id="stars"></div>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- ══════════════ ÉCRAN D'ACCUEIL ══════════════ -->
+    <div id="start-screen">
+        <h1>📐 Géométrie Toto</h1>
+        <p>Teste tes connaissances en géométrie — CM2</p>
+
+        <div class="mode-selector">
+            <div class="mode-btn selected" onclick="selectMode('cercle')" id="mode-cercle">
+                <span class="mode-icon">⭕</span>Le cercle
+            </div>
+            <div class="mode-btn" onclick="selectMode('droites')" id="mode-droites">
+                <span class="mode-icon">📏</span>Droites
+            </div>
+            <div class="mode-btn" onclick="selectMode('figures')" id="mode-figures">
+                <span class="mode-icon">🔷</span>Figures
+            </div>
+            <div class="mode-btn" onclick="selectMode('angles')" id="mode-angles">
+                <span class="mode-icon">📐</span>Angles
+            </div>
+            <div class="mode-btn" onclick="selectMode('mesures')" id="mode-mesures">
+                <span class="mode-icon">📏</span>Mesures
+            </div>
+            <div class="mode-btn" onclick="selectMode('melange')" id="mode-melange">
+                <span class="mode-icon">🎲</span>Mélange
+            </div>
+        </div>
+
+        <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
+        <br>
+        <a class="nav-link" href="index.html">🃏 Multiplications</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="fractions.html">🥧 Fractions</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="grammaire.html">📝 Grammaire</a>
+        <span style="color:rgba(255,255,255,0.5);margin:0 6px;">•</span>
+        <a class="nav-link" href="kangourou/index.html">🦘 Kangourou</a>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE JEU ══════════════ -->
+    <div id="game-screen">
+        <div class="game-controls">
+            <button class="btn-game-ctrl" onclick="pauseGame()">⏸️ Pause</button>
+            <button class="btn-game-ctrl" onclick="stopSeries()">⏹️ Arrêter</button>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-box">
+                <div class="label">Carte</div>
+                <div class="value" id="card-count">1 / 10</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">⏱ Chrono</div>
+                <div class="value" id="timer">00:00</div>
+            </div>
+            <div class="stat-box">
+                <div class="label">✅ Score</div>
+                <div class="value" id="score">0</div>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front" id="card-front">
+                    <div class="card-label" id="card-mode-label">Le cercle</div>
+                    <div id="question-area"></div>
+                    <div class="card-number" id="card-num">#1</div>
+                </div>
+                <div class="card-face card-back" id="card-back">
+                    <div class="result-label">La réponse est</div>
+                    <div class="result" id="result"></div>
+                    <div class="result-icon" id="result-icon">✅</div>
+                    <div class="explanation" id="explanation"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="answer-zone" id="answer-zone"></div>
+        <button class="btn-next" id="btn-next" onclick="nextCard()">Carte suivante ➜</button>
+    </div>
+
+    <!-- ══════════════ ÉCRAN DE PAUSE ══════════════ -->
+    <div id="pause-screen">
+        <h2 id="pause-title">🎉 Bravo !</h2>
+        <p class="pause-stats">Score : <strong id="pause-score">0 / 10</strong></p>
+        <p class="pause-stats">Temps : <strong id="pause-time">00:00</strong></p>
+        <p class="pause-stats" id="pause-message"></p>
+        <div class="pause-buttons">
+            <button class="btn btn-continue" onclick="continueGame()">🔄 Encore 10 !</button>
+            <button class="btn btn-stop" onclick="resetGame()">🏠 Accueil</button>
+        </div>
+    </div>
+
+    <!-- ══════════════ OVERLAY PAUSE EN JEU ══════════════ -->
+    <div id="ingame-pause-overlay">
+        <div class="pause-overlay-box">
+            <h2>⏸️ Pause</h2>
+            <p>Prends ton temps !</p>
+            <div class="pause-overlay-buttons">
+                <button class="btn btn-resume" onclick="resumeGame()">▶️ Reprendre</button>
+                <button class="btn btn-quit" onclick="stopSeries()">⏹️ Arrêter la série</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="shared.js"></script>
+    <script>
+        // ═══════════════════════════════════════
+        // Geometry definitions — CM2
+        // ═══════════════════════════════════════
+        let gameMode = 'cercle';
+        let currentAnswer = null;
+        let currentExplanation = '';
+
+        const questionArea  = document.getElementById('question-area');
+        const cardModeLabel = document.getElementById('card-mode-label');
+        const explanationEl = document.getElementById('explanation');
+
+        const modeLabels = {
+            cercle:  'Le cercle',
+            droites: 'Droites',
+            figures: 'Figures',
+            angles:  'Angles',
+            mesures: 'Mesures',
+            melange: 'Mélange'
+        };
+
+        // ── Mode selection ──
+        function selectMode(mode) {
+            gameMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById('mode-' + mode).classList.add('selected');
+        }
+
+        // ── Utility ──
+        function randInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function pick(arr) { return arr[randInt(0, arr.length - 1)]; }
+
+        function shuffle(arr) {
+            const a = [...arr];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = randInt(0, i);
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        // ═══════════════════════════════════════
+        // Question banks
+        // ═══════════════════════════════════════
+
+        // ── LE CERCLE ──
+        const cercleQuestions = [
+            { question: "Comment appelle-t-on un segment qui relie le centre d'un cercle à un point du cercle ?", answer: "Le rayon", choices: ["Le rayon", "Le diamètre", "La corde", "L'arc"], explanation: "Le rayon est le segment qui va du centre à n'importe quel point sur le cercle." },
+            { question: "Comment appelle-t-on un segment qui relie deux points du cercle en passant par le centre ?", answer: "Le diamètre", choices: ["Le rayon", "Le diamètre", "La corde", "La tangente"], explanation: "Le diamètre passe par le centre et relie deux points du cercle. Il mesure le double du rayon." },
+            { question: "Qu'est-ce qu'une corde d'un cercle ?", answer: "Un segment reliant deux points du cercle", choices: ["Un segment reliant deux points du cercle", "Un segment passant par le centre", "Une droite qui touche le cercle en un point", "La moitié du diamètre"], explanation: "Une corde relie deux points du cercle. Le diamètre est une corde particulière qui passe par le centre." },
+            { question: "Quel est le rapport entre le diamètre et le rayon ?", answer: "Le diamètre = 2 × le rayon", choices: ["Le diamètre = 2 × le rayon", "Le diamètre = le rayon ÷ 2", "Le diamètre = le rayon + 2", "Le diamètre = le rayon"], explanation: "Le diamètre est toujours égal à deux fois le rayon (d = 2r)." },
+            { question: "Comment appelle-t-on une portion du cercle située entre deux points ?", answer: "Un arc de cercle", choices: ["Un arc de cercle", "Une corde", "Un rayon", "Un secteur"], explanation: "L'arc de cercle est la partie de la ligne courbe du cercle entre deux points." },
+            { question: "Qu'est-ce qu'un disque ?", answer: "La surface intérieure d'un cercle", choices: ["La surface intérieure d'un cercle", "Le contour du cercle", "Un cercle sans centre", "Un demi-cercle"], explanation: "Le disque est la surface délimitée par le cercle. Le cercle est seulement la ligne courbe." },
+            { question: "Comment appelle-t-on le point à égale distance de tous les points du cercle ?", answer: "Le centre", choices: ["Le centre", "Le sommet", "Le milieu", "Le foyer"], explanation: "Le centre est le point depuis lequel tous les points du cercle sont à la même distance (le rayon)." },
+            { question: "Si le rayon d'un cercle mesure 5 cm, combien mesure le diamètre ?", answer: "10 cm", choices: ["10 cm", "5 cm", "2,5 cm", "15 cm"], explanation: "Le diamètre = 2 × rayon = 2 × 5 = 10 cm." },
+            { question: "Si le diamètre d'un cercle mesure 12 cm, combien mesure le rayon ?", answer: "6 cm", choices: ["6 cm", "12 cm", "24 cm", "3 cm"], explanation: "Le rayon = diamètre ÷ 2 = 12 ÷ 2 = 6 cm." },
+            { question: "Quel instrument utilise-t-on pour tracer un cercle ?", answer: "Un compas", choices: ["Un compas", "Une règle", "Une équerre", "Un rapporteur"], explanation: "Le compas permet de tracer un cercle en gardant une distance fixe (le rayon) depuis le centre." },
+            { question: "Le cercle est :", answer: "Une ligne courbe fermée", choices: ["Une ligne courbe fermée", "Une surface plane", "Un segment", "Un polygone"], explanation: "Le cercle est la ligne courbe. La surface à l'intérieur s'appelle le disque." },
+            { question: "Le diamètre est-il une corde ?", answer: "Oui, c'est la plus grande corde", choices: ["Oui, c'est la plus grande corde", "Non, ce n'est pas une corde", "Oui, c'est la plus petite corde", "Seulement parfois"], explanation: "Le diamètre est une corde spéciale : c'est la plus grande corde possible car elle passe par le centre." },
+            { question: "Comment appelle-t-on la portion de disque délimitée par deux rayons et un arc ?", answer: "Un secteur de disque", choices: ["Un secteur de disque", "Un segment de cercle", "Un demi-cercle", "Un quart de rond"], explanation: "Le secteur de disque est la « part de gâteau » comprise entre deux rayons et un arc." },
+            { question: "Qu'est-ce qu'un demi-cercle ?", answer: "La moitié du cercle coupé par un diamètre", choices: ["La moitié du cercle coupé par un diamètre", "Un quart de cercle", "Un arc de 90°", "Un cercle de rayon divisé par 2"], explanation: "Le demi-cercle est la moitié du cercle, délimitée par un diamètre." },
+            { question: "Tous les rayons d'un même cercle sont :", answer: "De la même longueur", choices: ["De la même longueur", "De longueurs différentes", "Parallèles entre eux", "Perpendiculaires entre eux"], explanation: "Tous les rayons d'un même cercle ont la même longueur, c'est la définition du cercle." },
+        ];
+
+        // ── DROITES ──
+        const droitesQuestions = [
+            { question: "Que sont deux droites parallèles ?", answer: "Deux droites qui ne se croisent jamais", choices: ["Deux droites qui ne se croisent jamais", "Deux droites qui se croisent à angle droit", "Deux droites qui se coupent en un point", "Deux droites de même longueur"], explanation: "Des droites parallèles gardent toujours le même écart : elles ne se croisent jamais." },
+            { question: "Que sont deux droites perpendiculaires ?", answer: "Deux droites qui se croisent en formant un angle droit", choices: ["Deux droites qui se croisent en formant un angle droit", "Deux droites qui ne se croisent jamais", "Deux droites de même longueur", "Deux droites courbes"], explanation: "Deux droites perpendiculaires forment un angle de 90° (angle droit) à leur point d'intersection." },
+            { question: "Que sont deux droites sécantes ?", answer: "Deux droites qui se croisent en un point", choices: ["Deux droites qui se croisent en un point", "Deux droites qui ne se croisent jamais", "Deux droites superposées", "Deux droites parallèles"], explanation: "Deux droites sécantes se coupent en exactement un point. Les droites perpendiculaires sont des sécantes particulières." },
+            { question: "Quel instrument permet de vérifier qu'un angle est droit ?", answer: "L'équerre", choices: ["L'équerre", "Le compas", "Le rapporteur", "La règle"], explanation: "L'équerre possède un angle droit qui permet de vérifier la perpendicularité." },
+            { question: "Qu'est-ce qu'une droite ?", answer: "Une ligne infinie et parfaitement droite", choices: ["Une ligne infinie et parfaitement droite", "Un segment avec deux extrémités", "Une ligne courbe", "Un trait qui commence à un point"], explanation: "Une droite est illimitée des deux côtés, contrairement au segment qui a deux extrémités." },
+            { question: "Qu'est-ce qu'un segment ?", answer: "Une portion de droite limitée par deux points", choices: ["Une portion de droite limitée par deux points", "Une droite infinie", "Un trait qui part d'un point sans fin", "Une ligne courbe"], explanation: "Un segment est une partie de droite délimitée par deux extrémités." },
+            { question: "Qu'est-ce qu'une demi-droite ?", answer: "Une droite qui a un point de départ mais pas de fin", choices: ["Une droite qui a un point de départ mais pas de fin", "La moitié d'un segment", "Deux droites parallèles", "Un segment très court"], explanation: "Une demi-droite part d'un point (origine) et se prolonge à l'infini dans une direction." },
+            { question: "Si deux droites sont parallèles à une même troisième droite, alors :", answer: "Elles sont parallèles entre elles", choices: ["Elles sont parallèles entre elles", "Elles sont perpendiculaires entre elles", "Elles se croisent", "On ne peut pas savoir"], explanation: "Si d₁ // d₃ et d₂ // d₃, alors d₁ // d₂. C'est une propriété des droites parallèles." },
+            { question: "Quel symbole utilise-t-on pour noter que deux droites sont parallèles ?", answer: "//", choices: ["//", "⊥", "=", "≠"], explanation: "Le symbole // signifie « est parallèle à ». Par exemple (d₁) // (d₂)." },
+            { question: "Quel symbole utilise-t-on pour noter que deux droites sont perpendiculaires ?", answer: "⊥", choices: ["⊥", "//", "=", "×"], explanation: "Le symbole ⊥ signifie « est perpendiculaire à ». Par exemple (d₁) ⊥ (d₂)." },
+            { question: "Deux droites perpendiculaires sont-elles sécantes ?", answer: "Oui, toujours", choices: ["Oui, toujours", "Non, jamais", "Seulement parfois", "Ce sont des droites parallèles"], explanation: "Les droites perpendiculaires se croisent en formant un angle droit : elles sont donc toujours sécantes." },
+            { question: "Si deux droites sont perpendiculaires à une même troisième droite, alors :", answer: "Elles sont parallèles entre elles", choices: ["Elles sont parallèles entre elles", "Elles sont perpendiculaires entre elles", "Elles se croisent forcément", "On ne peut pas savoir"], explanation: "Si d₁ ⊥ d₃ et d₂ ⊥ d₃, alors d₁ // d₂." },
+        ];
+
+        // ── FIGURES ──
+        const figuresQuestions = [
+            { question: "Combien de côtés a un triangle ?", answer: "3", choices: ["3", "4", "5", "6"], explanation: "Un triangle a toujours 3 côtés, 3 sommets et 3 angles." },
+            { question: "Comment appelle-t-on un triangle qui a ses trois côtés de même longueur ?", answer: "Un triangle équilatéral", choices: ["Un triangle équilatéral", "Un triangle isocèle", "Un triangle rectangle", "Un triangle scalène"], explanation: "Équilatéral signifie « côtés égaux ». Ses 3 angles mesurent chacun 60°." },
+            { question: "Comment appelle-t-on un triangle qui a deux côtés de même longueur ?", answer: "Un triangle isocèle", choices: ["Un triangle isocèle", "Un triangle équilatéral", "Un triangle rectangle", "Un triangle scalène"], explanation: "Un triangle isocèle a exactement deux côtés égaux et deux angles égaux." },
+            { question: "Comment appelle-t-on un triangle qui a un angle droit ?", answer: "Un triangle rectangle", choices: ["Un triangle rectangle", "Un triangle équilatéral", "Un triangle isocèle", "Un triangle obtusangle"], explanation: "Un triangle rectangle possède un angle de 90° (angle droit)." },
+            { question: "Combien de côtés a un quadrilatère ?", answer: "4", choices: ["3", "4", "5", "6"], explanation: "Quad signifie « quatre » : un quadrilatère a 4 côtés." },
+            { question: "Qu'est-ce qui caractérise un carré ?", answer: "4 côtés égaux et 4 angles droits", choices: ["4 côtés égaux et 4 angles droits", "4 côtés égaux seulement", "4 angles droits seulement", "2 paires de côtés parallèles"], explanation: "Le carré cumule deux propriétés : 4 côtés de même longueur ET 4 angles droits." },
+            { question: "Qu'est-ce qui caractérise un rectangle ?", answer: "4 angles droits et côtés opposés égaux", choices: ["4 angles droits et côtés opposés égaux", "4 côtés égaux", "Seulement 2 angles droits", "Des diagonales perpendiculaires"], explanation: "Le rectangle a 4 angles droits. Ses côtés opposés sont parallèles et de même longueur." },
+            { question: "Qu'est-ce qu'un losange ?", answer: "Un quadrilatère avec 4 côtés de même longueur", choices: ["Un quadrilatère avec 4 côtés de même longueur", "Un rectangle penché", "Un quadrilatère avec 4 angles droits", "Un triangle allongé"], explanation: "Le losange a 4 côtés égaux mais ses angles ne sont pas forcément droits (sinon ce serait un carré)." },
+            { question: "Qu'est-ce qu'un parallélogramme ?", answer: "Un quadrilatère avec les côtés opposés parallèles", choices: ["Un quadrilatère avec les côtés opposés parallèles", "Un quadrilatère avec 4 côtés égaux", "Un triangle avec 4 sommets", "Un quadrilatère avec un seul angle droit"], explanation: "Dans un parallélogramme, les côtés opposés sont parallèles deux à deux et de même longueur." },
+            { question: "Combien de côtés a un hexagone ?", answer: "6", choices: ["5", "6", "7", "8"], explanation: "Hexa signifie « six ». Un hexagone a 6 côtés." },
+            { question: "Combien de côtés a un pentagone ?", answer: "5", choices: ["4", "5", "6", "7"], explanation: "Penta signifie « cinq ». Un pentagone a 5 côtés." },
+            { question: "Comment appelle-t-on une figure qui a tous ses côtés et tous ses angles égaux ?", answer: "Un polygone régulier", choices: ["Un polygone régulier", "Un polygone irrégulier", "Un rectangle", "Un cercle"], explanation: "Un polygone régulier a tous ses côtés de même longueur et tous ses angles de même mesure." },
+            { question: "Le carré est-il un rectangle ?", answer: "Oui", choices: ["Oui", "Non", "Seulement parfois", "Ce sont des figures différentes"], explanation: "Oui ! Le carré est un rectangle particulier dont les 4 côtés sont égaux." },
+            { question: "Le carré est-il un losange ?", answer: "Oui", choices: ["Oui", "Non", "Seulement parfois", "Ce sont des figures différentes"], explanation: "Oui ! Le carré est un losange particulier dont les 4 angles sont droits." },
+            { question: "Comment appelle-t-on un quadrilatère qui a exactement une paire de côtés parallèles ?", answer: "Un trapèze", choices: ["Un trapèze", "Un parallélogramme", "Un losange", "Un rectangle"], explanation: "Le trapèze a exactement une paire de côtés parallèles (les « bases »)." },
+        ];
+
+        // ── ANGLES ──
+        const anglesQuestions = [
+            { question: "Comment appelle-t-on un angle qui mesure exactement 90° ?", answer: "Un angle droit", choices: ["Un angle droit", "Un angle aigu", "Un angle obtus", "Un angle plat"], explanation: "L'angle droit mesure exactement 90°. On le reconnaît au petit carré dans le coin." },
+            { question: "Comment appelle-t-on un angle qui mesure moins de 90° ?", answer: "Un angle aigu", choices: ["Un angle aigu", "Un angle droit", "Un angle obtus", "Un angle plat"], explanation: "Un angle aigu est « pointu » : il mesure entre 0° et 90°." },
+            { question: "Comment appelle-t-on un angle qui mesure entre 90° et 180° ?", answer: "Un angle obtus", choices: ["Un angle obtus", "Un angle aigu", "Un angle droit", "Un angle plat"], explanation: "Un angle obtus est plus « ouvert » qu'un angle droit mais moins qu'un angle plat." },
+            { question: "Comment appelle-t-on un angle qui mesure exactement 180° ?", answer: "Un angle plat", choices: ["Un angle plat", "Un angle droit", "Un angle obtus", "Un angle nul"], explanation: "L'angle plat mesure 180° : ses deux côtés forment une ligne droite." },
+            { question: "Quel instrument sert à mesurer un angle ?", answer: "Le rapporteur", choices: ["Le rapporteur", "L'équerre", "Le compas", "La règle graduée"], explanation: "Le rapporteur est un demi-cercle gradué en degrés qui permet de mesurer les angles." },
+            { question: "Combien de degrés mesure un tour complet ?", answer: "360°", choices: ["360°", "180°", "90°", "270°"], explanation: "Un tour complet correspond à 360°." },
+            { question: "Combien de degrés mesure un demi-tour ?", answer: "180°", choices: ["180°", "90°", "360°", "270°"], explanation: "Un demi-tour correspond à un angle plat = 180°." },
+            { question: "Combien de degrés mesure un quart de tour ?", answer: "90°", choices: ["90°", "180°", "45°", "60°"], explanation: "Un quart de tour = un angle droit = 90°." },
+            { question: "Un angle de 45° est :", answer: "Un angle aigu", choices: ["Un angle aigu", "Un angle droit", "Un angle obtus", "Un angle plat"], explanation: "45° est inférieur à 90°, c'est donc un angle aigu." },
+            { question: "Un angle de 120° est :", answer: "Un angle obtus", choices: ["Un angle obtus", "Un angle aigu", "Un angle droit", "Un angle plat"], explanation: "120° est compris entre 90° et 180°, c'est donc un angle obtus." },
+            { question: "Comment appelle-t-on le point commun aux deux côtés d'un angle ?", answer: "Le sommet de l'angle", choices: ["Le sommet de l'angle", "Le centre de l'angle", "L'origine de l'angle", "Le milieu de l'angle"], explanation: "Le sommet est le point où les deux demi-droites (côtés de l'angle) se rejoignent." },
+            { question: "La somme des angles d'un triangle vaut toujours :", answer: "180°", choices: ["180°", "360°", "90°", "270°"], explanation: "Dans tout triangle, la somme des trois angles est toujours égale à 180°." },
+        ];
+
+        // ── MESURES (périmètre / aire) ──
+        const mesuresQuestions = [
+            { question: "Comment appelle-t-on la longueur du contour d'une figure ?", answer: "Le périmètre", choices: ["Le périmètre", "L'aire", "Le volume", "La diagonale"], explanation: "Le périmètre est la mesure du tour complet d'une figure. Il s'exprime en unités de longueur (cm, m…)." },
+            { question: "Comment appelle-t-on la mesure de la surface d'une figure ?", answer: "L'aire", choices: ["L'aire", "Le périmètre", "Le volume", "La longueur"], explanation: "L'aire mesure la surface intérieure d'une figure. Elle s'exprime en unités carrées (cm², m²…)." },
+            { question: "Quelle est la formule du périmètre d'un carré de côté c ?", answer: "P = 4 × c", choices: ["P = 4 × c", "P = 2 × c", "P = c × c", "P = c + 4"], explanation: "Le carré a 4 côtés égaux, donc son périmètre = 4 × côté." },
+            { question: "Quelle est la formule de l'aire d'un carré de côté c ?", answer: "A = c × c", choices: ["A = c × c", "A = 4 × c", "A = 2 × c", "A = c + c"], explanation: "L'aire du carré = côté × côté = c²." },
+            { question: "Quelle est la formule du périmètre d'un rectangle (longueur L, largeur l) ?", answer: "P = 2 × (L + l)", choices: ["P = 2 × (L + l)", "P = L × l", "P = L + l", "P = 4 × L"], explanation: "Le périmètre du rectangle = 2 × longueur + 2 × largeur = 2 × (L + l)." },
+            { question: "Quelle est la formule de l'aire d'un rectangle (longueur L, largeur l) ?", answer: "A = L × l", choices: ["A = L × l", "A = 2 × (L + l)", "A = L + l", "A = 4 × l"], explanation: "L'aire du rectangle = longueur × largeur." },
+            { question: "Quelle est la formule de l'aire d'un triangle (base b, hauteur h) ?", answer: "A = (b × h) ÷ 2", choices: ["A = (b × h) ÷ 2", "A = b × h", "A = b + h", "A = 2 × b × h"], explanation: "L'aire du triangle = (base × hauteur) ÷ 2. C'est la moitié de l'aire du rectangle correspondant." },
+            { question: "Un carré a un côté de 5 cm. Quel est son périmètre ?", answer: "20 cm", choices: ["20 cm", "25 cm", "10 cm", "15 cm"], explanation: "Périmètre = 4 × 5 = 20 cm." },
+            { question: "Un carré a un côté de 5 cm. Quelle est son aire ?", answer: "25 cm²", choices: ["25 cm²", "20 cm²", "10 cm²", "50 cm²"], explanation: "Aire = 5 × 5 = 25 cm²." },
+            { question: "Un rectangle mesure 8 cm de long et 3 cm de large. Quel est son périmètre ?", answer: "22 cm", choices: ["22 cm", "24 cm", "11 cm", "32 cm"], explanation: "Périmètre = 2 × (8 + 3) = 2 × 11 = 22 cm." },
+            { question: "Un rectangle mesure 8 cm de long et 3 cm de large. Quelle est son aire ?", answer: "24 cm²", choices: ["24 cm²", "22 cm²", "11 cm²", "32 cm²"], explanation: "Aire = 8 × 3 = 24 cm²." },
+            { question: "L'aire s'exprime en :", answer: "Unités carrées (cm², m²…)", choices: ["Unités carrées (cm², m²…)", "Centimètres (cm)", "Litres (L)", "Kilogrammes (kg)"], explanation: "L'aire mesure une surface, on utilise donc des unités carrées." },
+            { question: "Le périmètre s'exprime en :", answer: "Unités de longueur (cm, m…)", choices: ["Unités de longueur (cm, m…)", "Unités carrées (cm², m²)", "Litres (L)", "Kilogrammes (kg)"], explanation: "Le périmètre mesure une longueur, on utilise donc des cm, m, km…" },
+            { question: "Un triangle a une base de 10 cm et une hauteur de 6 cm. Quelle est son aire ?", answer: "30 cm²", choices: ["30 cm²", "60 cm²", "16 cm²", "36 cm²"], explanation: "Aire = (10 × 6) ÷ 2 = 60 ÷ 2 = 30 cm²." },
+        ];
+
+        // ── Build question pool for current mode ──
+        function getQuestionPool() {
+            switch (gameMode) {
+                case 'cercle':  return cercleQuestions;
+                case 'droites': return droitesQuestions;
+                case 'figures': return figuresQuestions;
+                case 'angles':  return anglesQuestions;
+                case 'mesures': return mesuresQuestions;
+                case 'melange': return [
+                    ...cercleQuestions,
+                    ...droitesQuestions,
+                    ...figuresQuestions,
+                    ...anglesQuestions,
+                    ...mesuresQuestions
+                ];
+                default: return cercleQuestions;
+            }
+        }
+
+        let usedIndices = [];
+
+        function pickQuestion() {
+            const pool = getQuestionPool();
+            if (usedIndices.length >= pool.length) usedIndices = [];
+            let idx;
+            do {
+                idx = randInt(0, pool.length - 1);
+            } while (usedIndices.includes(idx));
+            usedIndices.push(idx);
+            return pool[idx];
+        }
+
+        // ═══════════════════════════════════════
+        // Required by shared.js
+        // ═══════════════════════════════════════
+
+        function generateQuestion() {
+            const q = pickQuestion();
+            currentAnswer = q.answer;
+            currentExplanation = q.explanation;
+
+            cardModeLabel.textContent = modeLabels[gameMode] || 'Géométrie';
+
+            // Card front
+            questionArea.innerHTML = `
+                <div class="geo-icon">📐</div>
+                <div class="question-text">${q.question}</div>
+            `;
+
+            // Answer zone — choice buttons
+            const choices = shuffle(q.choices);
+            answerZone.innerHTML = '<div class="choice-btns">' +
+                choices.map(c => `<button class="choice-btn" onclick="selectAnswer(this, '${c.replace(/'/g, "\\'")}')">${c}</button>`).join('') +
+                '</div>';
+        }
+
+        function selectAnswer(btn, choice) {
+            if (isFlipped) return;
+
+            const isCorrect = choice === currentAnswer;
+
+            explanationEl.textContent = currentExplanation;
+            showResult(isCorrect, currentAnswer);
+        }
+
+        function validateAnswer() {
+            // not used — answers selected via buttons
+        }
+
+        function getFocusInput() {
+            return null;
+        }
+
+        function canEnterValidate() {
+            return false;
+        }
+    </script>
+</body>
+</html>
