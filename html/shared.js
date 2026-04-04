@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// Shared game engine for Cartes Toto
+// Shared game engine for Revizo
 // ═══════════════════════════════════════
 
 // ── State ──
