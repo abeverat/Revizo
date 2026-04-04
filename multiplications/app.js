@@ -54,12 +54,27 @@ function generateQuestion() {
     a = pickNumber();
     b = pickNumber();
     correctAnswer = a * b;
-    questionEl.textContent = `${a} × ${b}`;
+    _renderMultiplication();
+}
 
-    answerInput.value    = '';
-    answerInput.disabled = false;
+function _renderMultiplication() {
+    questionEl.textContent    = `${a} × ${b}`;
+    answerInput.value         = '';
+    answerInput.disabled      = false;
     btnValidate.style.display = 'inline-block';
     setTimeout(() => answerInput.focus(), 100);
+}
+
+// ── Spaced repetition hooks ──
+function getReviewData() {
+    return { key: `${a}x${b}`, a, b, correctAnswer };
+}
+
+function applyReviewData(data) {
+    a             = data.a;
+    b             = data.b;
+    correctAnswer = data.correctAnswer;
+    _renderMultiplication();
 }
 
 function validateAnswer() {

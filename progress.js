@@ -65,3 +65,84 @@ function getBestScore(module, level) {
 function getModuleScores(module) {
     return _loadProgress()[module] || {};
 }
+
+// ═══════════════════════════════════════
+// Spaced repetition — wrong-answer queue
+// ═══════════════════════════════════════
+// Structure stored in localStorage:
+//   revizo_wrong = {
+//     multiplications: { ce2: [{id, data, addedAt}, ...], ... },
+//     ...
+//   }
+
+const WRONG_KEY = 'revizo_wrong';
+
+function _loadWrong() {
+    try {
+        return JSON.parse(localStorage.getItem(WRONG_KEY)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function _saveWrong(data) {
+    try {
+        localStorage.setItem(WRONG_KEY, JSON.stringify(data));
+    } catch (e) {}
+}
+
+/**
+ * Add a wrong answer to the review queue.
+ * Avoids duplicates by key if data has a `key` property.
+ * @returns {string} unique id for this entry
+ */
+function saveWrongAnswer(module, level, data) {
+    if (!module || !level || !data) return null;
+    const wrong = _loadWrong();
+    if (!wrong[module]) wrong[module] = {};
+    if (!wrong[module][level]) wrong[module][level] = [];
+
+    const queue = wrong[module][level];
+
+    // Deduplicate by data.key if present (avoid filling queue with same question)
+    if (data.key) {
+        if (queue.some(q => q.data && q.data.key === data.key)) return null;
+    }
+
+    // Cap queue at 20 per level to avoid unbounded growth
+    if (queue.length >= 20) queue.shift();
+
+    const id = String(Date.now()) + String(Math.random()).slice(2, 7);
+    queue.push({ id, data, addedAt: Date.now() });
+    _saveWrong(wrong);
+    return id;
+}
+
+/**
+ * Peek at the next review item (FIFO) without removing it.
+ * @returns {{ id: string, data: object } | null}
+ */
+function getNextWrongAnswer(module, level) {
+    const wrong = _loadWrong();
+    const queue = (wrong[module] && wrong[module][level]) || [];
+    return queue.length > 0 ? { id: queue[0].id, data: queue[0].data } : null;
+}
+
+/**
+ * Remove a review item after it has been answered correctly.
+ */
+function clearWrongAnswer(module, level, id) {
+    const wrong = _loadWrong();
+    if (!wrong[module] || !wrong[module][level]) return;
+    wrong[module][level] = wrong[module][level].filter(q => q.id !== id);
+    _saveWrong(wrong);
+}
+
+/**
+ * Count pending review items for a module/level.
+ */
+function getWrongAnswerCount(module, level) {
+    const wrong = _loadWrong();
+    return ((wrong[module] && wrong[module][level]) || []).length;
+}
+

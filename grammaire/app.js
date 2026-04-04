@@ -77,6 +77,8 @@ function getBank() {
 // Required by shared.js
 // ═══════════════════════════════════════
 
+let _currentQ = null; // current raw question object (for review)
+
 function generateQuestion() {
     switch (gameMode) {
         case 'homophones':  generateHomophone(); break;
@@ -87,8 +89,9 @@ function generateQuestion() {
 }
 
 // ── HOMOPHONES ──
-function generateHomophone() {
-    const q = pickQuestion(homophoneQuestions, 'homophones');
+function generateHomophone(q) {
+    if (!q) q = pickQuestion(homophoneQuestions, 'homophones');
+    _currentQ = q;
     cardModeLabel.textContent = 'Choisis le bon homophone';
 
     const display = q.sentence.replace('___', '<span class="blank">???</span>');
@@ -104,8 +107,9 @@ function generateHomophone() {
 }
 
 // ── CONJUGAISON ──
-function generateConjugaison() {
-    const q = pickQuestion(conjugaisonQuestions, 'conjugaison');
+function generateConjugaison(q) {
+    if (!q) q = pickQuestion(conjugaisonQuestions, 'conjugaison');
+    _currentQ = q;
     cardModeLabel.textContent = 'Conjugue le verbe';
 
     const display = q.sentence.replace('___', '<span class="blank">???</span>');
@@ -124,8 +128,9 @@ function generateConjugaison() {
 }
 
 // ── NATURE DES MOTS ──
-function generateNature() {
-    const q = pickQuestion(natureQuestions, 'nature');
+function generateNature(q) {
+    if (!q) q = pickQuestion(natureQuestions, 'nature');
+    _currentQ = q;
     cardModeLabel.textContent = 'Quelle est la nature du mot ?';
 
     questionArea.innerHTML = `<div class="sentence-text">${q.sentence}</div>`;
@@ -140,8 +145,9 @@ function generateNature() {
 }
 
 // ── ACCORDS ──
-function generateAccord() {
-    const q = pickQuestion(accordQuestions, 'accord');
+function generateAccord(q) {
+    if (!q) q = pickQuestion(accordQuestions, 'accord');
+    _currentQ = q;
     cardModeLabel.textContent = 'Choisis le bon accord';
 
     const display = q.sentence.replace('___', '<span class="blank">???</span>');
@@ -190,4 +196,21 @@ function getFocusInput() {
 
 function canEnterValidate() {
     return gameMode === 'conjugaison';
+}
+
+// ── Spaced repetition hooks ──
+function getReviewData() {
+    if (!_currentQ) return null;
+    return { key: _currentQ.sentence + _currentQ.answer, mode: gameMode, q: _currentQ };
+}
+
+function applyReviewData(data) {
+    // Restore the mode indicator without triggering tab UI update
+    gameMode = data.mode;
+    switch (data.mode) {
+        case 'homophones':  generateHomophone(data.q);  break;
+        case 'conjugaison': generateConjugaison(data.q); break;
+        case 'nature':      generateNature(data.q);     break;
+        case 'accord':      generateAccord(data.q);     break;
+    }
 }

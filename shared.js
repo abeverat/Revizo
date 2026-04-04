@@ -10,6 +10,7 @@ let timerInterval = null;
 let seconds = 0;
 let isFlipped = false;
 let isPaused = false;
+let _reviewId = null; // id of the current review card, or null
 
 // ── DOM cache (common elements) ──
 const startScreen  = document.getElementById('start-screen');
@@ -172,7 +173,7 @@ function loadCard() {
     totalCards++;
 
     // Reset card
-    cardEl.classList.remove('flipped');
+    cardEl.classList.remove('flipped', 'review-card');
     cardBack.classList.remove('wrong');
     isFlipped = false;
 
@@ -183,8 +184,29 @@ function loadCard() {
     btnNext.style.display    = 'none';
     answerZone.style.display = 'flex';
 
-    // Delegate to page-specific question generator
-    generateQuestion();
+    // Spaced repetition: probabilistically show a review card
+    const reviewQ = _tryGetReviewCard();
+    if (reviewQ && typeof applyReviewData === 'function') {
+        _reviewId = reviewQ.id;
+        cardEl.classList.add('review-card');
+        applyReviewData(reviewQ.data);
+    } else {
+        _reviewId = null;
+        generateQuestion();
+    }
+}
+
+// Returns a review card with probability proportional to queue size, or null.
+function _tryGetReviewCard() {
+    if (typeof getNextWrongAnswer !== 'function'
+        || typeof MODULE_KEY === 'undefined'
+        || typeof currentLevel === 'undefined') return null;
+    const count = getWrongAnswerCount(MODULE_KEY, currentLevel);
+    if (count === 0) return null;
+    // Probability: 10% per queued item, capped at 40%
+    const prob = Math.min(0.40, count * 0.10);
+    if (Math.random() >= prob) return null;
+    return getNextWrongAnswer(MODULE_KEY, currentLevel);
 }
 
 function showResult(isCorrect, resultText) {
@@ -207,6 +229,17 @@ function showResult(isCorrect, resultText) {
     answerZone.style.display = 'none';
     btnNext.style.display    = 'inline-block';
     setTimeout(() => btnNext.focus(), 650);
+
+    // Spaced repetition: track wrong answers / clear mastered reviews
+    if (typeof MODULE_KEY !== 'undefined' && typeof currentLevel !== 'undefined') {
+        if (!isCorrect && typeof getReviewData === 'function' && typeof saveWrongAnswer === 'function') {
+            const data = getReviewData();
+            if (data) saveWrongAnswer(MODULE_KEY, currentLevel, data);
+        } else if (isCorrect && _reviewId !== null && typeof clearWrongAnswer === 'function') {
+            clearWrongAnswer(MODULE_KEY, currentLevel, _reviewId);
+            _reviewId = null;
+        }
+    }
 }
 
 function nextCard() {

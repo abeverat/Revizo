@@ -79,6 +79,7 @@ function getQuestionPool() {
 }
 
 let usedIndices = [];
+let _currentQ = null; // current raw question object (for review)
 
 function pickQuestion() {
     const pool = getQuestionPool();
@@ -95,8 +96,9 @@ function pickQuestion() {
 // Required by shared.js
 // ═══════════════════════════════════════
 
-function generateQuestion() {
-    const q = pickQuestion();
+function generateQuestion(q) {
+    if (!q) q = pickQuestion();
+    _currentQ = q;
     currentAnswer = q.answer;
     currentExplanation = q.explanation;
 
@@ -111,6 +113,16 @@ function generateQuestion() {
     answerZone.innerHTML = '<div class="choice-btns">' +
         choices.map(c => `<button class="choice-btn" onclick="selectAnswer(this, '${c.replace(/'/g, "\\'")}')">${c}</button>`).join('') +
         '</div>';
+}
+
+// ── Spaced repetition hooks ──
+function getReviewData() {
+    if (!_currentQ) return null;
+    return { key: _currentQ.question, q: _currentQ };
+}
+
+function applyReviewData(data) {
+    generateQuestion(data.q);
 }
 
 function selectAnswer(btn, choice) {

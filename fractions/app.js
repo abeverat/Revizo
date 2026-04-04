@@ -106,53 +106,67 @@ function buildFractionInputZone() {
 // ═══════════════════════════════════════
 // Question generators (one per mode)
 // ═══════════════════════════════════════
-function generatePieQuestion() {
-    const maxDen = levels[currentLevel].maxDen;
-    const denominators = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
-    const den = denominators[randInt(0, denominators.length - 1)];
-    const num = randInt(1, den - 1);
+let _reviewData = null; // stored for spaced repetition
+
+function generatePieQuestion(params) {
+    let num, den;
+    if (params) {
+        num = params.num; den = params.den;
+    } else {
+        const maxDen = levels[currentLevel].maxDen;
+        const denominators = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
+        den = denominators[randInt(0, denominators.length - 1)];
+        num = randInt(1, den - 1);
+    }
 
     cardModeLabel.textContent = 'Quelle fraction est coloriée ?';
     questionArea.innerHTML = createPieChart(num, den);
     currentAnswer = { num, den };
+    _reviewData = { mode: 'pie', key: `pie-${num}/${den}`, num, den };
     buildFractionInputZone();
 }
 
-function generateSimplifyQuestion() {
-    const maxDen = levels[currentLevel].maxDen;
-    const simpleNums = [1, 2, 3, 4, 5, 6, 7].filter(n => n < maxDen);
-    const simpleDens = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(d => d <= maxDen);
-    let sNum, sDen;
-    do {
-        sNum = simpleNums[randInt(0, simpleNums.length - 1)];
-        sDen = simpleDens[randInt(0, simpleDens.length - 1)];
-    } while (sNum >= sDen || gcd(sNum, sDen) !== 1);
-
-    const multiplier = randInt(2, 5);
-    const displayNum = sNum * multiplier;
-    const displayDen = sDen * multiplier;
+function generateSimplifyQuestion(params) {
+    let displayNum, displayDen, sNum, sDen;
+    if (params) {
+        displayNum = params.displayNum; displayDen = params.displayDen;
+        sNum = params.sNum; sDen = params.sDen;
+    } else {
+        const maxDen = levels[currentLevel].maxDen;
+        const simpleNums = [1, 2, 3, 4, 5, 6, 7].filter(n => n < maxDen);
+        const simpleDens = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(d => d <= maxDen);
+        do {
+            sNum = simpleNums[randInt(0, simpleNums.length - 1)];
+            sDen = simpleDens[randInt(0, simpleDens.length - 1)];
+        } while (sNum >= sDen || gcd(sNum, sDen) !== 1);
+        const multiplier = randInt(2, 5);
+        displayNum = sNum * multiplier;
+        displayDen = sDen * multiplier;
+    }
 
     cardModeLabel.textContent = 'Simplifie cette fraction';
     questionArea.innerHTML = fractionHTML(displayNum, displayDen, false);
     currentAnswer = { num: sNum, den: sDen };
+    _reviewData = { mode: 'simplify', key: `simplify-${displayNum}/${displayDen}`, displayNum, displayDen, sNum, sDen };
     buildFractionInputZone();
 }
 
-function generateCompareQuestion() {
-    const maxDen = levels[currentLevel].maxDen;
-    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
-    let n1, d1, n2, d2;
-
-    do {
-        d1 = denOptions[randInt(0, denOptions.length - 1)];
-        d2 = denOptions[randInt(0, denOptions.length - 1)];
-        n1 = randInt(1, d1);
-        n2 = randInt(1, d2);
-    } while (n1 / d1 === n2 / d2);
-
-    const val1 = n1 / d1;
-    const val2 = n2 / d2;
-    const correctSymbol = val1 < val2 ? '<' : '>';
+function generateCompareQuestion(params) {
+    let n1, d1, n2, d2, correctSymbol;
+    if (params) {
+        n1 = params.n1; d1 = params.d1; n2 = params.n2; d2 = params.d2;
+        correctSymbol = params.correctSymbol;
+    } else {
+        const maxDen = levels[currentLevel].maxDen;
+        const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
+        do {
+            d1 = denOptions[randInt(0, denOptions.length - 1)];
+            d2 = denOptions[randInt(0, denOptions.length - 1)];
+            n1 = randInt(1, d1);
+            n2 = randInt(1, d2);
+        } while (n1 / d1 === n2 / d2);
+        correctSymbol = (n1 / d1) < (n2 / d2) ? '<' : '>';
+    }
 
     cardModeLabel.textContent = 'Compare ces deux fractions';
     questionArea.innerHTML = `
@@ -163,6 +177,7 @@ function generateCompareQuestion() {
         </div>`;
 
     currentAnswer = { symbol: correctSymbol, n1, d1, n2, d2 };
+    _reviewData = { mode: 'compare', key: `cmp-${n1}/${d1}-${n2}/${d2}`, n1, d1, n2, d2, correctSymbol };
 
     answerZone.innerHTML = `
         <div class="comparison-btns">
@@ -172,28 +187,31 @@ function generateCompareQuestion() {
         </div>`;
 }
 
-function generateAddQuestion() {
-    const maxDen = levels[currentLevel].maxDen;
-    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
-    const useSameDen = Math.random() < 0.5;
+function generateAddQuestion(params) {
     let n1, d1, n2, d2, ansNum, ansDen;
-
-    if (useSameDen) {
-        d1 = denOptions[randInt(0, denOptions.length - 1)];
-        d2 = d1;
-        n1 = randInt(1, d1 - 1);
-        n2 = randInt(1, d1 - 1);
-        ansNum = n1 + n2;
-        ansDen = d1;
+    if (params) {
+        n1 = params.n1; d1 = params.d1; n2 = params.n2; d2 = params.d2;
+        ansNum = params.ansNum; ansDen = params.ansDen;
     } else {
-        const base = denOptions[randInt(0, 5)];
-        const mult = randInt(2, 3);
-        d1 = base;
-        d2 = base * mult;
-        n1 = randInt(1, d1 - 1);
-        n2 = randInt(1, d2 - 1);
-        ansNum = n1 * mult + n2;
-        ansDen = d2;
+        const maxDen = levels[currentLevel].maxDen;
+        const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
+        const useSameDen = Math.random() < 0.5;
+        if (useSameDen) {
+            d1 = denOptions[randInt(0, denOptions.length - 1)];
+            d2 = d1;
+            n1 = randInt(1, d1 - 1);
+            n2 = randInt(1, d1 - 1);
+            ansNum = n1 + n2;
+            ansDen = d1;
+        } else {
+            const base = denOptions[randInt(0, 5)];
+            const mult = randInt(2, 3);
+            d1 = base; d2 = base * mult;
+            n1 = randInt(1, d1 - 1);
+            n2 = randInt(1, d2 - 1);
+            ansNum = n1 * mult + n2;
+            ansDen = d2;
+        }
     }
 
     const g = gcd(ansNum, ansDen);
@@ -209,6 +227,7 @@ function generateAddQuestion() {
         </div>`;
 
     currentAnswer = { num: ansNum, den: ansDen, simpNum, simpDen };
+    _reviewData = { mode: 'add', key: `add-${n1}/${d1}+${n2}/${d2}`, n1, d1, n2, d2, ansNum, ansDen };
     buildFractionInputZone();
 }
 
@@ -221,6 +240,22 @@ function generateQuestion() {
         case 'simplify': generateSimplifyQuestion(); break;
         case 'compare':  generateCompareQuestion(); break;
         case 'add':      generateAddQuestion(); break;
+    }
+}
+
+// ── Spaced repetition hooks ──
+function getReviewData() {
+    return _reviewData;
+}
+
+function applyReviewData(data) {
+    // Restore mode label (gameMode may differ if user mixed modes)
+    gameMode = data.mode;
+    switch (data.mode) {
+        case 'pie':      generatePieQuestion(data);      break;
+        case 'simplify': generateSimplifyQuestion(data); break;
+        case 'compare':  generateCompareQuestion(data);  break;
+        case 'add':      generateAddQuestion(data);      break;
     }
 }
 
