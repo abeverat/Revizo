@@ -132,7 +132,6 @@ body {
 .module-card.fractions::before { background: linear-gradient(90deg, #f093fb, #f5576c); }
 .module-card.grammaire::before { background: linear-gradient(90deg, #11998e, #38ef7d); }
 .module-card.geometrie::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
-.module-card.quiz-qcm::before  { background: linear-gradient(90deg, #667eea, #764ba2); }
 .module-card.kangourou::before { background: linear-gradient(90deg, #f7b733, #fc4a1a); }
 
 /* ── Footer ── */
