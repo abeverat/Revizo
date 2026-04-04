@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════
 // Multiplication-specific logic
 // ═══════════════════════════════════════
+const MODULE_KEY = 'multiplications';
 let a, b, correctAnswer;
 
 const questionEl   = document.getElementById('question');

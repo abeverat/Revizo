@@ -222,6 +222,15 @@ function nextCard() {
 // ═══════════════════════════════════════
 function showPauseScreen() {
     stopTimer();
+
+    // Persist best score if the module declared MODULE_KEY + currentLevel
+    if (typeof saveRoundScore === 'function'
+        && typeof MODULE_KEY !== 'undefined'
+        && typeof currentLevel !== 'undefined') {
+        const answered = isFlipped ? currentCard : currentCard - 1;
+        saveRoundScore(MODULE_KEY, currentLevel, roundScore, answered, seconds);
+    }
+
     gameScreen.style.display  = 'none';
     pauseScreen.style.display = 'block';
     pauseScreen.style.animation = 'none';

@@ -16,34 +16,39 @@
     </header>
 
     <div class="module-grid">
-        <a class="module-card multiply" href="multiplications/index.html">
+        <a class="module-card multiply" href="multiplications/index.html" id="card-multiplications">
             <span class="card-icon">🃏</span>
             <div class="card-title">Multiplications</div>
             <div class="card-desc">Entraîne-toi aux tables</div>
+            <div class="card-best" id="best-multiplications"></div>
         </a>
 
-        <a class="module-card fractions" href="fractions/index.html">
+        <a class="module-card fractions" href="fractions/index.html" id="card-fractions">
             <span class="card-icon">🥧</span>
             <div class="card-title">Fractions</div>
             <div class="card-desc">Identifier, simplifier, comparer</div>
+            <div class="card-best" id="best-fractions"></div>
         </a>
 
-        <a class="module-card grammaire" href="grammaire/index.html">
+        <a class="module-card grammaire" href="grammaire/index.html" id="card-grammaire">
             <span class="card-icon">📝</span>
             <div class="card-title">Grammaire</div>
             <div class="card-desc">Homophones, conjugaison, nature…</div>
+            <div class="card-best" id="best-grammaire"></div>
         </a>
 
-        <a class="module-card geometrie" href="geometrie/index.html">
+        <a class="module-card geometrie" href="geometrie/index.html" id="card-geometrie">
             <span class="card-icon">📐</span>
             <div class="card-title">Géométrie</div>
             <div class="card-desc">Cercle, droites, figures, angles</div>
+            <div class="card-best" id="best-geometrie"></div>
         </a>
 
-        <a class="module-card kangourou" href="kangourou/index.html">
+        <a class="module-card kangourou" href="kangourou/index.html" id="card-kangourou">
             <span class="card-icon">🦘</span>
             <div class="card-title">Kangourou</div>
             <div class="card-desc">Prépare la compétition !</div>
+            <div class="card-best" id="best-kangourou"></div>
         </a>
     </div>
 
@@ -51,6 +56,7 @@
         Revizo — CM2
     </footer>
 
+    <script src="progress.js"></script>
     <script>
         // Decorative stars
         (function() {
@@ -64,6 +70,32 @@
                 star.style.width = star.style.height = (Math.random() * 4 + 3) + 'px';
                 container.appendChild(star);
             }
+        })();
+
+        // Show best scores on each module card
+        (function() {
+            const modules = ['multiplications', 'fractions', 'grammaire', 'geometrie'];
+            modules.forEach(function(mod) {
+                const scores = getModuleScores(mod);
+                const el = document.getElementById('best-' + mod);
+                if (!el) return;
+                const levels = Object.keys(scores);
+                if (levels.length === 0) return;
+
+                // Find overall best across all levels
+                let topScore = 0, topTotal = 10, allPerfect = true;
+                levels.forEach(function(lvl) {
+                    const s = scores[lvl];
+                    if (s.best > topScore || (s.best === topScore && s.total > topTotal)) {
+                        topScore = s.best; topTotal = s.total;
+                    }
+                    if (s.best < s.total) allPerfect = false;
+                });
+
+                const pct = topTotal > 0 ? Math.round(topScore / topTotal * 100) : 0;
+                el.textContent = (allPerfect && levels.length > 0 ? '🏆 ' : '⭐ ') + 'Meilleur : ' + topScore + ' / ' + topTotal;
+                el.classList.add(pct === 100 ? 'perfect' : 'played');
+            });
         })();
     </script>
 </body>

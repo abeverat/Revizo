@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════
 // Geometry definitions
 // ═══════════════════════════════════════
+const MODULE_KEY = 'geometrie';
 let gameMode = 'cercle';
 let currentAnswer = null;
 let currentExplanation = '';
