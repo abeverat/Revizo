@@ -6,6 +6,36 @@ let currentAnswer = null;
 
 const questionArea  = document.getElementById('question-area');
 const cardModeLabel = document.getElementById('card-mode-label');
+const levelDescEl   = document.getElementById('level-desc');
+
+// ── Level definitions ──
+let currentLevel = 'ce2';
+
+const levels = {
+    ce2: { desc: 'Identifier (dénominateur 2–6)', maxDen: 6, allowedModes: ['pie'] },
+    cm1: { desc: 'Identifier, Simplifier, Comparer (2–9)', maxDen: 9, allowedModes: ['pie', 'simplify', 'compare'] },
+    cm2: { desc: 'Tous les modes (2–12)', maxDen: 12, allowedModes: ['pie', 'simplify', 'compare', 'add'] }
+};
+
+function selectLevel(level) {
+    currentLevel = level;
+    document.querySelectorAll('.level-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === level);
+    });
+    levelDescEl.textContent = levels[level].desc;
+
+    // Show/hide mode buttons based on allowed modes
+    const allowed = levels[level].allowedModes;
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        const mode = btn.id.replace('mode-', '');
+        btn.style.display = allowed.includes(mode) ? '' : 'none';
+    });
+
+    // If current mode is not allowed, switch to first allowed
+    if (!allowed.includes(gameMode)) {
+        selectMode(allowed[0]);
+    }
+}
 
 // ── Mode selection ──
 function selectMode(mode) {
@@ -76,7 +106,8 @@ function buildFractionInputZone() {
 // Question generators (one per mode)
 // ═══════════════════════════════════════
 function generatePieQuestion() {
-    const denominators = [2, 3, 4, 5, 6, 8, 10, 12];
+    const maxDen = levels[currentLevel].maxDen;
+    const denominators = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
     const den = denominators[randInt(0, denominators.length - 1)];
     const num = randInt(1, den - 1);
 
@@ -87,8 +118,9 @@ function generatePieQuestion() {
 }
 
 function generateSimplifyQuestion() {
-    const simpleNums = [1, 2, 3, 4, 5, 6, 7];
-    const simpleDens = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    const maxDen = levels[currentLevel].maxDen;
+    const simpleNums = [1, 2, 3, 4, 5, 6, 7].filter(n => n < maxDen);
+    const simpleDens = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].filter(d => d <= maxDen);
     let sNum, sDen;
     do {
         sNum = simpleNums[randInt(0, simpleNums.length - 1)];
@@ -106,7 +138,8 @@ function generateSimplifyQuestion() {
 }
 
 function generateCompareQuestion() {
-    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12];
+    const maxDen = levels[currentLevel].maxDen;
+    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
     let n1, d1, n2, d2;
 
     do {
@@ -139,7 +172,8 @@ function generateCompareQuestion() {
 }
 
 function generateAddQuestion() {
-    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12];
+    const maxDen = levels[currentLevel].maxDen;
+    const denOptions = [2, 3, 4, 5, 6, 8, 10, 12].filter(d => d <= maxDen);
     const useSameDen = Math.random() < 0.5;
     let n1, d1, n2, d2, ansNum, ansDen;
 

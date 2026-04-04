@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// Grammar-specific logic — CM2
+// Grammar-specific logic
 // ═══════════════════════════════════════
 let gameMode = 'homophones';
 let currentAnswer = null;
@@ -8,6 +8,26 @@ let currentExplanation = '';
 const questionArea  = document.getElementById('question-area');
 const cardModeLabel = document.getElementById('card-mode-label');
 const explanationEl = document.getElementById('explanation');
+const levelDescEl   = document.getElementById('level-desc');
+
+// ── Level definitions ──
+let currentLevel = 'ce2';
+const levelRank = { ce2: 1, cm1: 2, cm2: 3 };
+const levelDescs = { ce2: 'Notions de base', cm1: 'Notions intermédiaires', cm2: 'Programme complet' };
+
+function selectLevel(level) {
+    currentLevel = level;
+    document.querySelectorAll('.level-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === level);
+    });
+    levelDescEl.textContent = levelDescs[level];
+    usedIndices = {};
+}
+
+function filterByLevel(questions) {
+    const rank = levelRank[currentLevel];
+    return questions.filter(q => levelRank[q.level] <= rank);
+}
 
 // ── Mode selection ──
 function selectMode(mode) {
@@ -45,10 +65,10 @@ function pickQuestion(bank, mode) {
 
 function getBank() {
     switch (gameMode) {
-        case 'homophones':  return homophoneQuestions;
-        case 'conjugaison': return conjugaisonQuestions;
-        case 'nature':      return natureQuestions;
-        case 'accord':      return accordQuestions;
+        case 'homophones':  return filterByLevel(homophoneQuestions);
+        case 'conjugaison': return filterByLevel(conjugaisonQuestions);
+        case 'nature':      return filterByLevel(natureQuestions);
+        case 'accord':      return filterByLevel(accordQuestions);
     }
 }
 

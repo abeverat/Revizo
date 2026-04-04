@@ -14,8 +14,16 @@
 
     <!-- ══════════════ ÉCRAN D'ACCUEIL ══════════════ -->
     <div id="start-screen">
-        <h1>� Revizo</h1>
+        <h1>🃏 Revizo</h1>
         <p>Entraîne-toi aux multiplications !</p>
+
+        <div class="level-tabs">
+            <button class="level-tab active" data-level="ce2" onclick="selectLevel('ce2')">CE2</button>
+            <button class="level-tab" data-level="cm1" onclick="selectLevel('cm1')">CM1</button>
+            <button class="level-tab" data-level="cm2" onclick="selectLevel('cm2')">CM2</button>
+        </div>
+        <p class="level-desc" id="level-desc">Tables de 2 à 5</p>
+
         <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
         <br>
         <a class="nav-link" href="../index.html">🏠 Accueil</a>

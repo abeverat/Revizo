@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════
-// Geometry definitions — CM2
+// Geometry definitions
 // ═══════════════════════════════════════
 let gameMode = 'cercle';
 let currentAnswer = null;
@@ -8,6 +8,21 @@ let currentExplanation = '';
 const questionArea  = document.getElementById('question-area');
 const cardModeLabel = document.getElementById('card-mode-label');
 const explanationEl = document.getElementById('explanation');
+const levelDescEl   = document.getElementById('level-desc');
+
+// ── Level definitions ──
+let currentLevel = 'ce2';
+const levelRank = { ce2: 1, cm1: 2, cm2: 3 };
+const levelDescs = { ce2: 'Notions de base', cm1: 'Notions intermédiaires', cm2: 'Programme complet' };
+
+function selectLevel(level) {
+    currentLevel = level;
+    document.querySelectorAll('.level-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === level);
+    });
+    levelDescEl.textContent = levelDescs[level];
+    usedIndices = [];
+}
 
 const modeLabels = {
     cercle:  'Le cercle',
@@ -38,22 +53,27 @@ function shuffle(arr) {
     return a;
 }
 
-// ── Build question pool for current mode ──
+// ── Build question pool for current mode, filtered by level ──
+function filterByLevel(questions) {
+    const rank = levelRank[currentLevel];
+    return questions.filter(q => levelRank[q.level] <= rank);
+}
+
 function getQuestionPool() {
     switch (gameMode) {
-        case 'cercle':  return cercleQuestions;
-        case 'droites': return droitesQuestions;
-        case 'figures': return figuresQuestions;
-        case 'angles':  return anglesQuestions;
-        case 'mesures': return mesuresQuestions;
-        case 'melange': return [
+        case 'cercle':  return filterByLevel(cercleQuestions);
+        case 'droites': return filterByLevel(droitesQuestions);
+        case 'figures': return filterByLevel(figuresQuestions);
+        case 'angles':  return filterByLevel(anglesQuestions);
+        case 'mesures': return filterByLevel(mesuresQuestions);
+        case 'melange': return filterByLevel([
             ...cercleQuestions,
             ...droitesQuestions,
             ...figuresQuestions,
             ...anglesQuestions,
             ...mesuresQuestions
-        ];
-        default: return cercleQuestions;
+        ]);
+        default: return filterByLevel(cercleQuestions);
     }
 }
 

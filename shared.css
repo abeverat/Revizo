@@ -446,3 +446,42 @@ body {
     from { opacity: 0.2; transform: scale(0.8); }
     to   { opacity: 1;   transform: scale(1.2); }
 }
+
+/* ── Level tabs ── */
+.level-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin: 1.2rem auto 0.4rem;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.15);
+    width: fit-content;
+}
+
+.level-tab {
+    padding: 0.5rem 1.4rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.level-tab:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.level-tab.active {
+    background: rgba(255,255,255,0.3);
+    color: #fff;
+}
+
+.level-desc {
+    color: rgba(255,255,255,0.65);
+    font-size: 0.95rem;
+    margin: 0.2rem 0 1rem;
+}

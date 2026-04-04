@@ -6,17 +6,45 @@ let a, b, correctAnswer;
 const questionEl   = document.getElementById('question');
 const answerInput  = document.getElementById('answer-input');
 const btnValidate  = document.getElementById('btn-validate');
+const levelDescEl  = document.getElementById('level-desc');
 
-// Weighted pool: 3–8 appear 4× more often than 0,1,2,9,10
-const weightedPool = [
-    0, 1, 2,
-    3,3,3,3, 4,4,4,4, 5,5,5,5,
-    6,6,6,6, 7,7,7,7, 8,8,8,8,
-    9, 10
-];
+// ── Level definitions ──
+let currentLevel = 'ce2';
+
+const levels = {
+    ce2: {
+        desc: 'Tables de 2 à 5',
+        pool: buildPool(2, 5)
+    },
+    cm1: {
+        desc: 'Tables de 2 à 9',
+        pool: buildPool(2, 9)
+    },
+    cm2: {
+        desc: 'Tables de 2 à 12',
+        pool: buildPool(2, 12)
+    }
+};
+
+function buildPool(min, max) {
+    const pool = [];
+    for (let i = min; i <= max; i++) pool.push(i, i, i, i);
+    // add 0 and 1 with lower weight
+    pool.push(0, 1);
+    return pool;
+}
+
+function selectLevel(level) {
+    currentLevel = level;
+    document.querySelectorAll('.level-tab').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.level === level);
+    });
+    levelDescEl.textContent = levels[level].desc;
+}
 
 function pickNumber() {
-    return weightedPool[Math.floor(Math.random() * weightedPool.length)];
+    const pool = levels[currentLevel].pool;
+    return pool[Math.floor(Math.random() * pool.length)];
 }
 
 // ── Required by shared.js ──
