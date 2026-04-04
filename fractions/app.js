@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════
 // Fractions-specific logic
 // ═══════════════════════════════════════
+const MODULE_KEY = 'fractions';
 let gameMode = 'pie'; // pie | simplify | compare | add
 let currentAnswer = null;
 

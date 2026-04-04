@@ -1,6 +1,7 @@
 // ═══════════════════════════════════════
 // Grammar-specific logic
 // ═══════════════════════════════════════
+const MODULE_KEY = 'grammaire';
 let gameMode = 'homophones';
 let currentAnswer = null;
 let currentExplanation = '';

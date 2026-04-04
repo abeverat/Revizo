@@ -134,6 +134,29 @@ body {
 .module-card.geometrie::before { background: linear-gradient(90deg, #4facfe, #00f2fe); }
 .module-card.kangourou::before { background: linear-gradient(90deg, #f7b733, #fc4a1a); }
 
+/* ── Best-score badge on module cards ── */
+.card-best {
+    display: none;
+    margin-top: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.2);
+    color: rgba(255,255,255,0.9);
+    letter-spacing: 0.02em;
+}
+
+.card-best.played,
+.card-best.perfect {
+    display: inline-block;
+}
+
+.card-best.perfect {
+    background: rgba(255,215,0,0.3);
+    color: #fff;
+}
+
 /* ── Footer ── */
 .portal-footer {
     margin-top: 50px;
