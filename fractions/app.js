@@ -2,7 +2,8 @@
 // Fractions-specific logic
 // ═══════════════════════════════════════
 const MODULE_KEY = 'fractions';
-let gameMode = 'pie'; // pie | simplify | compare | add
+let gameMode  = 'pie'; // active rendering mode (may be overridden by review)
+let _userMode = 'pie'; // mode chosen by the user — survives review cards
 let currentAnswer = null;
 
 const questionArea  = document.getElementById('question-area');
@@ -40,7 +41,8 @@ function selectLevel(level) {
 
 // ── Mode selection ──
 function selectMode(mode) {
-    gameMode = mode;
+    gameMode  = mode;
+    _userMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
     document.getElementById('mode-' + mode).classList.add('selected');
 }
@@ -235,6 +237,7 @@ function generateAddQuestion(params) {
 // Required by shared.js
 // ═══════════════════════════════════════
 function generateQuestion() {
+    gameMode = _userMode; // always generate fresh cards in the user-selected mode
     switch (gameMode) {
         case 'pie':      generatePieQuestion(); break;
         case 'simplify': generateSimplifyQuestion(); break;

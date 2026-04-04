@@ -2,7 +2,8 @@
 // Grammar-specific logic
 // ═══════════════════════════════════════
 const MODULE_KEY = 'grammaire';
-let gameMode = 'homophones';
+let gameMode = 'homophones';  // active rendering mode (may be overridden by review)
+let _userMode = 'homophones'; // mode chosen by the user — survives review cards
 let currentAnswer = null;
 let currentExplanation = '';
 
@@ -32,7 +33,8 @@ function filterByLevel(questions) {
 
 // ── Mode selection ──
 function selectMode(mode) {
-    gameMode = mode;
+    gameMode  = mode;
+    _userMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
     document.getElementById('mode-' + mode).classList.add('selected');
 }
@@ -80,6 +82,7 @@ function getBank() {
 let _currentQ = null; // current raw question object (for review)
 
 function generateQuestion() {
+    gameMode = _userMode; // always generate fresh cards in the user-selected mode
     switch (gameMode) {
         case 'homophones':  generateHomophone(); break;
         case 'conjugaison': generateConjugaison(); break;
