@@ -54,11 +54,18 @@ GENERATORS["4eme"] = [
   },
   // PPCM
   () => {
-    const a = randInt(4, 20), b = randInt(4, 20);
+    let a, b;
+    do {
+      a = randInt(4, 20);
+      b = randInt(4, 20);
+    } while (gcd(a, b) === 1 || a === b);
     const correct = lcm(a, b);
+    const product = a * b;
+    const dists = [gcd(a, b), correct + a, correct - b, a + b];
+    if (product !== correct) dists.unshift(product);
     return buildQuestion(
       `Quel est le PPCM de ${a} et ${b} ?`, correct,
-      [a * b, gcd(a, b), correct + a, correct - b, a + b].map(String), 2,
+      dists.map(String), 2,
       `PPCM(${a}, ${b}) = ${correct}`
     );
   },

@@ -76,8 +76,8 @@ GENERATORS["6eme"] = [
   },
   // Pourcentage
   () => {
-    const pct = randChoice([10, 15, 20, 25, 30, 40, 50, 75]);
-    const base = randChoice([40, 50, 60, 80, 100, 120, 150, 200, 300, 400, 500]);
+    const pct = randChoice([10, 20, 25, 50]);
+    const base = randChoice([40, 60, 80, 100, 120, 200, 300, 400, 500]);
     const correct = (pct * base) / 100;
     return buildQuestion(
       `Combien font ${pct}% de ${base} ?`, correct,
