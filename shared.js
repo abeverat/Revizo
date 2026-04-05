@@ -421,6 +421,7 @@ document.addEventListener('keydown', (e) => {
 
     if (e.key === 'Enter') {
         if (gameScreen.style.display !== 'none' && gameScreen.style.display !== '') {
+            e.preventDefault();
             if (isFlipped) {
                 nextCard();
             } else if (typeof canEnterValidate === 'function' ? canEnterValidate() : true) {
