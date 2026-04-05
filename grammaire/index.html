@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revizo - Grammaire</title>
+    <meta name="description" content="Entraîne-toi en grammaire : homophones, conjugaison, nature des mots et accords. Niveaux CE2, CM1, CM2.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#764ba2">
     <link rel="stylesheet" href="../shared.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">🌙</button>
 
     <div class="stars" id="stars"></div>
     <canvas id="confetti-canvas"></canvas>
@@ -24,18 +30,27 @@
         </div>
         <p class="level-desc" id="level-desc">Notions de base</p>
 
-        <div class="mode-selector">
-            <div class="mode-btn selected" onclick="selectMode('homophones')" id="mode-homophones">
-                <span class="mode-icon">🔤</span>Homophones
-            </div>
-            <div class="mode-btn" onclick="selectMode('conjugaison')" id="mode-conjugaison">
-                <span class="mode-icon">✏️</span>Conjugaison
-            </div>
-            <div class="mode-btn" onclick="selectMode('nature')" id="mode-nature">
-                <span class="mode-icon">🏷️</span>Nature
-            </div>
-            <div class="mode-btn" onclick="selectMode('accord')" id="mode-accord">
-                <span class="mode-icon">🤝</span>Accords
+        <div class="mode-selector" role="group" aria-label="Choix du mode">
+            <button class="mode-btn selected" onclick="selectMode('homophones')" id="mode-homophones" type="button" aria-pressed="true">
+                <span class="mode-icon" aria-hidden="true">🔤</span>Homophones
+            </button>
+            <button class="mode-btn" onclick="selectMode('conjugaison')" id="mode-conjugaison" type="button" aria-pressed="false">
+                <span class="mode-icon" aria-hidden="true">✏️</span>Conjugaison
+            </button>
+            <button class="mode-btn" onclick="selectMode('nature')" id="mode-nature" type="button" aria-pressed="false">
+                <span class="mode-icon" aria-hidden="true">🏷️</span>Nature
+            </button>
+            <button class="mode-btn" onclick="selectMode('accord')" id="mode-accord" type="button" aria-pressed="false">
+                <span class="mode-icon" aria-hidden="true">🤝</span>Accords
+            </button>
+        </div>
+
+        <div class="round-selector">
+            <span class="round-label">Questions :</span>
+            <div class="round-btns">
+                <button class="round-btn" data-size="5" onclick="selectRoundSize(5)">5</button>
+                <button class="round-btn active" data-size="10" onclick="selectRoundSize(10)">10</button>
+                <button class="round-btn" data-size="20" onclick="selectRoundSize(20)">20</button>
             </div>
         </div>
 
@@ -54,15 +69,15 @@
         <div class="stats-bar">
             <div class="stat-box">
                 <div class="label">Carte</div>
-                <div class="value" id="card-count">1 / 10</div>
+                <div class="value" id="card-count" aria-live="polite">1 / 10</div>
             </div>
             <div class="stat-box">
-                <div class="label">⏱ Chrono</div>
-                <div class="value" id="timer">00:00</div>
+                <div class="label"><span aria-hidden="true">⏱</span> Chrono</div>
+                <div class="value" id="timer" aria-live="off">00:00</div>
             </div>
             <div class="stat-box">
-                <div class="label">✅ Score</div>
-                <div class="value" id="score">0</div>
+                <div class="label"><span aria-hidden="true">✅</span> Score</div>
+                <div class="value" id="score" aria-live="polite">0</div>
             </div>
         </div>
 

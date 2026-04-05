@@ -41,8 +41,13 @@ function selectLevel(level) {
 // ── Mode selection ──
 function selectMode(mode) {
     gameMode = mode;
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById('mode-' + mode).classList.add('selected');
+    document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-pressed', 'false');
+    });
+    const active = document.getElementById('mode-' + mode);
+    active.classList.add('selected');
+    active.setAttribute('aria-pressed', 'true');
 }
 
 // ── Math utilities ──
@@ -253,13 +258,13 @@ function validateAnswer() {
                      userDen / userG === currentAnswer.simpDen);
     }
 
-    showResult(isCorrect, buildResultText());
+    showResult(isCorrect, buildResultText(), isCorrect ? '' : buildExplanation());
 }
 
 function validateComparison(symbol) {
     if (isFlipped) return;
     const isCorrect = symbol === currentAnswer.symbol;
-    showResult(isCorrect, buildResultText());
+    showResult(isCorrect, buildResultText(), isCorrect ? '' : buildExplanation());
 }
 
 function buildResultText() {
@@ -273,6 +278,25 @@ function buildResultText() {
             : `${currentAnswer.simpNum}⁄${currentAnswer.simpDen}`;
     }
     return '';
+}
+
+function buildExplanation() {
+    if (gameMode === 'pie') {
+        return `La partie coloriée représente ${currentAnswer.num} part${currentAnswer.num > 1 ? 's' : ''} sur ${currentAnswer.den}.`;
+    } else if (gameMode === 'simplify') {
+        return `On divise le numérateur et le dénominateur par leur PGCD.`;
+    } else if (gameMode === 'compare') {
+        const v1 = (currentAnswer.n1 / currentAnswer.d1).toFixed(3);
+        const v2 = (currentAnswer.n2 / currentAnswer.d2).toFixed(3);
+        return `${currentAnswer.n1}⁄${currentAnswer.d1} ≈ ${v1} et ${currentAnswer.n2}⁄${currentAnswer.d2} ≈ ${v2}`;
+    } else if (gameMode === 'add') {
+        return `On met au même dénominateur puis on additionne les numérateurs.`;
+    }
+    return '';
+}
+
+function getCurrentQuestionData() {
+    return { mode: gameMode, answer: currentAnswer };
 }
 
 function getFocusInput() {

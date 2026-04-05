@@ -10,6 +10,11 @@ let timerInterval = null;
 let seconds = 0;
 let isFlipped = false;
 let isPaused = false;
+let wrongQuestions = [];
+let isReviewMode = false;
+let reviewIndex = 0;
+let cardsPerRound = 10;
+let selectedRoundSize = 10;
 
 // ── DOM cache (common elements) ──
 const startScreen  = document.getElementById('start-screen');
@@ -155,6 +160,9 @@ function startGame() {
     currentCard = 0;
     roundScore  = 0;
     totalCards  = 0;
+    wrongQuestions = [];
+    isReviewMode = false;
+    cardsPerRound = selectedRoundSize;
     scoreEl.textContent = '0';
 
     startTimer();
@@ -176,7 +184,7 @@ function loadCard() {
     cardBack.classList.remove('wrong');
     isFlipped = false;
 
-    cardCountEl.textContent = `${currentCard} / 10`;
+    cardCountEl.textContent = `${currentCard} / ${cardsPerRound}`;
     cardNumEl.textContent   = `#${totalCards}`;
     scoreEl.textContent     = roundScore;
 
@@ -187,8 +195,15 @@ function loadCard() {
     generateQuestion();
 }
 
-function showResult(isCorrect, resultText) {
+function showResult(isCorrect, resultText, explanation) {
     resultEl.textContent = resultText;
+
+    // Show explanation if provided
+    const explanationEl = document.getElementById('explanation');
+    if (explanationEl) {
+        explanationEl.textContent = explanation || '';
+        explanationEl.style.display = explanation ? 'block' : 'none';
+    }
 
     if (isCorrect) {
         cardBack.classList.remove('wrong');
@@ -199,6 +214,10 @@ function showResult(isCorrect, resultText) {
     } else {
         cardBack.classList.add('wrong');
         resultIconEl.textContent = '❌';
+        // Track wrong question for review mode
+        if (typeof getCurrentQuestionData === 'function') {
+            wrongQuestions.push(getCurrentQuestionData());
+        }
     }
 
     cardEl.classList.add('flipped');
@@ -210,7 +229,7 @@ function showResult(isCorrect, resultText) {
 }
 
 function nextCard() {
-    if (currentCard >= 10) {
+    if (currentCard >= cardsPerRound) {
         showPauseScreen();
     } else {
         loadCard();
@@ -229,6 +248,26 @@ function showPauseScreen() {
         && typeof currentLevel !== 'undefined') {
         const answered = isFlipped ? currentCard : currentCard - 1;
         saveRoundScore(MODULE_KEY, currentLevel, roundScore, answered, seconds);
+    }
+
+    // Check and award badges
+    if (typeof checkAndAwardBadges === 'function') {
+        const newBadges = checkAndAwardBadges();
+        if (newBadges.length > 0) {
+            // Show badge notification after a short delay
+            setTimeout(() => {
+                const toast = document.createElement('div');
+                toast.className = 'badge-toast';
+                toast.textContent = '🏅 Badge débloqué : ' + newBadges[0].name + ' !';
+                toast.setAttribute('role', 'alert');
+                document.body.appendChild(toast);
+                requestAnimationFrame(() => toast.classList.add('visible'));
+                setTimeout(() => {
+                    toast.classList.remove('visible');
+                    setTimeout(() => toast.remove(), 500);
+                }, 3500);
+            }, 800);
+        }
     }
 
     gameScreen.style.display  = 'none';
@@ -259,17 +298,78 @@ function showPauseScreen() {
         title.textContent = '💪 Courage !';
         msg.textContent   = 'Entraîne-toi encore, tu vas y arriver !';
     }
+
+    // Adaptive difficulty suggestion
+    let hintEl = document.getElementById('difficulty-hint');
+    if (!hintEl) {
+        hintEl = document.createElement('p');
+        hintEl.id = 'difficulty-hint';
+        hintEl.className = 'difficulty-hint';
+        msg.parentNode.insertBefore(hintEl, msg.nextSibling);
+    }
+    hintEl.textContent = '';
+    hintEl.style.display = 'none';
+
+    if (typeof currentLevel !== 'undefined' && typeof selectLevel === 'function' && !isReviewMode) {
+        const levelOrder = ['ce2', 'cm1', 'cm2'];
+        const idx = levelOrder.indexOf(currentLevel);
+        if (pct >= 90 && idx < levelOrder.length - 1) {
+            hintEl.textContent = '⬆️ Tu es prêt(e) pour le niveau ' + levelOrder[idx + 1].toUpperCase() + ' !';
+            hintEl.style.display = 'block';
+        } else if (pct < 40 && idx > 0) {
+            hintEl.textContent = '💡 Essaie le niveau ' + levelOrder[idx - 1].toUpperCase() + ' pour consolider tes bases.';
+            hintEl.style.display = 'block';
+        }
+    }
+
+    // Show/hide review button
+    let reviewBtn = document.getElementById('btn-review');
+    if (!reviewBtn) {
+        const pauseButtons = pauseScreen.querySelector('.pause-buttons');
+        if (pauseButtons) {
+            reviewBtn = document.createElement('button');
+            reviewBtn.id = 'btn-review';
+            reviewBtn.className = 'btn btn-review';
+            reviewBtn.textContent = '🔄 Revoir mes erreurs';
+            reviewBtn.onclick = startReviewMode;
+            pauseButtons.appendChild(reviewBtn);
+        }
+    }
+    if (reviewBtn) {
+        reviewBtn.style.display = wrongQuestions.length > 0 && !isReviewMode ? 'inline-block' : 'none';
+    }
+}
+
+function startReviewMode() {
+    if (wrongQuestions.length === 0) return;
+    isReviewMode = true;
+    reviewIndex = 0;
+    cardsPerRound = wrongQuestions.length;
+    currentCard = 0;
+    roundScore = 0;
+
+    pauseScreen.style.display = 'none';
+    gameScreen.style.display  = 'block';
+    startTimer();
+
+    loadCard();
 }
 
 function continueGame() {
     pauseScreen.style.display = 'none';
     gameScreen.style.display  = 'block';
+    cardsPerRound = selectedRoundSize;
+    wrongQuestions = [];
+    isReviewMode = false;
     startTimer();
     newRound();
 }
 
 function resetGame() {
     stopTimer();
+    cardsPerRound = selectedRoundSize;
+    wrongQuestions = [];
+    isReviewMode = false;
     pauseScreen.style.display = 'none';
     gameScreen.style.display  = 'none';
     startScreen.style.display = 'block';
@@ -329,3 +429,14 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// ═══════════════════════════════════════
+// Round size selector
+// ═══════════════════════════════════════
+function selectRoundSize(size) {
+    selectedRoundSize = size;
+    cardsPerRound = size;
+    document.querySelectorAll('.round-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.size) === size);
+    });
+}

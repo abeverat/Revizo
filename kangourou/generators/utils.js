@@ -40,15 +40,23 @@ function round2(x) {
 function buildQuestion(question, correct, distractors, difficulty, explanation) {
   correct = String(correct);
   let dists = [...new Set(distractors.map(String))].filter(d => d !== correct);
-  while (dists.length < 4) {
+  let safety = 0;
+  while (dists.length < 4 && safety++ < 50) {
     const numCorrect = parseFloat(correct);
     if (!isNaN(numCorrect)) {
       const offset = randInt(1, 10) * randChoice([-1, 1]);
       const fake = String(numCorrect + offset);
       if (fake !== correct && !dists.includes(fake)) dists.push(fake);
     } else {
-      dists.push("Aucune de ces réponses");
+      const fallback = "Réponse " + String.fromCharCode(65 + dists.length);
+      if (!dists.includes(fallback)) dists.push(fallback);
     }
+  }
+  // Fallback: sequential offsets if random failed
+  for (let i = 1; dists.length < 4; i++) {
+    const numCorrect = parseFloat(correct);
+    const fake = !isNaN(numCorrect) ? String(numCorrect + i) : "Option " + (dists.length + 1);
+    if (fake !== correct && !dists.includes(fake)) dists.push(fake);
   }
   dists = dists.slice(0, 4);
 

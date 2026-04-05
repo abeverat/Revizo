@@ -288,6 +288,11 @@ function finishQuiz() {
   dom.resultTime.textContent = dom.timer.textContent;
   dom.resultsDetail.innerHTML = detailHTML;
 
+  // Save score to portal progress system
+  if (typeof saveRoundScore === 'function' && state.currentLevel) {
+    saveRoundScore('kangourou', state.currentLevel.id, correct, total, state.timerSeconds);
+  }
+
   showScreen("results");
 }
 

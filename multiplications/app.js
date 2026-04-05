@@ -77,7 +77,12 @@ function validateAnswer() {
     answerInput.disabled      = true;
     btnValidate.style.display = 'none';
 
-    showResult(isCorrect, String(correctAnswer));
+    const explanation = `${a} × ${b} = ${correctAnswer}`;
+    showResult(isCorrect, String(correctAnswer), isCorrect ? '' : explanation);
+}
+
+function getCurrentQuestionData() {
+    return { a, b, correctAnswer };
 }
 
 function getFocusInput() {

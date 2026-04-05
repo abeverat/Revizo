@@ -4,9 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kangourou — Entraînement Mathématiques</title>
+  <meta name="description" content="Prépare le Kangourou des Mathématiques : quiz de la 6ème à la Terminale avec questions générées.">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#764ba2">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">🌙</button>
   <div id="app">
     <!-- ÉCRAN D'ACCUEIL -->
     <section id="screen-home" class="screen active">
@@ -92,6 +97,9 @@
       </div>
     </section>
   </div>
+
+  <!-- Progress tracking (shared with portal) -->
+  <script src="../progress.js"></script>
 
   <!-- Questions : config + banque statique par niveau -->
   <script src="questions/levels.js"></script>

@@ -9,6 +9,21 @@
   padding: 0;
 }
 
+/* ─── FOCUS VISIBLE (keyboard accessibility) ─── */
+:focus-visible {
+  outline: 3px solid #ffd700;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.btn:focus-visible,
+.level-btn:focus-visible,
+.choice-btn:focus-visible {
+  outline: 3px solid #ffd700;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
 :root {
   --bg: #0f0f1a;
   --bg-card: #1a1a2e;
@@ -647,4 +662,28 @@ body {
     flex-direction: column;
     align-items: center;
   }
+}
+
+/* ─── Theme toggle button ─── */
+.theme-toggle {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.1);
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 999;
+  transition: background 0.3s, transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
 }

@@ -33,8 +33,13 @@ function filterByLevel(questions) {
 // ── Mode selection ──
 function selectMode(mode) {
     gameMode = mode;
-    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
-    document.getElementById('mode-' + mode).classList.add('selected');
+    document.querySelectorAll('.mode-btn').forEach(b => {
+        b.classList.remove('selected');
+        b.setAttribute('aria-pressed', 'false');
+    });
+    const active = document.getElementById('mode-' + mode);
+    active.classList.add('selected');
+    active.setAttribute('aria-pressed', 'true');
 }
 
 // ── Utility ──

@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revizo - Multiplications</title>
+    <meta name="description" content="Entraîne-toi aux tables de multiplication avec Revizo. Niveaux CE2, CM1, CM2.">
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#764ba2">
     <link rel="stylesheet" href="../shared.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">🌙</button>
 
     <div class="stars" id="stars"></div>
     <canvas id="confetti-canvas"></canvas>
@@ -24,6 +30,15 @@
         </div>
         <p class="level-desc" id="level-desc">Tables de 2 à 5</p>
 
+        <div class="round-selector">
+            <span class="round-label">Questions :</span>
+            <div class="round-btns">
+                <button class="round-btn" data-size="5" onclick="selectRoundSize(5)">5</button>
+                <button class="round-btn active" data-size="10" onclick="selectRoundSize(10)">10</button>
+                <button class="round-btn" data-size="20" onclick="selectRoundSize(20)">20</button>
+            </div>
+        </div>
+
         <button class="btn" onclick="startGame()">🚀 C'est parti !</button>
         <br>
         <a class="nav-link" href="../index.html">🏠 Accueil</a>
@@ -39,15 +54,15 @@
         <div class="stats-bar">
             <div class="stat-box">
                 <div class="label">Carte</div>
-                <div class="value" id="card-count">1 / 10</div>
+                <div class="value" id="card-count" aria-live="polite">1 / 10</div>
             </div>
             <div class="stat-box">
-                <div class="label">⏱ Chrono</div>
-                <div class="value" id="timer">00:00</div>
+                <div class="label"><span aria-hidden="true">⏱</span> Chrono</div>
+                <div class="value" id="timer" aria-live="off">00:00</div>
             </div>
             <div class="stat-box">
-                <div class="label">✅ Score</div>
-                <div class="value" id="score">0</div>
+                <div class="label"><span aria-hidden="true">✅</span> Score</div>
+                <div class="value" id="score" aria-live="polite">0</div>
             </div>
         </div>
 
@@ -62,6 +77,7 @@
                     <div class="result-label">Le résultat est</div>
                     <div class="result" id="result">0</div>
                     <div class="result-icon" id="result-icon">✅</div>
+                    <div class="explanation" id="explanation"></div>
                 </div>
             </div>
         </div>

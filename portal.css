@@ -164,6 +164,136 @@ body {
     font-size: 0.85rem;
     position: relative;
     z-index: 1;
+    text-align: center;
+}
+
+.portal-footer p {
+    margin-top: 12px;
+}
+
+/* ── Streak display ── */
+.streak-display {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 8px 20px;
+    background: rgba(255, 152, 0, 0.25);
+    border: 2px solid rgba(255, 152, 0, 0.5);
+    border-radius: 30px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #fff;
+    animation: pop 0.5s ease;
+}
+
+/* ── Badges section ── */
+.badges-section {
+    display: none;
+    max-width: 900px;
+    width: 100%;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+.badges-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.badges-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+}
+
+.badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 16px;
+    min-width: 100px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.badge-item.unlocked {
+    background: rgba(255,255,255,0.18);
+    border: 2px solid rgba(255,215,0,0.5);
+}
+
+.badge-item.locked {
+    background: rgba(255,255,255,0.06);
+    border: 2px solid rgba(255,255,255,0.1);
+    opacity: 0.45;
+    filter: grayscale(1);
+}
+
+.badge-item:hover {
+    transform: translateY(-3px);
+}
+
+.badge-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+}
+
+.badge-name {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+}
+
+/* ── Reset button ── */
+.btn-reset {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 8px 20px;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 30px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.55);
+    transition: all 0.2s;
+}
+
+.btn-reset:hover {
+    background: rgba(244, 67, 54, 0.25);
+    border-color: rgba(244, 67, 54, 0.5);
+    color: #fff;
+}
+
+/* ── Toast notification ── */
+.toast {
+    position: fixed;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #ffd700, #ff9800);
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 50px;
+    box-shadow: 0 8px 30px rgba(255, 152, 0, 0.4);
+    z-index: 1000;
+    transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.toast.visible {
+    bottom: 30px;
+}
+
+@keyframes pop {
+    0%   { transform: scale(0.8); opacity: 0; }
+    50%  { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 /* ── Responsive ── */
@@ -184,4 +314,89 @@ body {
     .portal-header h1 { font-size: 2.2rem; }
     .module-card { padding: 24px 16px; }
     .module-card .card-icon { font-size: 2.8rem; }
+}
+
+@media (max-width: 375px) {
+    body { padding: 16px 10px; }
+    .portal-header h1 { font-size: 1.8rem; }
+    .portal-header p { font-size: 1rem; }
+    .module-card { padding: 18px 12px; border-radius: 18px; }
+    .module-card .card-icon { font-size: 2.4rem; }
+    .module-card .card-title { font-size: 1.1rem; }
+    .module-card .card-desc { font-size: 0.8rem; }
+    .badges-title { font-size: 1.3rem; }
+    .badge-item { min-width: 80px; padding: 10px 12px; }
+    .badge-icon { font-size: 1.6rem; }
+    .badge-name { font-size: 0.7rem; }
+    .streak-display { font-size: 0.95rem; padding: 6px 14px; }
+}
+
+/* ═══════════════════════════════════════
+   Dark Mode — Portal overrides
+   ═══════════════════════════════════════ */
+
+/* Theme toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 999;
+    transition: background 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.1);
+}
+
+.dark-mode body {
+    background: linear-gradient(135deg, #1a1a3a 0%, #2a1535 50%, #3a1540 100%);
+}
+
+.dark-mode .module-card {
+    background: rgba(0,0,0,0.3);
+    backdrop-filter: blur(12px);
+}
+
+.dark-mode .module-card:hover {
+    background: rgba(0,0,0,0.4);
+}
+
+.dark-mode .score-best {
+    color: rgba(200,200,220,0.8);
+}
+
+.dark-mode .badges-section .badges-title {
+    color: rgba(200,200,220,0.7);
+}
+
+.dark-mode .badge-item {
+    background: rgba(0,0,0,0.25);
+}
+
+.dark-mode .badge-item.locked {
+    background: rgba(0,0,0,0.15);
+}
+
+.dark-mode .btn-reset {
+    color: rgba(200,200,220,0.5);
+}
+
+.dark-mode .btn-reset:hover {
+    color: rgba(255,100,100,0.8);
+}
+
+.dark-mode .streak-display {
+    background: rgba(0,0,0,0.25);
 }

@@ -7,6 +7,24 @@
     box-sizing: border-box;
 }
 
+/* ── Focus visible (keyboard accessibility) ── */
+:focus-visible {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.btn:focus-visible,
+.btn-validate:focus-visible,
+.btn-next:focus-visible,
+.btn-game-ctrl:focus-visible,
+.mode-btn:focus-visible,
+.level-tab:focus-visible {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 6px rgba(255, 215, 0, 0.3);
+}
+
 body {
     min-height: 100vh;
     font-family: 'Nunito', sans-serif;
@@ -484,4 +502,201 @@ body {
     color: rgba(255,255,255,0.65);
     font-size: 0.95rem;
     margin: 0.2rem 0 1rem;
+}
+
+/* ── Round-size selector ── */
+.round-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    margin: 0.6rem auto 1rem;
+}
+
+.round-selector .round-label {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+.round-btns {
+    display: flex;
+    gap: 0;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.15);
+}
+
+.round-btn {
+    padding: 0.35rem 1rem;
+    border: none;
+    background: transparent;
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    font-family: 'Nunito', sans-serif;
+}
+
+.round-btn:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.round-btn.active {
+    background: rgba(255,255,255,0.3);
+    color: #fff;
+}
+
+/* ── Explanation on card back ── */
+.explanation {
+    display: none;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.85);
+    margin-top: 10px;
+    padding: 8px 14px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 10px;
+    max-width: 90%;
+    line-height: 1.4;
+}
+
+/* ── Review button ── */
+.btn-review {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    box-shadow: 0 8px 20px rgba(102,126,234,0.4);
+}
+
+/* ── Difficulty hint ── */
+.difficulty-hint {
+    display: none;
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.8);
+    margin-top: 8px;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    animation: fadeIn 0.5s ease;
+}
+
+/* ── Badge toast ── */
+.badge-toast {
+    position: fixed;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #ffd700, #ff9800);
+    color: #333;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 14px 28px;
+    border-radius: 50px;
+    box-shadow: 0 8px 30px rgba(255, 152, 0, 0.4);
+    z-index: 1000;
+    transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+
+.badge-toast.visible {
+    bottom: 30px;
+}
+
+/* ── Theme toggle button ── */
+.theme-toggle {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 999;
+    transition: background 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.1);
+}
+
+/* ═══════════════════════════════════════
+   Dark Mode overrides
+   ═══════════════════════════════════════ */
+
+/* Card & glassmorphism */
+.dark-mode .card .card-front {
+    background: linear-gradient(145deg, #2a2a3a, #1e1e2e);
+    color: #e0e0e0;
+}
+
+.dark-mode .card .card-back {
+    background: linear-gradient(145deg, #1a3a2a, #1a2a20);
+}
+
+.dark-mode .card .card-back.wrong {
+    background: linear-gradient(145deg, #3a1a2a, #2a1a1e);
+}
+
+.dark-mode .stat-box {
+    background: rgba(0,0,0,0.25);
+}
+
+.dark-mode .btn-validate {
+    background: linear-gradient(145deg, #2a7a4a, #1e6e3a);
+}
+
+.dark-mode .level-tab {
+    color: rgba(200,200,220,0.7);
+}
+
+.dark-mode .level-tab.active {
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+.dark-mode .level-tabs {
+    background: rgba(0,0,0,0.2);
+}
+
+.dark-mode .round-btns {
+    background: rgba(0,0,0,0.2);
+}
+
+.dark-mode .round-btn {
+    color: rgba(200,200,220,0.7);
+}
+
+.dark-mode .round-btn.active {
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+.dark-mode #start-screen h1 {
+    text-shadow: 3px 3px 8px rgba(0,0,0,0.6);
+}
+
+.dark-mode .theme-toggle {
+    background: rgba(0,0,0,0.3);
+}
+
+.dark-mode .theme-toggle:hover {
+    background: rgba(0,0,0,0.45);
+}
+
+/* Ingame pause overlay */
+.dark-mode #ingame-pause-overlay {
+    background: rgba(0,0,0,0.75);
+}
+
+/* Pause screen */
+.dark-mode #pause-screen {
+    color: #e0e0e0;
 }

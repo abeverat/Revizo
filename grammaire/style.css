@@ -2,6 +2,10 @@ body {
     background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
 }
 
+.dark-mode body {
+    background: linear-gradient(135deg, #0a4540 0%, #1a6535 100%);
+}
+
 .btn {
     background: linear-gradient(135deg, #fc4a1a, #f7b733);
     box-shadow: 0 8px 20px rgba(252,74,26,0.4);
@@ -155,4 +159,16 @@ body {
     .card-back .result { font-size: 1.6rem; }
     .choice-btn { font-size: 1rem; padding: 10px 16px; min-width: 70px; }
     .mode-btn { min-width: 120px; font-size: 0.9rem; padding: 10px 16px; }
+}
+
+@media (max-width: 375px) {
+    #start-screen h1 { font-size: 1.8rem; }
+    .card-container { width: 240px; height: 320px; }
+    .sentence-text { font-size: 1rem; }
+    .choice-btn { font-size: 0.9rem; padding: 8px 12px; min-width: 60px; }
+    .mode-btn { min-width: 100px; font-size: 0.8rem; padding: 8px 12px; }
+    .mode-btn .mode-icon { font-size: 1.5rem; }
+    .stat-box { padding: 6px 10px; min-width: 70px; }
+    .stat-box .value { font-size: 1.2rem; }
+    #grammar-input { width: 150px; }
 }

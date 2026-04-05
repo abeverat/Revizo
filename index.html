@@ -4,57 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revizo — Apprends en t'amusant !</title>
+    <meta name="description" content="Revizo : plateforme éducative gratuite pour réviser les multiplications, fractions, grammaire, géométrie et préparer le Kangourou des Mathématiques.">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#764ba2">
     <link rel="stylesheet" href="portal.css">
 </head>
 <body>
 
+    <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Changer le thème">🌙</button>
+
     <div class="stars" id="stars"></div>
 
     <header class="portal-header">
-        <h1>� Revizo</h1>
+        <h1><span aria-hidden="true">📚</span> Revizo</h1>
         <p>Apprends en t'amusant !</p>
+        <div class="streak-display" id="streak-display" style="display:none;"></div>
     </header>
 
     <div class="module-grid">
         <a class="module-card multiply" href="multiplications/index.html" id="card-multiplications">
-            <span class="card-icon">🃏</span>
+            <span class="card-icon" aria-hidden="true">🃏</span>
             <div class="card-title">Multiplications</div>
             <div class="card-desc">Entraîne-toi aux tables</div>
             <div class="card-best" id="best-multiplications"></div>
         </a>
 
         <a class="module-card fractions" href="fractions/index.html" id="card-fractions">
-            <span class="card-icon">🥧</span>
+            <span class="card-icon" aria-hidden="true">🥧</span>
             <div class="card-title">Fractions</div>
             <div class="card-desc">Identifier, simplifier, comparer</div>
             <div class="card-best" id="best-fractions"></div>
         </a>
 
         <a class="module-card grammaire" href="grammaire/index.html" id="card-grammaire">
-            <span class="card-icon">📝</span>
+            <span class="card-icon" aria-hidden="true">📝</span>
             <div class="card-title">Grammaire</div>
             <div class="card-desc">Homophones, conjugaison, nature…</div>
             <div class="card-best" id="best-grammaire"></div>
         </a>
 
         <a class="module-card geometrie" href="geometrie/index.html" id="card-geometrie">
-            <span class="card-icon">📐</span>
+            <span class="card-icon" aria-hidden="true">📐</span>
             <div class="card-title">Géométrie</div>
             <div class="card-desc">Cercle, droites, figures, angles</div>
             <div class="card-best" id="best-geometrie"></div>
         </a>
 
         <a class="module-card kangourou" href="kangourou/index.html" id="card-kangourou">
-            <span class="card-icon">🦘</span>
+            <span class="card-icon" aria-hidden="true">🦘</span>
             <div class="card-title">Kangourou</div>
             <div class="card-desc">Prépare la compétition !</div>
             <div class="card-best" id="best-kangourou"></div>
         </a>
     </div>
 
+    <section class="badges-section" id="badges-section">
+        <h2 class="badges-title"><span aria-hidden="true">🏅</span> Mes badges</h2>
+        <div class="badges-grid" id="badges-grid"></div>
+    </section>
+
     <footer class="portal-footer">
-        Revizo — CM2
+        <button class="btn-reset" id="btn-reset" type="button">🗑️ Réinitialiser ma progression</button>
+        <p>Revizo — CM2</p>
     </footer>
+
+    <!-- Toast notification for new badges -->
+    <div class="toast" id="toast" role="alert" aria-live="assertive"></div>
 
     <script src="progress.js"></script>
     <script>
@@ -72,9 +88,9 @@
             }
         })();
 
-        // Show best scores on each module card
+        // Show best scores on each module card (including kangourou)
         (function() {
-            const modules = ['multiplications', 'fractions', 'grammaire', 'geometrie'];
+            const modules = ['multiplications', 'fractions', 'grammaire', 'geometrie', 'kangourou'];
             modules.forEach(function(mod) {
                 const scores = getModuleScores(mod);
                 const el = document.getElementById('best-' + mod);
@@ -82,7 +98,6 @@
                 const levels = Object.keys(scores);
                 if (levels.length === 0) return;
 
-                // Find overall best across all levels
                 let topScore = 0, topTotal = 10, allPerfect = true;
                 levels.forEach(function(lvl) {
                     const s = scores[lvl];
@@ -97,6 +112,60 @@
                 el.classList.add(pct === 100 ? 'perfect' : 'played');
             });
         })();
+
+        // Streak display
+        (function() {
+            const stats = getStats();
+            if (stats.currentStreak >= 2) {
+                const el = document.getElementById('streak-display');
+                el.textContent = '🔥 ' + stats.currentStreak + ' jour' + (stats.currentStreak > 1 ? 's' : '') + ' de suite !';
+                el.style.display = 'inline-block';
+            }
+        })();
+
+        // Badges display
+        (function() {
+            const badges = getAllBadges();
+            const grid = document.getElementById('badges-grid');
+            const hasAnyUnlocked = badges.some(b => b.unlocked);
+
+            grid.innerHTML = badges.map(function(b) {
+                return '<div class="badge-item ' + (b.unlocked ? 'unlocked' : 'locked') + '" title="' + b.desc + '">'
+                    + '<span class="badge-icon">' + b.icon + '</span>'
+                    + '<span class="badge-name">' + b.name + '</span>'
+                    + '</div>';
+            }).join('');
+
+            // Show section only if at least one session played
+            var stats = getStats();
+            if (stats.totalSessions > 0) {
+                document.getElementById('badges-section').style.display = 'block';
+            }
+        })();
+
+        // Check for new badges and show toast
+        (function() {
+            var newBadges = checkAndAwardBadges();
+            if (newBadges.length > 0) {
+                var toast = document.getElementById('toast');
+                toast.textContent = '🏅 Badge débloqué : ' + newBadges[0].name + ' !';
+                toast.classList.add('visible');
+                setTimeout(function() { toast.classList.remove('visible'); }, 4000);
+            }
+        })();
+
+        // Reset button
+        document.getElementById('btn-reset').addEventListener('click', function() {
+            if (confirm('⚠️ Es-tu sûr(e) ? Toute ta progression, tes badges et ton historique seront effacés.')) {
+                resetAllProgress();
+                location.reload();
+            }
+        });
+
+        // Register Service Worker for offline support (PWA)
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(function() {});
+        }
     </script>
 </body>
 </html>

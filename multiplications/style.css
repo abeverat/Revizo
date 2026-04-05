@@ -3,6 +3,10 @@ body {
     overflow: hidden;
 }
 
+.dark-mode body {
+    background: linear-gradient(135deg, #2a3377 0%, #3a2055 100%);
+}
+
 .btn {
     background: linear-gradient(135deg, #f857a6, #ff5858);
     box-shadow: 0 8px 20px rgba(248,87,166,0.4);
@@ -42,4 +46,14 @@ body {
     .card-front .multiplication { font-size: 2.6rem; }
     .card-back .result { font-size: 3rem; }
     #answer-input { width: 110px; font-size: 1.4rem; }
+}
+
+@media (max-width: 375px) {
+    #start-screen h1 { font-size: 2rem; }
+    .card-container { width: 190px; height: 260px; }
+    .card-front .multiplication { font-size: 2.2rem; }
+    .card-back .result { font-size: 2.4rem; }
+    #answer-input { width: 90px; font-size: 1.2rem; }
+    .stat-box { padding: 6px 10px; min-width: 70px; }
+    .stat-box .value { font-size: 1.2rem; }
 }
