@@ -36,7 +36,8 @@ const modeLabels = {
 
 // ── Mode selection ──
 function selectMode(mode) {
-    gameMode = mode;
+    gameMode  = mode;
+    _userMode = mode;
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
     document.getElementById('mode-' + mode).classList.add('selected');
 }
@@ -79,7 +80,8 @@ function getQuestionPool() {
 }
 
 let usedIndices = [];
-let _currentQ = null; // current raw question object (for review)
+let _currentQ = null;  // current raw question object (for review)
+let _userMode = 'cercle'; // mode chosen by the user — survives review cards
 
 function pickQuestion() {
     const pool = getQuestionPool();
@@ -97,7 +99,10 @@ function pickQuestion() {
 // ═══════════════════════════════════════
 
 function generateQuestion(q) {
-    if (!q) q = pickQuestion();
+    if (!q) {
+        gameMode = _userMode; // restore user mode before picking a fresh question
+        q = pickQuestion();
+    }
     _currentQ = q;
     currentAnswer = q.answer;
     currentExplanation = q.explanation;
@@ -118,10 +123,13 @@ function generateQuestion(q) {
 // ── Spaced repetition hooks ──
 function getReviewData() {
     if (!_currentQ) return null;
-    return { key: _currentQ.question, q: _currentQ };
+    // Store gameMode so the card label is correct when replaying
+    return { key: _currentQ.question, mode: gameMode, q: _currentQ };
 }
 
 function applyReviewData(data) {
+    // Temporarily set gameMode for the correct card label; _userMode is unchanged
+    if (data.mode) gameMode = data.mode;
     generateQuestion(data.q);
 }
 

@@ -256,11 +256,12 @@ function nextCard() {
 function showPauseScreen() {
     stopTimer();
 
+    const answered = isFlipped ? currentCard : currentCard - 1;
+
     // Persist best score if the module declared MODULE_KEY + currentLevel
     if (typeof saveRoundScore === 'function'
         && typeof MODULE_KEY !== 'undefined'
         && typeof currentLevel !== 'undefined') {
-        const answered = isFlipped ? currentCard : currentCard - 1;
         saveRoundScore(MODULE_KEY, currentLevel, roundScore, answered, seconds);
     }
 
@@ -270,7 +271,6 @@ function showPauseScreen() {
     pauseScreen.offsetHeight; // reflow
     pauseScreen.style.animation = 'fadeIn 0.5s ease';
 
-    const answered = isFlipped ? currentCard : currentCard - 1;
     document.getElementById('pause-score').textContent = `${roundScore} / ${answered}`;
     document.getElementById('pause-time').textContent  = getTimerText();
 

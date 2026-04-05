@@ -82,19 +82,18 @@
                 const levels = Object.keys(scores);
                 if (levels.length === 0) return;
 
-                // Find overall best across all levels
-                let topScore = 0, topTotal = 10, allPerfect = true;
+                // Find the single best score across all levels
+                let topScore = 0, topTotal = 10;
                 levels.forEach(function(lvl) {
                     const s = scores[lvl];
                     if (s.best > topScore || (s.best === topScore && s.total > topTotal)) {
                         topScore = s.best; topTotal = s.total;
                     }
-                    if (s.best < s.total) allPerfect = false;
                 });
 
-                const pct = topTotal > 0 ? Math.round(topScore / topTotal * 100) : 0;
-                el.textContent = (allPerfect && levels.length > 0 ? '🏆 ' : '⭐ ') + 'Meilleur : ' + topScore + ' / ' + topTotal;
-                el.classList.add(pct === 100 ? 'perfect' : 'played');
+                const isPerfect = topScore === topTotal;
+                el.textContent = (isPerfect ? '🏆 ' : '⭐ ') + 'Meilleur : ' + topScore + ' / ' + topTotal;
+                el.classList.add(isPerfect ? 'perfect' : 'played');
             });
         })();
     </script>
