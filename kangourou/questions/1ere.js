@@ -1,6 +1,6 @@
 QUESTIONS["1ere"] = [
   { question: "La dérivée de f(x) = 3x⁴ est :", choices: ["3x³", "4x³", "12x³", "12x⁴", "x³"], answer: 2, difficulty: 1, explanation: "f'(x) = 3×4x³ = 12x³" },
-  { question: "Que vaut e⁰ ?", choices: ["0", "1", "e", "2,718", "∞"], answer: 1, difficulty: 1, explanation: "e⁰ = 1" },
+  { question: "Si f(x) = eˣ − x − 1, combien vaut f(0) + f'(0) ?", choices: ["-1", "0", "1", "e", "2"], answer: 1, difficulty: 1, explanation: "f(0) = 1 − 0 − 1 = 0. f'(x) = eˣ − 1, f'(0) = 0. Donc f(0) + f'(0) = 0." },
   { question: "ln(e³) = ?", choices: ["1/3", "1", "3", "e³", "3e"], answer: 2, difficulty: 1, explanation: "ln(eⁿ) = n" },
   { question: "cos(π) = ?", choices: ["-1", "0", "1", "π", "-π"], answer: 0, difficulty: 1, explanation: "cos(π) = -1" },
   { question: "Combien vaut C(5,2) ?", choices: ["5", "10", "15", "20", "25"], answer: 1, difficulty: 1, explanation: "C(5,2) = 5!/(2!3!) = 10" },

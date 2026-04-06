@@ -2,10 +2,10 @@ QUESTIONS["6eme"] = [
   // --- Faciles (Q1-Q8) ---
   { question: "Combien font 25 × 4 ?", choices: ["80", "90", "100", "110", "120"], answer: 2, difficulty: 1, explanation: "25 × 4 = 100" },
   { question: "Quel est le plus petit nombre premier ?", choices: ["0", "1", "2", "3", "4"], answer: 2, difficulty: 1, explanation: "2 est le plus petit nombre premier." },
-  { question: "Combien y a-t-il de minutes dans 2 heures ?", choices: ["60", "90", "100", "120", "150"], answer: 3, difficulty: 1, explanation: "2 × 60 = 120 minutes." },
-  { question: "Un triangle a combien de côtés ?", choices: ["2", "3", "4", "5", "6"], answer: 1, difficulty: 1, explanation: "Un triangle a 3 côtés." },
+  { question: "Marie a 3 fois plus de billes que Paul. Ensemble, ils ont 24 billes. Combien Paul en a-t-il ?", choices: ["3", "4", "6", "8", "12"], answer: 2, difficulty: 1, explanation: "Paul = x, Marie = 3x. x + 3x = 24 → 4x = 24 → x = 6." },
+  { question: "On écrit tous les nombres de 1 à 20. Combien de fois écrit-on le chiffre 1 ?", choices: ["2", "3", "10", "11", "12"], answer: 4, difficulty: 1, explanation: "Unités : 1, 11 → 2 fois. Dizaines : 10–19 → 10 fois. Total = 12." },
   { question: "Que vaut 1/2 + 1/2 ?", choices: ["1/4", "1/2", "1", "2", "3/2"], answer: 2, difficulty: 1, explanation: "1/2 + 1/2 = 1" },
-  { question: "Combien font 999 + 1 ?", choices: ["990", "1000", "1001", "9991", "10000"], answer: 1, difficulty: 1, explanation: "999 + 1 = 1000" },
+  { question: "Dans un carré magique, la somme de chaque ligne est la même. Si les cases contiennent les nombres 1 à 9, quelle est cette somme ?", choices: ["12", "13", "14", "15", "18"], answer: 3, difficulty: 1, explanation: "Somme totale = 1+2+…+9 = 45. Il y a 3 lignes, donc 45 ÷ 3 = 15." },
   { question: "Quel est le double de 35 ?", choices: ["60", "65", "70", "75", "80"], answer: 2, difficulty: 1, explanation: "35 × 2 = 70" },
   { question: "Combien de faces a un cube ?", choices: ["4", "5", "6", "8", "12"], answer: 2, difficulty: 1, explanation: "Un cube a 6 faces." },
 
@@ -14,7 +14,7 @@ QUESTIONS["6eme"] = [
   { question: "Quel est le reste de la division de 47 par 6 ?", choices: ["1", "2", "3", "5", "7"], answer: 3, difficulty: 2, explanation: "47 = 6 × 7 + 5, reste = 5" },
   { question: "Combien font 3/4 de 60 ?", choices: ["15", "30", "40", "45", "48"], answer: 3, difficulty: 2, explanation: "3/4 × 60 = 45" },
   { question: "Un livre coûte 12 €. Après une réduction de 25%, quel est son prix ?", choices: ["3 €", "6 €", "8 €", "9 €", "10 €"], answer: 3, difficulty: 2, explanation: "25% de 12 = 3 €, donc 12 - 3 = 9 €" },
-  { question: "Combien y a-t-il de dizaines dans 3 450 ?", choices: ["34", "45", "345", "3", "5"], answer: 2, difficulty: 2, explanation: "Le chiffre des dizaines dans 3 450 est 5, et il y a 345 dizaines au total. Le chiffre des dizaines est 5." },
+  { question: "Combien y a-t-il de dizaines dans 3 450 ?", choices: ["34", "45", "345", "3", "5"], answer: 2, difficulty: 2, explanation: "3 450 ÷ 10 = 345. Il y a 345 dizaines dans 3 450. (Attention à ne pas confondre avec le chiffre des dizaines, qui est 5.)" },
   { question: "Quel nombre est à la fois multiple de 3 et de 5 parmi ceux-ci ?", choices: ["10", "12", "20", "25", "30"], answer: 4, difficulty: 2, explanation: "30 = 3 × 10 = 5 × 6" },
   { question: "L'aire d'un carré de côté 7 cm est :", choices: ["14 cm²", "21 cm²", "28 cm²", "49 cm²", "56 cm²"], answer: 3, difficulty: 2, explanation: "Aire = 7² = 49 cm²" },
   { question: "Si je parcours 15 km en 3 heures, quelle est ma vitesse ?", choices: ["3 km/h", "5 km/h", "12 km/h", "18 km/h", "45 km/h"], answer: 1, difficulty: 2, explanation: "v = 15 / 3 = 5 km/h" },

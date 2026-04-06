@@ -1,12 +1,12 @@
 QUESTIONS["5eme"] = [
   { question: "Combien vaut (-3) × (-5) ?", choices: ["-15", "-8", "8", "15", "0"], answer: 3, difficulty: 1, explanation: "Moins × moins = plus. (-3)×(-5)=15" },
   { question: "Quelle fraction est égale à 0,75 ?", choices: ["1/2", "2/3", "3/4", "4/5", "7/10"], answer: 2, difficulty: 1, explanation: "3/4 = 0,75" },
-  { question: "Un angle droit mesure :", choices: ["45°", "60°", "90°", "120°", "180°"], answer: 2, difficulty: 1, explanation: "Un angle droit = 90°." },
+  { question: "Un carré de côté 6 cm voit son côté augmenter de 2 cm. De combien son aire augmente-t-elle ?", choices: ["16 cm²", "24 cm²", "28 cm²", "32 cm²", "40 cm²"], answer: 2, difficulty: 1, explanation: "Ancienne aire = 36 cm², nouvelle aire = 64 cm². Différence = 64 − 36 = 28 cm²." },
   { question: "Combien font 15% de 200 ?", choices: ["15", "20", "25", "30", "35"], answer: 3, difficulty: 1, explanation: "15% × 200 = 30" },
-  { question: "Si x + 7 = 12, alors x = ?", choices: ["3", "4", "5", "7", "19"], answer: 2, difficulty: 1, explanation: "x = 12 - 7 = 5" },
+  { question: "On dispose 5 points sur un cercle. Combien de segments différents peut-on tracer entre ces points ?", choices: ["5", "8", "10", "15", "20"], answer: 2, difficulty: 1, explanation: "Chaque paire de points donne un segment : C(5,2) = 5×4/2 = 10." },
   { question: "Combien de cm³ y a-t-il dans 1 litre ?", choices: ["10", "100", "1 000", "10 000", "100 000"], answer: 2, difficulty: 1, explanation: "1 L = 1 000 cm³" },
   { question: "La somme des angles d'un triangle vaut :", choices: ["90°", "120°", "180°", "270°", "360°"], answer: 2, difficulty: 1, explanation: "La somme des angles d'un triangle = 180°." },
-  { question: "Quel est l'opposé de -8 ?", choices: ["-8", "0", "8", "1/8", "-1/8"], answer: 2, difficulty: 1, explanation: "L'opposé de -8 est 8." },
+  { question: "La somme de 5 nombres entiers consécutifs est 100. Quel est le plus grand ?", choices: ["20", "21", "22", "24", "25"], answer: 2, difficulty: 1, explanation: "Soient n, n+1, n+2, n+3, n+4. Leur somme = 5n + 10 = 100 → n = 18. Le plus grand = 22." },
 
   { question: "Dans un triangle rectangle, les côtés de l'angle droit mesurent 3 et 4. Que vaut l'hypoténuse ?", choices: ["5", "6", "7", "√7", "12"], answer: 0, difficulty: 2, explanation: "3² + 4² = 25, √25 = 5" },
   { question: "Combien vaut 2/3 + 3/4 ?", choices: ["5/7", "5/12", "17/12", "11/12", "1"], answer: 2, difficulty: 2, explanation: "2/3 + 3/4 = 8/12 + 9/12 = 17/12" },

@@ -1,6 +1,6 @@
 QUESTIONS["4eme"] = [
   { question: "Que vaut √144 ?", choices: ["10", "11", "12", "13", "14"], answer: 2, difficulty: 1, explanation: "√144 = 12" },
-  { question: "Si 2x = 18, alors x = ?", choices: ["6", "7", "8", "9", "10"], answer: 3, difficulty: 1, explanation: "x = 18/2 = 9" },
+  { question: "On partage 120 € entre trois amis. Le 2ᵉ reçoit le double du 1ᵉʳ, et le 3ᵉ le triple du 1ᵉʳ. Combien reçoit le 1ᵉʳ ?", choices: ["15 €", "20 €", "24 €", "30 €", "40 €"], answer: 1, difficulty: 1, explanation: "x + 2x + 3x = 120 → 6x = 120 → x = 20 €." },
   { question: "Combien vaut (-2)³ ?", choices: ["-8", "-6", "6", "8", "12"], answer: 0, difficulty: 1, explanation: "(-2)³ = -8" },
   { question: "Quelle est la médiane de : 3, 7, 1, 9, 5 ?", choices: ["1", "3", "5", "7", "9"], answer: 2, difficulty: 1, explanation: "Ordonné : 1,3,5,7,9. Médiane = 5." },
   { question: "Convertir 3,5 km en mètres :", choices: ["35 m", "350 m", "3 500 m", "35 000 m", "3,5 m"], answer: 2, difficulty: 1, explanation: "3,5 × 1000 = 3 500 m" },

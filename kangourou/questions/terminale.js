@@ -2,7 +2,7 @@ QUESTIONS["terminale"] = [
   { question: "lim(x→+∞) eˣ/x² = ?", choices: ["0", "1", "+∞", "e", "Indéterminée"], answer: 2, difficulty: 1, explanation: "Croissance comparée : eˣ >> x² → +∞" },
   { question: "La primitive de cos(x) est :", choices: ["-sin(x) + C", "sin(x) + C", "cos(x) + C", "-cos(x) + C", "tan(x) + C"], answer: 1, difficulty: 1, explanation: "∫cos(x)dx = sin(x) + C" },
   { question: "Si f'(x) > 0 sur ]a,b[, alors f est :", choices: ["Décroissante", "Croissante", "Constante", "Concave", "Convexe"], answer: 1, difficulty: 1, explanation: "f' > 0 → f croissante." },
-  { question: "ln(ab) = ?", choices: ["ln(a) × ln(b)", "ln(a) + ln(b)", "ln(a) - ln(b)", "a × ln(b)", "ln(a)/ln(b)"], answer: 1, difficulty: 1, explanation: "Propriété fondamentale du logarithme." },
+  { question: "Si ln(x) + ln(x²) = 6, alors x = ?", choices: ["e", "e²", "e³", "e⁶", "2"], answer: 1, difficulty: 1, explanation: "ln(x) + 2ln(x) = 3ln(x) = 6 → ln(x) = 2 → x = e²." },
   { question: "Le module de z = -3 + 4i est :", choices: ["1", "5", "7", "√7", "25"], answer: 1, difficulty: 1, explanation: "|z| = √(9+16) = 5" },
   { question: "e^(ln 7) = ?", choices: ["1", "e⁷", "7", "7e", "ln 7"], answer: 2, difficulty: 1, explanation: "e^(ln x) = x" },
   { question: "∫₀^π sin(x) dx = ?", choices: ["0", "1", "2", "-1", "π"], answer: 2, difficulty: 1, explanation: "[-cos(x)]₀^π = -cos(π)+cos(0) = 1+1 = 2" },
