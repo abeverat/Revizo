@@ -137,19 +137,31 @@ GENERATORS["5eme"] = [
       `Proportionnalité : ${x2} × ${y1} / ${x1} = ${y2}`
     );
   },
-  // Classement de nombres relatifs
+  // Classement de nombres relatifs (avec décimaux)
   () => {
+    // Mix negatives + decimals so ordering is non-trivial
     const nums = new Set();
-    while (nums.size < 4) nums.add(randInt(-20, 20));
+    while (nums.size < 5) {
+      const n = randInt(-50, 50) / 10; // e.g. -3.2, 0.7, 4.1
+      nums.add(n);
+    }
     const arr = [...nums];
+    // Ensure at least 2 negatives
+    let negCount = arr.filter(x => x < 0).length;
+    if (negCount < 2) return GENERATORS["5eme"][10]();
     const sorted = [...arr].sort((a, b) => a - b);
-    const correct = sorted.join(' < ');
-    const wrong1 = [...sorted].reverse().join(' < ');
-    const wrong2 = [...arr].join(' < ');
-    const wrong3 = [sorted[0], sorted[2], sorted[1], sorted[3]].join(' < ');
-    const wrong4 = [sorted[1], sorted[0], sorted[2], sorted[3]].join(' < ');
+    const fmt = n => Number.isInteger(n) ? String(n) : n.toFixed(1);
+    const correct = sorted.map(fmt).join(' < ');
+    const wrong1 = [...sorted].reverse().map(fmt).join(' < ');
+    const wrong2 = [...arr].map(fmt).join(' < ');
+    // Swap two adjacent negatives (common mistake: confusing -3.2 and -2.3)
+    const s3 = [...sorted]; [s3[0], s3[1]] = [s3[1], s3[0]];
+    const wrong3 = s3.map(fmt).join(' < ');
+    // Swap middle elements
+    const s4 = [...sorted]; [s4[1], s4[2]] = [s4[2], s4[1]];
+    const wrong4 = s4.map(fmt).join(' < ');
     return buildQuestion(
-      `Range dans l'ordre croissant : ${arr.join(', ')}`,
+      `Range dans l'ordre croissant : ${arr.map(fmt).join(', ')}`,
       correct, [wrong1, wrong2, wrong3, wrong4], 1,
       `Ordre croissant : ${correct}`
     );
