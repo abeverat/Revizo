@@ -114,20 +114,27 @@ GENERATORS["5eme"] = [
   },
   // Proportionnalité (produit en croix)
   () => {
-    const a = randInt(2, 12);
-    const b = randInt(2, 15);
-    const k = randInt(2, 8);
-    const c = a * k;
-    const d = b * k;
+    // Build from ratio a/b with gcd=1, then scale so cross-mult is needed
+    let num, den;
+    do {
+      num = randInt(2, 9);
+      den = randInt(2, 9);
+    } while (num === den || gcd(num, den) !== 1);
+    // x1 items cost/take y1 units; x2 items → y2 = ?
+    const x1 = den * randInt(1, 3);        // ensures x1 divisible by den
+    const y1 = num * randInt(1, 3);         // ensures y1 divisible by num
+    const mult = randInt(2, 5);
+    const x2 = x1 + den * mult;            // x2/x1 is NOT an integer (different scale)
+    const y2 = y1 * x2 / x1;              // clean because x2 is multiple of den
+    if (!Number.isInteger(y2) || y2 > 200) return GENERATORS["5eme"][9]();
     const scenarios = [
-      { q: `${a} cahiers coûtent ${b} €. Combien coûtent ${c} cahiers ?`, ans: d, expl: `${c}×${b}/${a} = ${d} €` },
-      { q: `Une voiture parcourt ${b} km en ${a} min. Combien de km en ${c} min ?`, ans: d, expl: `${c}×${b}/${a} = ${d} km` },
-      { q: `${a} kg de pommes coûtent ${b} €. Combien pour ${c} kg ?`, ans: d, expl: `${c}×${b}/${a} = ${d} €` },
+      `${x1} cahiers coûtent ${y1} €. Combien coûtent ${x2} cahiers ?`,
+      `Une voiture parcourt ${y1} km en ${x1} min. Combien de km en ${x2} min ?`,
+      `${x1} kg de pommes coûtent ${y1} €. Combien pour ${x2} kg ?`,
     ];
-    const s = randChoice(scenarios);
     return buildQuestion(
-      s.q, `${s.ans}`, numericDistractors(s.ans).map(v => v), 2,
-      `Proportionnalité : ${s.expl}`
+      randChoice(scenarios), y2, numericDistractors(y2), 2,
+      `Proportionnalité : ${x2} × ${y1} / ${x1} = ${y2}`
     );
   },
   // Classement de nombres relatifs
