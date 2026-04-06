@@ -92,4 +92,36 @@ GENERATORS["2nde"] = [
       `C(${n}, ${k}) = ${n}! / (${k}!×${n - k}!) = ${correct}`
     );
   },
+  // Valeurs trigonométriques remarquables
+  () => {
+    const table = [
+      { angle: '0',    cos: '1',    sin: '0',    tan: '0' },
+      { angle: 'π/6',  cos: '√3/2', sin: '1/2',  tan: '√3/3' },
+      { angle: 'π/4',  cos: '√2/2', sin: '√2/2', tan: '1' },
+      { angle: 'π/3',  cos: '1/2',  sin: '√3/2', tan: '√3' },
+      { angle: 'π/2',  cos: '0',    sin: '1',    tan: null },
+    ];
+    const entry = randChoice(table);
+    const fn = randChoice(entry.tan !== null ? ['cos', 'sin', 'tan'] : ['cos', 'sin']);
+    const correct = entry[fn];
+    const allValues = ['0', '1', '1/2', '√2/2', '√3/2', '√3', '√3/3', '-1', '-1/2'];
+    const dists = allValues.filter(v => v !== correct);
+    return buildQuestion(
+      `Que vaut ${fn}(${entry.angle}) ?`, correct,
+      dists, 1,
+      `${fn}(${entry.angle}) = ${correct}`
+    );
+  },
+  // Intersection d'intervalles
+  () => {
+    const a = randInt(-5, 0), b = randInt(3, 8);
+    const c = randInt(a + 1, b - 1), d = randInt(b + 1, b + 6);
+    // [a,b] ∩ [c,d] = [c,b]
+    const correct = `[${c} ; ${b}]`;
+    return buildQuestion(
+      `Quel est l'ensemble [${a} ; ${b}] ∩ [${c} ; ${d}] ?`, correct,
+      [`[${a} ; ${d}]`, `[${a} ; ${b}]`, `[${c} ; ${d}]`, `[${a} ; ${c}]`, `∅`], 2,
+      `[${a} ; ${b}] ∩ [${c} ; ${d}] = [max(${a},${c}) ; min(${b},${d})] = ${correct}`
+    );
+  },
 ];

@@ -178,7 +178,7 @@ function renderQuestion() {
   dom.questionDiff.textContent = diffLabels[q.difficulty];
   dom.questionDiff.className = `question-difficulty ${diffClasses[q.difficulty]}`;
 
-  dom.questionText.textContent = q.question;
+  dom.questionText.innerHTML = q.question;
 
   const labels = ["A", "B", "C", "D", "E"];
   dom.choices.innerHTML = q.choices

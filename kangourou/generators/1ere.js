@@ -97,4 +97,26 @@ GENERATORS["1ere"] = [
       3, `f'(x) = ${a}/(${a}x + ${b})`
     );
   },
+  // Équation trigonométrique
+  () => {
+    const solutions = [
+      { eq: 'cos(x) = 1',     ans: 'x = 0',     dists: ['x = π', 'x = π/2', 'x = 2π', 'x = -π'] },
+      { eq: 'cos(x) = 0',     ans: 'x = π/2',   dists: ['x = 0', 'x = π', 'x = π/4', 'x = 2π'] },
+      { eq: 'cos(x) = -1',    ans: 'x = π',      dists: ['x = 0', 'x = 2π', 'x = -π/2', 'x = 3π/2'] },
+      { eq: 'cos(x) = 1/2',   ans: 'x = π/3',   dists: ['x = π/6', 'x = π/4', 'x = 2π/3', 'x = π/2'] },
+      { eq: 'cos(x) = √2/2',  ans: 'x = π/4',   dists: ['x = π/3', 'x = π/6', 'x = π/2', 'x = 3π/4'] },
+      { eq: 'cos(x) = √3/2',  ans: 'x = π/6',   dists: ['x = π/3', 'x = π/4', 'x = π/2', 'x = 5π/6'] },
+      { eq: 'sin(x) = 1',     ans: 'x = π/2',   dists: ['x = 0', 'x = π', 'x = π/4', 'x = 3π/2'] },
+      { eq: 'sin(x) = 0',     ans: 'x = 0',     dists: ['x = π/2', 'x = π/4', 'x = π/6', 'x = π'] },
+      { eq: 'sin(x) = 1/2',   ans: 'x = π/6',   dists: ['x = π/3', 'x = π/4', 'x = π/2', 'x = 5π/6'] },
+      { eq: 'sin(x) = √2/2',  ans: 'x = π/4',   dists: ['x = π/3', 'x = π/6', 'x = π/2', 'x = 3π/4'] },
+      { eq: 'sin(x) = √3/2',  ans: 'x = π/3',   dists: ['x = π/6', 'x = π/4', 'x = π/2', 'x = 2π/3'] },
+    ];
+    const s = randChoice(solutions);
+    return buildQuestion(
+      `Sur [0, π], résoudre ${s.eq}`, s.ans,
+      s.dists, 2,
+      `${s.eq} → ${s.ans} (valeurs remarquables)`
+    );
+  },
 ];

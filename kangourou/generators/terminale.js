@@ -92,4 +92,25 @@ GENERATORS["terminale"] = [
       `Dérivée de composée : f'(x) = ${chosen.fp}`
     );
   },
+  // Multiplication de nombres complexes
+  () => {
+    const a = randInt(-5, 5), b = randInt(-5, 5);
+    const c = randInt(-5, 5), d = randInt(-5, 5);
+    if (b === 0 || d === 0) return GENERATORS["terminale"][8]();
+    const re = a * c - b * d;
+    const im = a * d + b * c;
+    const fmt = (r, i) => {
+      if (i === 0) return `${r}`;
+      const iStr = Math.abs(i) === 1 ? (i > 0 ? 'i' : '-i') : `${i}i`;
+      if (r === 0) return iStr;
+      return `${r} ${i > 0 ? '+' : '-'} ${Math.abs(i) === 1 ? 'i' : Math.abs(i) + 'i'}`;
+    };
+    const correct = fmt(re, im);
+    const z1 = fmt(a, b), z2 = fmt(c, d);
+    return buildQuestion(
+      `Calculer (${z1})(${z2})`, correct,
+      [fmt(a * c + b * d, a * d - b * c), fmt(re + 1, im), fmt(re, im + 1), fmt(a * c, b * d)], 2,
+      `(${a})(${c}) - (${b})(${d}) + [(${a})(${d}) + (${b})(${c})]i = ${correct}`
+    );
+  },
 ];

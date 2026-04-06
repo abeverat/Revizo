@@ -104,4 +104,47 @@ GENERATORS["3eme"] = [
       steps.join(", ")
     );
   },
+  // Addition de vecteurs
+  () => {
+    const ax = randInt(-5, 5), ay = randInt(-5, 5);
+    const bx = randInt(-5, 5), by = randInt(-5, 5);
+    const cx = ax + bx, cy = ay + by;
+    return buildQuestion(
+      `Si u⃗(${ax} ; ${ay}) et v⃗(${bx} ; ${by}), quelles sont les coordonnées de u⃗ + v⃗ ?`,
+      `(${cx} ; ${cy})`,
+      [`(${ax * bx} ; ${ay * by})`, `(${cx + 1} ; ${cy - 1})`, `(${ax - bx} ; ${ay - by})`, `(${cy} ; ${cx})`, `(${cx + 2} ; ${cy})`],
+      2, `u⃗ + v⃗ = (${ax}+${bx} ; ${ay}+${by}) = (${cx} ; ${cy})`
+    );
+  },
+  // Théorème de Thalès (avec dessin)
+  () => {
+    // OA/OA' = OB/OB' with integer ratios
+    const k = randInt(2, 5);
+    const oa = randInt(2, 6);
+    const ob = randInt(2, 6);
+    const oaPrime = oa * k;
+    const obPrime = ob * k;
+    // Choose which value to hide
+    const missingChoice = randChoice(['b', 'd']);
+    let correct, question;
+    if (missingChoice === 'b') {
+      // Hide OA' (= oaPrime)
+      correct = oaPrime;
+      question = `OA = ${oa}, OB = ${ob}, OB' = ${obPrime}. (AB) // (A'B'). Combien vaut OA' ?`;
+    } else {
+      // Hide OB' (= obPrime)
+      correct = obPrime;
+      question = `OA = ${oa}, OA' = ${oaPrime}, OB = ${ob}. (AB) // (A'B'). Combien vaut OB' ?`;
+    }
+    const svg = svgThales({
+      a: oa, b: missingChoice === 'b' ? '?' : oaPrime,
+      c: ob, d: missingChoice === 'd' ? '?' : obPrime,
+      missing: missingChoice
+    });
+    return buildQuestion(
+      `${question}${svg}`, correct,
+      numericDistractors(correct), 3,
+      `Par le théorème de Thalès : OA/OA' = OB/OB', donc la valeur manquante = ${correct}`
+    );
+  },
 ];

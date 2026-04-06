@@ -130,4 +130,61 @@ GENERATORS["6eme"] = [
       `n(n+1)/2 = ${n}×${n + 1}/2 = ${correct}`
     );
   },
+  // Opérations décimales
+  () => {
+    const a = randInt(10, 99) / 10;   // 1.0 – 9.9
+    const b = randInt(10, 99) / 10;
+    const op = randChoice(['+', '−']);
+    const correct = op === '+' ? round2(a + b) : round2(Math.abs(a - b));
+    const display = op === '+' ? `${a} + ${b}` : (a >= b ? `${a} − ${b}` : `${b} − ${a}`);
+    return buildQuestion(
+      `Combien font ${display} ?`, correct,
+      numericDistractors(correct), 1,
+      `${display} = ${correct}`
+    );
+  },
+  // Conversions d'unités
+  () => {
+    const conversions = [
+      { q: 'km en m', factor: 1000, unit: 'm', from: 'km', range: [1, 15] },
+      { q: 'm en cm', factor: 100, unit: 'cm', from: 'm', range: [1, 30] },
+      { q: 'kg en g', factor: 1000, unit: 'g', from: 'kg', range: [1, 12] },
+      { q: 'L en mL', factor: 1000, unit: 'mL', from: 'L', range: [1, 10] },
+      { q: 'cm en mm', factor: 10, unit: 'mm', from: 'cm', range: [5, 50] },
+    ];
+    const c = randChoice(conversions);
+    const val = randInt(c.range[0], c.range[1]);
+    const correct = val * c.factor;
+    return buildQuestion(
+      `Combien font ${val} ${c.from} en ${c.unit} ?`, correct,
+      [correct / 10, correct * 10, correct + c.factor, correct - val].filter(x => x > 0).map(String), 1,
+      `${val} ${c.from} = ${correct} ${c.unit}`
+    );
+  },
+  // Médiane
+  () => {
+    const len = randChoice([5, 7]);
+    const nums = Array.from({ length: len }, () => randInt(2, 30));
+    nums.sort((a, b) => a - b);
+    const correct = nums[Math.floor(len / 2)];
+    const display = [...nums].sort(() => Math.random() - 0.5);
+    return buildQuestion(
+      `Quelle est la médiane de : ${display.join(', ')} ?`, correct,
+      numericDistractors(correct), 2,
+      `Valeurs triées : ${nums.join(', ')} → médiane = ${correct}`
+    );
+  },
+  // Axes de symétrie (avec dessin)
+  () => {
+    const types = ['equilateral', 'square', 'rectangle', 'isosceles', 'regular_hexagon', 'regular_pentagon'];
+    const type = randChoice(types);
+    const shape = svgShape(type);
+    const correct = shape.axes;
+    const dists = [0, 1, 2, 3, 4, 5, 6].filter(x => x !== correct).map(String);
+    return buildQuestion(
+      `Combien d'axes de symétrie a ce ${shape.name} ?${shape.svg}`, correct,
+      dists, 2,
+      `Un ${shape.name} a ${correct} axe(s) de symétrie.`
+    );
+  },
 ];
